@@ -94,7 +94,7 @@ onMounted(async () => {
 });
 
 const handleCheckout = () => {
-    openCheckoutModal(); 
+    openCheckoutModal();
 };
 
 </script>
@@ -138,14 +138,23 @@ const handleCheckout = () => {
             </div>
         </main>
 
-        <section class="extended-info-grid">
-            <div class="description-section">
-                <h3>Mô tả chi tiết</h3>
-                <p class="pre-line-text">{{ product.description || 'Chưa có mô tả chi tiết cho sản phẩm này.' }}</p>
-            </div>
-        </section>
+        <div style="display: flex; justify-content: space-between;">
+            <section class="extended-info-grid">
+                <div class="description-section">
+                    <h3>Mô tả chi tiết</h3>
+                    <p class="pre-line-text">{{ product.description || 'Chưa có mô tả chi tiết cho sản phẩm này.' }}</p>
+                </div>
+            </section>
 
-        <!-- <section class="related-products-section">
+            <section class="extended-info-grid">
+                <div class="description-section">
+                    <h3>Thông số kĩ thuật</h3>
+                    <p class="pre-line-text">{{ product.description || 'Chưa có mô tả chi tiết cho sản phẩm này.' }}</p>
+                </div>
+            </section>
+        </div>
+
+        <section class="related-products-section">
             <h2>Sản phẩm tương tự</h2>
             <div class="related-products-grid">
                 <div v-for="related in allproducts" :key="related.ID" class="product-card">
@@ -154,7 +163,7 @@ const handleCheckout = () => {
                     <p>{{ related.price }} đ</p>
                 </div>
             </div>
-        </section> -->
+        </section>
     </div>
 
     <teleport to="body">
