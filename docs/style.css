@@ -223,7 +223,7 @@ img {
   margin-top: 20px;
 }
 
-.btn-submit {
+.btn-primary {
   background-color: var(--primary-color);
   color: #fff;
   border: none;
@@ -233,7 +233,7 @@ img {
   font-size: 1rem;
 }
 
-.btn-cancel {
+.btn {
   background-color: #eee;
   color: #333;
   border: 1px solid #ccc;
@@ -364,7 +364,7 @@ img {
   margin-top: 20px;
 }
 
-.btn-submit {
+.btn-primary {
   background-color: var(--primary-color);
   color: #fff;
   border: none;
@@ -374,7 +374,7 @@ img {
   font-size: 1rem;
 }
 
-.btn-cancel {
+.btn {
   background-color: #eee;
   color: #333;
   border: 1px solid #ccc;

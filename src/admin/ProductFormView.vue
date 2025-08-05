@@ -149,9 +149,8 @@ const handleSubmit = async () => {
                 <div v-if="error" class="error-message">{{ error }}</div>
 
                 <div class="form-action-buttons">
-                    <button type="button" class="btn" @click="router.back()"
-                        style="background-color: #6B7280; color: white;">Hủy</button>
-                    <button type="submit" class="btn btn-primary" :disabled="isLoading">
+                    <button type="button" class="btn" @click="router.back()">Hủy</button>
+                    <button type="submit" class="btn-primary" :disabled="isLoading">
                         {{ isLoading ? 'Đang xử lý...' : submitButtonText }}
                     </button>
                 </div>

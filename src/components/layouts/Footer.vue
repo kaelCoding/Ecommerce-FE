@@ -7,17 +7,13 @@
                     Chuyên cung mô hình cấp đồ chơi chất lượng cao, an toàn và đa dạng cho mọi lứa tuổi.
                 </p>
                 <div class="social-links">
-                    <a href="https://www.facebook.com/tungthanh.1504" target="_blank" class="social-icon"><i
-                            class="fab fa-facebook-f"></i></a>
+                    <a href="https://www.facebook.com/tungthanh.1504" target="_blank" class="social-icon"><i class="fab fa-facebook-f"></i></a>
                     <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
                 </div>
             </div>
 
             <div id="contact" class="footer-column contact-info">
                 <h3 class="footer-heading">Liên hệ</h3>
-                <p class="footer-text">
-                    <i class="fas fa-map-marker-alt"></i> Quận Ngũ Hành Sơn, TP Đà Nẵng
-                </p>
                 <p class="footer-text">
                     <i class="fas fa-phone"></i> +84 869553209
                 </p>

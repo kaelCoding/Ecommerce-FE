@@ -1,15 +1,19 @@
 <script setup>
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { get_productID_api, get_products_api } from '@/services/product';
 import { submit_order_api } from '@/services/order';
+import ProductCard from '@/components/product/Card.vue';
 
 const route = useRoute();
 
 const product = ref(null);
 const allproducts = ref([])
+
 const isLoading = ref(true);
+
 const quantity = ref(1);
+
 const mainImage = ref('');
 const isCheckoutModalOpen = ref(false);
 const customerInfo = ref({
@@ -102,7 +106,7 @@ const handleCheckout = () => {
 <template>
     <div v-if="isLoading" class="page-state">Đang tải...</div>
     <div v-else-if="!product" class="page-state">Không tìm thấy sản phẩm.</div>
-    <div v-else class="product-page-container">
+    <div v-else class="container">
         <main class="main-content-grid">
             <div class="image-gallery">
                 <div class="main-image-wrapper">
@@ -117,7 +121,6 @@ const handleCheckout = () => {
             <div class="info-panel">
                 <p class="product-brand">{{ product.category_name }}</p>
                 <h1 class="product-title">{{ product.name }}</h1>
-
                 <p class="product-price">{{ formatPrice(product.price) }}</p>
                 <div class="actions">
                     <div class="quantity-selector">
@@ -125,7 +128,7 @@ const handleCheckout = () => {
                         <input type="text" :value="quantity" readonly aria-label="Số lượng hiện tại" />
                         <button @click="incrementQuantity" aria-label="Tăng số lượng">+</button>
                     </div>
-                    <button class="checkout-btn" @click="handleCheckout">
+                    <button class="btn-primary" @click="handleCheckout">
                         <i class="fas fa-credit-card"></i> THANH TOÁN
                     </button>
                 </div>
@@ -147,12 +150,8 @@ const handleCheckout = () => {
 
         <section class="related-products-section">
             <h2>Sản phẩm tương tự</h2>
-            <div class="related-products-grid">
-                <div v-for="related in allproducts" :key="related.ID" class="product-card">
-                    <img :src="related.image_urls[0]" :alt="related.name" />
-                    <h4>{{ related.name }}</h4>
-                    <p>{{ related.price }} đ</p>
-                </div>
+            <div class="product-grid">
+                <ProductCard v-for="productitem in allproducts" :key="productitem.ID" :product="productitem" />
             </div>
         </section>
     </div>
@@ -163,7 +162,6 @@ const handleCheckout = () => {
                 <div class="checkout-modal">
                     <div class="modal-header">
                         <h3>Thông tin đặt hàng</h3>
-                        <button class="close-btn" @click="closeCheckoutModal">&times;</button>
                     </div>
                     <div class="modal-body">
                         <p class="summary">Sản phẩm: **{{ product.name }}**</p>
@@ -199,8 +197,8 @@ const handleCheckout = () => {
                             </div>
 
                             <div class="form-actions">
-                                <button type="button" class="btn-cancel" @click="closeCheckoutModal">Hủy</button>
-                                <button type="submit" class="btn-submit">Đặt hàng</button>
+                                <button type="button" class="btn" @click="closeCheckoutModal">Hủy</button>
+                                <button type="submit" class="btn-primary">Đặt hàng</button>
                             </div>
                         </form>
                     </div>
@@ -211,19 +209,8 @@ const handleCheckout = () => {
 </template>
 
 <style scoped>
-:root {
-    --primary-color: #007bff;
-    --text-dark: #1a1a1a;
-    --text-light: #666;
-    --bg-light: #f8f9fa;
-    --border-color: #e9ecef;
-}
-
-.product-page-container {
-    max-width: 1200px;
+.container {
     margin: 40px auto;
-    padding: 0 20px;
-    font-family: 'Inter', sans-serif;
 }
 
 .main-content-grid {
@@ -283,12 +270,6 @@ const handleCheckout = () => {
     opacity: 1;
 }
 
-/* PANEL THÔNG TIN */
-.info-panel {
-    display: flex;
-    flex-direction: column;
-}
-
 .product-brand {
     font-size: 0.9rem;
     font-weight: 500;
@@ -306,19 +287,6 @@ const handleCheckout = () => {
     margin: 0;
 }
 
-.social-proof {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-top: 16px;
-    font-size: 0.9rem;
-    color: var(--text-light);
-}
-
-.social-proof .rating .fa-star {
-    color: #fdd835;
-}
-
 .product-price {
     font-size: 2.5rem;
     font-weight: 700;
@@ -326,8 +294,15 @@ const handleCheckout = () => {
     margin: 24px 0;
 }
 
+/* PANEL THÔNG TIN */
+.info-panel {
+    display: flex;
+    flex-direction: column;
+}
+
 .actions {
     display: flex;
+    flex-wrap: wrap;
     gap: 16px;
     margin-bottom: 32px;
 }
@@ -336,7 +311,6 @@ const handleCheckout = () => {
     display: flex;
     align-items: center;
     border: 1px solid var(--border-color);
-    border-radius: 8px;
 }
 
 .quantity-selector input {
@@ -354,58 +328,31 @@ const handleCheckout = () => {
     height: 48px;
     font-size: 1.2rem;
     cursor: pointer;
-    color: var(--text-light);
 }
 
-.checkout-btn {
+.btn-primary {
     flex-grow: 1;
-    background-color: var(--primary-color);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 1.1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     gap: 10px;
-    height: 50px;
-}
-
-.checkout-btn:hover {
-    background-color: #0056b3;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
 }
 
 .trust-bar {
     display: flex;
-    justify-content: space-around;
-    gap: 16px;
-    background-color: var(--bg-light);
-    padding: 16px;
-    border-radius: 8px;
-    font-size: 0.9rem;
-    color: var(--text-dark);
+    flex-flow: column;
+    gap: 30px;
 }
 
 .trust-item {
     display: flex;
     align-items: center;
     gap: 8px;
-}
-
-.trust-item .fas {
-    color: var(--primary-color);
+    color: var(--text-color);
 }
 
 .extended-info-grid {
     display: grid;
     grid-template-columns: 2fr 1fr;
     gap: 60px;
-    padding-top: 60px;
+    padding-top: 40px;
     border-top: 1px solid var(--border-color);
 }
 
@@ -413,91 +360,19 @@ const handleCheckout = () => {
 .specs-section h3,
 .related-products-section h2 {
     font-size: 1.5rem;
-    font-weight: 600;
-    color: var(--text-dark);
+    color: var(--text-color);
     margin-bottom: 16px;
 }
 
 .description-section p {
     line-height: 1.8;
-    color: var(--text-light);
-}
-
-.specs-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.9rem;
-}
-
-.specs-table td {
-    padding: 12px;
-    border-bottom: 1px solid var(--border-color);
-}
-
-.specs-table tr:last-child td {
-    border-bottom: none;
-}
-
-.specs-table td:first-child {
-    font-weight: 600;
-    color: var(--text-dark);
-    width: 40%;
-}
-
-.specs-table td:last-child {
-    color: var(--text-light);
+    color: var(--text-color);
 }
 
 .related-products-section {
-    padding-top: 60px;
+    padding-top: 32px;
     margin-top: 60px;
-    border-top: 1px solid var(--border-color);
-}
-
-.related-products-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 24px;
-}
-
-.product-card {
-    border: 1px solid transparent;
-    border-radius: 12px;
-    overflow: hidden;
-    transition: all 0.3s ease;
-}
-
-.product-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
-    border-color: var(--border-color);
-}
-
-.product-card img {
-    width: 100%;
-    aspect-ratio: 1/1;
-    background-color: var(--bg-light);
-    object-fit: cover;
-}
-
-.product-card h4,
-.product-card p {
-    margin: 0;
-    padding: 4px 16px;
-}
-
-.product-card h4 {
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--text-dark);
-    margin-top: 12px;
-}
-
-.product-card p {
-    font-size: 1rem;
-    color: var(--primary-color);
-    font-weight: 500;
-    margin-bottom: 16px;
+    border-top: 1px solid black;
 }
 
 /* RESPONSIVE */
@@ -513,22 +388,12 @@ const handleCheckout = () => {
 }
 
 @media (max-width: 768px) {
-    .related-products-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
     .product-title {
         font-size: 2.2rem;
     }
 
     .product-price {
         font-size: 2rem;
-    }
-
-    .quantity-selector {
-        width: 100%;
-        justify-content: center;
-        height: 45px;
     }
 
     .quantity-selector input {
@@ -542,18 +407,23 @@ const handleCheckout = () => {
         font-size: 1.1rem;
     }
 
-    .checkout-btn {
+    .btn-primary {
         width: 100%;
         height: 45px;
         font-size: 1rem;
         padding: 0;
+    }
+
+    .actions {
+        flex-wrap: nowrap;
     }
 }
 
 @media (max-width: 480px) {
     .actions {
         flex-direction: column;
-        gap: 15px;
+        flex-wrap: nowrap;
+        gap: 10px;
         margin-bottom: 20px;
     }
 
@@ -571,16 +441,9 @@ const handleCheckout = () => {
         font-size: 1rem;
     }
 
-    .checkout-btn {
+    .btn-primary {
         height: 40px;
         font-size: 0.9rem;
     }
-}
-
-.page-state {
-    text-align: center;
-    padding: 80px 20px;
-    font-size: 1.2rem;
-    color: var(--text-light);
 }
 </style>

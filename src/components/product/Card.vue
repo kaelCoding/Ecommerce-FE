@@ -18,20 +18,32 @@ const goToDetailProduct = (productId) => {
   <div class="product-card" @click="goToDetailProduct(product.ID)">
     <div class="card-image-wrapper">
       <img :src="product.image_urls[0]" :alt="product.name" class="product-image">
-      <!-- <div class="overlay">
-        <button class="add-to-cart-btn">Thêm vào giỏ</button>
-      </div> -->
+      <div class="overlay">
+        <button class="btn-primary">Xem chi tiết</button>
+      </div>
     </div>
     <div class="card-content">
-      <div class="">
-        <h3 class="product-name">{{ product.name }}</h3>
-      </div>
-      <p class="product-price">{{ formatPrice(product.price) }}</p>
+      <h3 class="product-name2">{{ product.name }}</h3>
+      <p class="product-price2">{{ formatPrice(product.price) }}</p>
     </div>
   </div>
 </template>
 
 <style scoped>
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transition: opacity var(--transition-speed) ease;
+}
+
 .product-card {
   background-color: var(--white-color);
   border-radius: var(--border-radius);
@@ -70,38 +82,8 @@ const goToDetailProduct = (productId) => {
   transform: scale(1.05);
 }
 
-.overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.2);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  opacity: 0;
-  transition: opacity var(--transition-speed) ease;
-}
-
 .product-card:hover .overlay {
   opacity: 1;
-}
-
-.add-to-cart-btn {
-  padding: 10px 20px;
-  background-color: var(--primary-color);
-  color: var(--white-color);
-  border: none;
-  border-radius: var(--border-radius);
-  cursor: pointer;
-  font-weight: 600;
-  transform: translateY(20px);
-  transition: all var(--transition-speed) ease;
-}
-
-.product-card:hover .add-to-cart-btn {
-  transform: translateY(0);
 }
 
 .card-content {
@@ -109,20 +91,20 @@ const goToDetailProduct = (productId) => {
   flex-grow: 1;
 }
 
-.product-name {
+.product-name2 {
   font-size: 1rem;
   font-weight: 600;
   margin-bottom: 5px;
   color: var(--secondary-color);
 }
 
-.product-category {
+.product-brand2 {
   font-size: 0.85rem;
   color: #6B7280;
   margin-bottom: 10px;
 }
 
-.product-price {
+.product-price2 {
   font-size: 1.1rem;
   font-weight: 700;
   color: var(--primary-color);
@@ -145,6 +127,12 @@ const goToDetailProduct = (productId) => {
 
   .card-content {
     padding: 10px; 
+  }
+}
+
+@media (max-width: 480px) {
+  .btn, .btn-primary {
+    display: none;
   }
 }
 </style>

@@ -70,7 +70,7 @@ const handleSubmit = async () => {
                 <div class="form-action-buttons">
                     <button type="button" class="btn" @click="router.back()"
                         style="background-color: #6B7280; color: white;">Hủy</button>
-                    <button type="submit" class="btn btn-primary" :disabled="isLoading">
+                    <button type="submit" class="btn-primary" :disabled="isLoading">
                         {{ isLoading ? 'Đang xử lý...' : submitButtonText }}
                     </button>
                 </div>
@@ -106,10 +106,6 @@ const handleSubmit = async () => {
     gap: 10px;
     justify-content: flex-end;
     margin-top: 20px;
-}
-
-.btn {
-    width: auto !important;
 }
 
 @media (max-width: 992px) {
@@ -157,10 +153,6 @@ const handleSubmit = async () => {
     .form-action-buttons {
         flex-direction: column;
         gap: 10px;
-    }
-
-    .btn {
-        width: 100% !important;
     }
 }
 </style>

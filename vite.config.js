@@ -10,7 +10,7 @@ export default defineConfig({
     vue(),
     vueDevTools(),
   ],
-  // base: process.env.VERCEL ? '/' : '/Ecommerce-FE/',
+  base: process.env.VERCEL ? '/' : '/Ecommerce-FE/',
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
