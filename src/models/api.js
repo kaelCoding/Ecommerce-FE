@@ -1,7 +1,8 @@
 import { token } from "@/stores/auth";
 
 // const API_BASE_URL = "http://localhost:8080";
-const API_BASE_URL = "https://ecommerce-be-zixc.onrender.com";
+// const API_BASE_URL = "https://ecommerce-be-zixc.onrender.com";
+const API_BASE_URL = "https://ecommerce-be-production-856c.up.railway.app";
 
 export const api = async (method, url, data) => {
     const urlApi = API_BASE_URL + url;
