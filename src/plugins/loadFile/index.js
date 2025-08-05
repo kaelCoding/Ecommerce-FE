@@ -1,5 +1,5 @@
 const loadFile = (idFile) => {
-    return `http://localhost:8080/${idFile}`
+    return `https://ecommerce-be-yxmb.onrender.com/${idFile}`
 }
  
 export default {
