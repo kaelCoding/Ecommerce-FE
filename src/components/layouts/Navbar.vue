@@ -20,8 +20,8 @@ onBeforeUnmount(() => {
   <header class="navbar" :class="{ 'scrolled': isScrolled }">
     <div class="navbar-container container">
       <a href="/" class="logo">
-        <img class="favicon-ctn" src="/public/favicon.png" alt="">
-        <span>TONI TOKU</span>
+        <img class="favicon-ctn" src="/public/image.png" alt="">
+        <span>TUNI TOKU</span>
       </a>
       <nav class="nav-links">
         <RouterLink to="/">Trang chủ</RouterLink>
@@ -82,8 +82,9 @@ onBeforeUnmount(() => {
 }
 
 .favicon-ctn {
-  width: 32px;
-  height: 32px;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
 }
 
 .nav-links {

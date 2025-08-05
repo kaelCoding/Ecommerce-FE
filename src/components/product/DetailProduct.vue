@@ -138,21 +138,12 @@ const handleCheckout = () => {
             </div>
         </main>
 
-        <div style="display: flex; justify-content: space-between;">
-            <section class="extended-info-grid">
-                <div class="description-section">
-                    <h3>Mô tả chi tiết</h3>
-                    <p class="pre-line-text">{{ product.description || 'Chưa có mô tả chi tiết cho sản phẩm này.' }}</p>
-                </div>
-            </section>
-
-            <section class="extended-info-grid">
-                <div class="description-section">
-                    <h3>Thông số kĩ thuật</h3>
-                    <p class="pre-line-text">{{ product.description || 'Chưa có mô tả chi tiết cho sản phẩm này.' }}</p>
-                </div>
-            </section>
-        </div>
+        <section class="extended-info-grid">
+            <div class="description-section">
+                <h3>Mô tả chi tiết</h3>
+                <p class="pre-line-text">{{ product.description || 'Chưa có mô tả chi tiết cho sản phẩm này.' }}</p>
+            </div>
+        </section>
 
         <section class="related-products-section">
             <h2>Sản phẩm tương tự</h2>
