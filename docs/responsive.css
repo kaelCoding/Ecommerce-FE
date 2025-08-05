@@ -1,0 +1,27 @@
+@media (max-width: 990px) {
+  .product-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+}
+
+@media (max-width: 800px) {
+  .page-title {
+    font-size: 2rem;
+    margin-bottom: 30px;
+  }
+
+  .product-grid {
+    gap: 15px;
+  }
+}
+
+@media (max-width: 576px) {
+  .page-title {
+    font-size: 1.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  
+}
