@@ -138,6 +138,7 @@ watch(() => props.isActive, (newVal) => {
   font-size: 1rem;
   padding: 8px 0;
   background-color: transparent;
+  color: var(--text-color);
 }
 
 .results-content {
@@ -151,6 +152,7 @@ watch(() => props.isActive, (newVal) => {
   padding: 40px 20px;
   color: var(--gray-color);
 }
+
 .empty-icon {
   font-size: 2rem;
   margin-bottom: 10px;
@@ -165,7 +167,7 @@ watch(() => props.isActive, (newVal) => {
   border-radius: var(--border-radius);
   transition: background-color 0.2s ease;
   text-decoration: none;
-  border-bottom: 1px solid black;
+  border-bottom: 1px solid var(--text-color);
 }
 .result-item:hover {
   background-color: var(--light-gray-color);

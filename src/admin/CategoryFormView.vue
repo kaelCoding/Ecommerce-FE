@@ -65,7 +65,7 @@ const handleSubmit = async () => {
             <form v-else @submit.prevent="handleSubmit">
                 <div class="form-group">
                     <label for="name">Tên danh mục</label>
-                    <input v-model="category.name" type="text" id="name" class="form-input" required>
+                    <input v-model="category.name" type="text" id="name" class="form-input" placeholder="Nhập danh mục" required>
                 </div>
 
                 <div class="form-action-buttons">

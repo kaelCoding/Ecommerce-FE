@@ -46,7 +46,7 @@ img {
 
 .btn,
 .btn-primary {
-  display: inline-block;    
+  display: inline-block;
   padding: 12px 20px;
   border: none;
   border-radius: var(--border-radius);
@@ -56,10 +56,11 @@ img {
   text-align: center;
   transition: all var(--transition-speed) ease;
   color: var(--white-color);
-  background-color: #6B7280;
+  background-color: #6b7280;
 }
 
-.btn:hover, .btn-primary:hover {
+.btn:hover,
+.btn-primary:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);
 }
@@ -169,3 +170,182 @@ img {
   gap: 30px;
   animation: fadeInUp 1s ease-in-out;
 }
+
+/* DARK MODE */
+html[data-theme="dark"] {
+  --primary-color: #3b82f6;
+  --secondary-color: #e5e7eb;
+  --light-gray-color: #374151;
+  --text-color: #d1d5db;
+  --white-color: #111827;
+  --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+html[data-theme="dark"] .navbar,
+html[data-theme="dark"] .checkout-modal {
+  background-color: #1f2937;
+  border-color: #374151;
+}
+
+html[data-theme="dark"] .navbar.scrolled {
+  border-bottom-color: #374151;
+}
+
+html[data-theme="dark"] .hero-subtitle,
+html[data-theme="dark"] .logo,
+html[data-theme="dark"] .nav-links a,
+html[data-theme="dark"] .action-icon,
+html[data-theme="dark"] .search-icon,
+html[data-theme="dark"] .page-title,
+html[data-theme="dark"] .section-title {
+  color: var(--secondary-color);
+}
+
+html[data-theme="dark"] .search-bar {
+  background-color: var(--light-gray-color);
+  border-color: #4b5563;
+  color: var(--secondary-color);
+}
+
+html[data-theme="dark"] .search-bar:focus {
+  background-color: #111827;
+}
+
+html[data-theme="dark"] .main-footer {
+  background-color: #111827;
+  border-top: 5px solid #1f2937;
+}
+
+html[data-theme="dark"] .footer-bottom {
+  border-top-color: #374151;
+}
+
+html[data-theme="dark"] .quantity-selector button {
+  background-color: #4b5563;
+  color: var(--text-color);
+}
+
+html[data-theme="dark"] .quantity-selector button:hover {
+  background-color: #6b7280;
+}
+
+html[data-theme="dark"] .quantity-selector input {
+  background-color: var(--white-color);
+}
+
+html[data-theme="dark"] .admin-wrapper {
+  background-color: var(--white-color);
+}
+
+html[data-theme="dark"] .product-card {
+  background-color: #1f2937;
+}
+
+html[data-theme="dark"] .sidebar {
+  background-color: var(--white-color);
+  color: #e5e7eb;
+}
+
+html[data-theme="dark"] .sidebar-header h2 {
+  color: #e5e7eb;
+}
+
+html[data-theme="dark"] .sidebar-nav ul li a {
+  color: #d1d5db;
+}
+
+html[data-theme="dark"] .sidebar-nav ul li a:hover,
+html[data-theme="dark"] .sidebar-nav ul li a.router-link-exact-active {
+  background-color: var(--primary-color);
+  color: var(--white-color);
+}
+
+html[data-theme="dark"] .admin-mobile-header {
+  background-color: var(--white-color);
+  color: #e5e7eb;
+  box-shadow: 0 2px 5px rgba(255, 255, 255, 0.1);
+}
+
+html[data-theme="dark"] .menu-toggle {
+  color: #e5e7eb;
+}
+
+html[data-theme="dark"] .main-content {
+  background-color: var(--light-gray-color);
+}
+
+html[data-theme="dark"] .content-area {
+  background-color: var(--white-color);
+  box-shadow: var(--box-shadow);
+  color: var(--text-color);
+}
+
+html[data-theme="dark"] .main-header {
+  box-shadow: var(--box-shadow);
+  color: #e5e7eb;
+}
+
+html[data-theme="dark"] .stat-card {
+  background-color: #1f2937;
+  box-shadow: var(--box-shadow);
+  color: var(--text-color);
+}
+
+html[data-theme="dark"] .stat-card p {
+  color: var(--primary-color);
+}
+
+html[data-theme="dark"] .form-input {
+  background-color: #374151; 
+  color: #d1d5db; 
+  border-color: #4b5563; 
+}
+
+html[data-theme="dark"] .form-input:focus {
+  background-color: #1f2937; 
+  border-color: var(--primary-color);
+}
+
+html[data-theme="dark"] .form-input option {
+  background-color: #374151; 
+  color: #d1d5db;
+}
+
+html[data-theme="dark"] input[type="file"] {
+  color: #d1d5db;
+}
+
+html[data-theme="dark"] .modal-backdrop {
+  background-color: rgba(0, 0, 0, 0.75); 
+}
+
+html[data-theme="dark"] .modal-container {
+  background-color: #1f2937; 
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4); 
+}
+
+html[data-theme="dark"] .modal-header {
+  border-bottom: 1px solid #374151; 
+}
+
+html[data-theme="dark"] .modal-header h3 {
+  color: #e5e7eb; 
+}
+
+html[data-theme="dark"] .modal-body {
+  color: #d1d5db; 
+}
+
+html[data-theme="dark"] .modal-footer {
+  border-top: 1px solid #374151; 
+}
+
+html[data-theme="dark"] .close-btn {
+  color: #d1d5db; 
+}
+
+html[data-theme="dark"] .close-btn:hover {
+  color: #e5e7eb;
+}
+
+/*  */

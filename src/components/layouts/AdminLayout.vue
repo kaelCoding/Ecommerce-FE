@@ -4,6 +4,10 @@ import { ref, onMounted, onBeforeUnmount } from 'vue';
 const isSidebarOpen = ref(false);
 const sidebar = ref(null);
 
+const closeSidebar = () => {
+  isSidebarOpen.value = false;
+};
+
 const toggleSidebar = () => {
   isSidebarOpen.value = !isSidebarOpen.value;
 };
@@ -42,22 +46,22 @@ onBeforeUnmount(() => {
       <nav class="sidebar-nav" ref="sidebar">
         <ul>
           <li>
-            <router-link to="/admin">
+            <router-link to="/admin" @click="closeSidebar">
               <i class="fas fa-tachometer-alt"></i>Dashboard
             </router-link>
           </li>
           <li>
-            <router-link to="/admin/products">
+            <router-link to="/admin/products" @click="closeSidebar">
               <i class="fas fa-box"></i> Sản Phẩm
             </router-link>
           </li>
           <li>
-            <router-link to="/admin/categories">
+            <router-link to="/admin/categories" @click="closeSidebar">
               <i class="fas fa-list-alt"></i> Danh Mục
             </router-link>
           </li>
           <li>
-            <RouterLink to="/">
+            <RouterLink to="/" >
               <i class="fas fa-sign-out-alt"></i> Đăng Xuất
             </RouterLink>
           </li>

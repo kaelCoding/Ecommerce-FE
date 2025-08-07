@@ -159,7 +159,7 @@ const handleCheckout = () => {
         </section>
 
         <section class="related-products-section">
-            <h2>Sản phẩm tương tự</h2>
+            <h2>Sản phẩm tương tự</h2> <br>
             <div class="product-grid">
                 <ProductCard v-for="productitem in allproducts" :key="productitem.ID" :product="productitem" />
             </div>
@@ -188,15 +188,15 @@ const handleCheckout = () => {
                             <form @submit.prevent="submitOrder">
                                 <div class="form-group">
                                     <label for="name">Họ và tên</label>
-                                    <input id="name" type="text" v-model="customerInfo.name" required>
+                                    <input id="name" type="text" class="form-input" v-model="customerInfo.name" placeholder="Nhập tên của bạn" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="phone">Số điện thoại</label>
-                                    <input id="phone" type="tel" v-model="customerInfo.phone" required>
+                                    <input id="phone" type="tel" class="form-input" v-model="customerInfo.phone" placeholder="Nhập số điện thoại của bạn" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="address">Địa chỉ</label>
-                                    <textarea id="address" v-model="customerInfo.address" required></textarea>
+                                    <textarea id="address" class="form-input" v-model="customerInfo.address" placeholder="Nhập địa chỉ nhận hàng" required></textarea>
                                 </div>
 
                                 <div class="form-group">
@@ -207,7 +207,7 @@ const handleCheckout = () => {
                                             <span>Thanh toán khi nhận hàng</span>
                                         </div>
                                         <div class="radio-label">
-                                            <input type="radio" v-model="customerInfo.paymentMethod"
+                                            <input type="radio"  v-model="customerInfo.paymentMethod"
                                                 value="bank_transfer">
                                             <span>Chuyển khoản ngân hàng</span>
                                         </div>
@@ -323,34 +323,48 @@ const handleCheckout = () => {
     flex-wrap: wrap;
     gap: 16px;
     margin-bottom: 32px;
+    align-items: center;
 }
 
 .quantity-selector {
     display: flex;
     align-items: center;
-    border: 1px solid var(--border-color);
+    border: 2px solid var(--border-color);
+    border-radius: var(--border-radius);
+    overflow: hidden;
 }
 
 .quantity-selector input {
     width: 50px;
+    height: 48px;
     text-align: center;
+    background-color: var(--white-color);
+    color: var(--text-color);
     border: none;
     font-size: 1.1rem;
     font-weight: 600;
 }
 
 .quantity-selector button {
-    background: none;
+    background-color: var(--light-gray-color);
+    color: var(--text-color);
     border: none;
     width: 40px;
     height: 48px;
     font-size: 1.2rem;
     cursor: pointer;
+    transition: background-color var(--transition-speed);
+}
+
+
+.quantity-selector button:hover {
+    background-color: #d1d5db;
 }
 
 .btn-primary {
     flex-grow: 1;
     gap: 10px;
+    height: 48px; 
 }
 
 .order-summary {

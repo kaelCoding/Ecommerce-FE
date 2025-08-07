@@ -112,7 +112,7 @@ const handleSubmit = async () => {
             <form v-else @submit.prevent="handleSubmit">
                 <div class="form-group">
                     <label for="name">Tên sản phẩm</label>
-                    <input type="text" id="name" class="form-input" v-model="product.name" required>
+                    <input type="text" id="name" class="form-input" v-model="product.name" placeholder="Nhập tên sản phẩm" required>
                 </div>
                 <div class="form-group">
                     <label for="category">Danh mục</label>
@@ -124,7 +124,7 @@ const handleSubmit = async () => {
 
                 <div class="form-group">
                     <label for="price">Giá</label>
-                    <input type="text" id="price" class="form-input" v-model="product.price" required>
+                    <input type="text" id="price" class="form-input" v-model="product.price" placeholder="Nhập giá" required>
                 </div>
                 <!-- <div class="form-group">
                 <label for="stock">Kho hàng</label>
@@ -132,7 +132,7 @@ const handleSubmit = async () => {
             </div> -->
                 <div class="form-group">
                     <label for="imageUrl">Mô tả</label>
-                    <textarea id="description" class="form-input" v-model="product.description"></textarea>
+                    <textarea id="description" class="form-input" v-model="product.description" placeholder="Nhập mô tả"></textarea>
                 </div>
 
                 <div v-if="isEditing && existingImageUrls.length > 0" class="form-group">
@@ -178,6 +178,55 @@ const handleSubmit = async () => {
     padding: 30px;
     border-radius: var(--border-radius);
     box-shadow: var(--box-shadow);
+    color: var(--text-color);
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: var(--text-color);
+}
+
+.form-input,
+select.form-input,
+textarea.form-input {
+    width: 100%;
+    padding: 12px 15px;
+    font-size: 1rem;
+    border: 1px solid #d1d5db;
+    border-radius: var(--border-radius);
+    background-color: var(--light-gray-color);
+    color: var(--text-color);
+    transition: all 0.3s ease;
+}
+
+.form-input:focus,
+select.form-input:focus,
+textarea.form-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    background-color: var(--white-color);
+}
+
+select.form-input {
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url('data:image/svg+xml;utf8,<svg fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" fill-rule="evenodd"></path></svg>');
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 1.5em;
+    padding-right: 2.5rem;
+}
+
+textarea.form-input {
+    min-height: 120px;
+    resize: vertical;
 }
 
 .form-action-buttons {

@@ -49,7 +49,7 @@
 .footer-heading {
     font-size: 1.2rem;
     font-weight: 600;
-    color: var(--white-color);
+    color: #ffffff;
     margin-bottom: 20px;
 }
 

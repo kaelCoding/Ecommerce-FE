@@ -63,9 +63,9 @@ const onCancel = () => {
 }
 
 .modal-container {
-  background-color: white;
-  border-radius: var(--border-radius-lg, 12px);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  background-color: var(--white-color);
+  border-radius: 12px;
+  box-shadow: var(--box-shadow);
   width: 90%;
   max-width: 450px;
   display: flex;
@@ -74,7 +74,7 @@ const onCancel = () => {
 
 .modal-header {
   padding: 16px 24px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--light-gray-color);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -83,19 +83,19 @@ const onCancel = () => {
 .modal-header h3 {
   margin: 0;
   font-size: 1.25rem;
-  color: #333;
+  color: var(--text-color);
 }
 
 .modal-body {
   padding: 24px;
   font-size: 1rem;
-  color: #555;
+  color: var(--text-color);
   line-height: 1.6;
 }
 
 .modal-footer {
   padding: 16px 24px;
-  border-top: 1px solid #eee;
+  border-top: 1px solid var(--light-gray-color);
   display: flex;
   justify-content: flex-end;
   gap: 12px;

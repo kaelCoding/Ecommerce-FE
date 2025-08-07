@@ -70,6 +70,7 @@ onMounted(async () => {
 .main-header h1 {
   font-size: 1.8rem;
   font-weight: 600;
+  color: var(--text-color);
 }
 
 .content-area {
@@ -86,10 +87,11 @@ onMounted(async () => {
 }
 
 .stat-card {
-  background-color: #F3F4F6;
+  background-color: var(--light-gray-color);
   padding: 20px;
-  border-radius: 8px;
+  border-radius: var(--border-radius);
   box-shadow: var(--box-shadow);
+  color: var(--text-color);
 }
 
 .stat-card h3 {

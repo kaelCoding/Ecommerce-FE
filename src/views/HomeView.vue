@@ -32,12 +32,12 @@ const goToProductList = () => {
     <section class="hero-section">
       <div class="container">
         <button @click="goToProductList" class="btn-primary">MUA NGAY !</button>
-        <p class="hero-subtitle">Khám phá những thiết kế mới nhất, mang phong cách hiện đại và đầy cảm hứng.</p>
+        <p class="hero-subtitle">Hóa thân thành huyền thoại, chiến đấu vì công lý. Sưu tập ngay các mô hình siêu nhân mạnh mẽ nhất!</p>
       </div>
     </section>
 
     <main class="container product-section">
-      <h2 class="page-title">Sản phẩm nổi bật</h2>
+      <h2 class="page-title">Sản phẩm nổi bật</h2> <br>
       <LoadingSpinner v-if="isLoding" message="Đang tải..."/>
       <div v-else class="product-grid">
         <ProductCard v-for="product in products" :key="product.ID" :product="product" />
@@ -61,7 +61,7 @@ const goToProductList = () => {
 .hero-subtitle {
   font-size: 1.25rem;
   margin-bottom: 2rem;
-  font-weight: 300;
+  font-weight: 500;
   margin-top: 32px;
 }
 

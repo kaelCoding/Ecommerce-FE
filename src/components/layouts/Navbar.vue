@@ -2,6 +2,7 @@
 import { ref, onMounted, onBeforeUnmount, watch } from 'vue';
 import { searchProductsAPI } from '@/services/product';
 import SearchOverlay from '../product/SearchOverlay.vue';
+import ThemeToggle from '../common/ThemeToggle.vue';
 
 const searchQuery = ref('');
 const searchResults = ref([]);
@@ -75,34 +76,26 @@ onBeforeUnmount(() => {
       </nav>
       <div class="nav-actions">
         <div class="search-container">
-          <input 
-          type="text" 
-          class="search-bar" 
-          placeholder="Tìm kiếm sản phẩm..." 
-          v-model="searchQuery"
-          @focus="openSearch"
-          >
+          <input type="text" class="search-bar" placeholder="Tìm kiếm sản phẩm..." v-model="searchQuery"
+            @focus="openSearch">
           <i class="fa-solid fa-magnifying-glass search-icon" @click="openSearch"></i>
         </div>
-        
+
         <button class="action-icon mobile-search-trigger" @click="openSearch">
-           <i class="fa-solid fa-magnifying-glass"></i>
-       </button>
+          <i class="fa-brands fa-searchengin"></i>
+        </button>
 
         <RouterLink to="/admin" class="action-icon">
           <i class="fa-solid fa-user-secret"></i>
         </RouterLink>
 
+        <ThemeToggle />
+        
       </div>
     </div>
   </header>
-  <SearchOverlay 
-    :is-active="isSearchActive" 
-    :results="searchResults" 
-    :is-loading="isLoading" 
-    v-model="searchQuery"
-    @close="closeSearch" 
-  />
+  <SearchOverlay :is-active="isSearchActive" :results="searchResults" :is-loading="isLoading" v-model="searchQuery"
+    @close="closeSearch" />
 </template>
 
 <style scoped>
@@ -183,7 +176,7 @@ onBeforeUnmount(() => {
 .nav-actions {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 10px;
 }
 
 .action-icon {
@@ -201,6 +194,7 @@ onBeforeUnmount(() => {
 
 .fa-user-secret {
   font-size: 24px;
+  margin-top: 4px;
 }
 
 .search-container {
@@ -211,7 +205,7 @@ onBeforeUnmount(() => {
 
 .search-bar {
   border: 1px solid #E5E7EB;
-  border-radius: var(--border-radius); 
+  border-radius: var(--border-radius);
   padding: 8px 15px 8px 40px;
   width: 250px;
   transition: all var(--transition-speed) ease;
@@ -233,7 +227,7 @@ onBeforeUnmount(() => {
   pointer-events: none;
 }
 
-.search-bar:focus + .search-icon {
+.search-bar:focus+.search-icon {
   color: var(--primary-color);
 }
 
@@ -258,11 +252,16 @@ onBeforeUnmount(() => {
   }
 
   .mobile-search-trigger {
-    display: block; 
+    display: block;
   }
 
-  .fa-user-secret, .mobile-search-trigger .fa-magnifying-glass {
+  .fa-user-secret,
+  .mobile-search-trigger .fa-searchengin {
     font-size: 22px;
+  }
+
+  .fa-searchengin {
+    margin-top: 2px;
   }
 }
 </style>
