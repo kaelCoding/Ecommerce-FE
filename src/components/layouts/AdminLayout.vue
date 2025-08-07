@@ -42,18 +42,24 @@ onBeforeUnmount(() => {
       <nav class="sidebar-nav" ref="sidebar">
         <ul>
           <li>
-            <router-link to="/admin" active-class="active" exact><i class="fas fa-tachometer-alt"></i>
-              Dashboard</router-link>
+            <router-link to="/admin">
+              <i class="fas fa-tachometer-alt"></i>Dashboard
+            </router-link>
           </li>
           <li>
-            <router-link to="/admin/products" active-class="active"><i class="fas fa-box"></i> Sản Phẩm</router-link>
+            <router-link to="/admin/products">
+              <i class="fas fa-box"></i> Sản Phẩm
+            </router-link>
           </li>
           <li>
-            <router-link to="/admin/categories" active-class="active"><i class="fas fa-list-alt"></i> Danh
-              Mục</router-link>
+            <router-link to="/admin/categories">
+              <i class="fas fa-list-alt"></i> Danh Mục
+            </router-link>
           </li>
           <li>
-            <RouterLink to="/"><i class="fas fa-sign-out-alt"></i> Đăng Xuất</RouterLink>
+            <RouterLink to="/">
+              <i class="fas fa-sign-out-alt"></i> Đăng Xuất
+            </RouterLink>
           </li>
         </ul>
       </nav>
@@ -129,8 +135,8 @@ onBeforeUnmount(() => {
 }
 
 .sidebar-nav ul li a:hover,
-.sidebar-nav ul li a.active {
-  background-color: rgba(255, 255, 255, 0.1);
+.sidebar-nav ul li a.router-link-exact-active { 
+  background-color: var(--primary-color);
 }
 
 .sidebar-nav ul li a i {

@@ -1,16 +1,9 @@
 <script setup>
-import router from '@/router';
 import { defineProps } from 'vue';
+import { goToDetailProduct } from '@/composables/useUtils';
+import { formatPrice } from '@/composables/useUtils';
 
 const props = defineProps(["product"])
-
-const formatPrice = (value) => {
-  return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(value);
-};
-
-const goToDetailProduct = (productId) => {
-  router.push({ name: 'product-detail', params: { id: productId } });
-};
 
 </script>
 

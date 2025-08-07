@@ -2,12 +2,14 @@
 import { ref, onMounted, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { add_category_api, update_category_api, get_categoryID_api } from '@/services/category';
+import LoadingSpinner from '@/components/common/LoadingSpinner.vue';
+import { useNotification } from '@/composables/useNotification';
+
+const { showNotification } = useNotification();
 
 const route = useRoute();
 const router = useRouter();
-
 const isLoading = ref(false);
-const error = ref(null);
 
 const isEditing = computed(() => !!route.params.id);
 const pageTitle = computed(() => isEditing.value ? 'Sửa Danh Mục' : 'Thêm Danh Mục Mới');
@@ -25,7 +27,7 @@ onMounted(async () => {
             category.value.name = fetchedCategory.name;
         } catch (err) {
             console.error("Failed to fetch category data:", err);
-            error.value = "Không tìm thấy danh mục.";
+            showNotification("Không tìm thấy danh mục.", "error");
         } finally {
             isLoading.value = false;
         }
@@ -34,20 +36,19 @@ onMounted(async () => {
 
 const handleSubmit = async () => {
     isLoading.value = true;
-    error.value = null;
 
     try {
         if (isEditing.value) {
             await update_category_api(route.params.id, category.value);
-            console.log("update category oke")
+            showNotification("Cập nhật danh mục thành công!")
         } else {
             await add_category_api(category.value);
-            console.log("add category oke")
+            showNotification("Thêm danh mục thành công!")
         }
         router.push({ name: 'admin-categories' });
     } catch (err) {
         console.error('Submit failed:', err);
-        error.value = err.message || 'Đã có lỗi xảy ra.';
+        showNotification("Đã có lỗi xảy ra.", "error")
     } finally {
         isLoading.value = false;
     }
@@ -60,7 +61,7 @@ const handleSubmit = async () => {
             <h1>{{ pageTitle }}</h1>
         </div>
         <div class="content-area">
-            <div v-if="isLoading" class="loading-indicator">Đang tải...</div>
+            <LoadingSpinner v-if="isLoading" message="Đang tải..."/>
             <form v-else @submit.prevent="handleSubmit">
                 <div class="form-group">
                     <label for="name">Tên danh mục</label>

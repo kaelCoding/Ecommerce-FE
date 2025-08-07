@@ -39,3 +39,15 @@ export const delete_product_api = async (id) => {
         throw error
     }
 }
+
+export const searchProductsAPI = async (query) => {
+    if (!query) {
+        return [];
+    }
+    const url = `/products/search?q=${encodeURIComponent(query)}`;
+    try {
+        return await api("GET", url); 
+    } catch (error) {
+        throw error
+    }
+}

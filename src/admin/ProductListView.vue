@@ -3,45 +3,64 @@ import { useRouter } from 'vue-router';
 import { onBeforeMount, ref } from 'vue';
 import { get_products_api } from '@/services/product';
 import { delete_product_api } from '@/services/product';
+import { useNotification } from '@/composables/useNotification';
+import { formatPrice } from '@/composables/useUtils';
+import LoadingSpinner from '@/components/common/LoadingSpinner.vue';
+import ConfirmationModal from '@/components/common/ConfirmationModal.vue';
 
+const { showNotification } = useNotification();
 const router = useRouter();
+const isLoading = ref(true);
+
+const isConfirmModalVisible = ref(false);
+const productIdToDelete = ref(null);  
 
 const products = ref([]);
 
 onBeforeMount(async () => {
   await getProducts()
-  console.log(products.value)
+  isLoading.value = false
 })
 
 const getProducts = async () => {
-  await get_products_api().then((res) => {
-    products.value = res
-  })
-}
+  try {
+    const res = await get_products_api();
+    products.value = res;
+  } catch (error) {
+    console.error("Failed to get products:", error);
+    showNotification("Tải danh sách sản phẩm thất bại.", "error");
+  }
+};
 
 const goToEditProduct = (productId) => {
   router.push({ name: 'admin-products-edit', params: { id: productId } });
 };
 
-const handleDeleteProduct = async (productId) => {
-  if (!window.confirm("Bạn có chắc chắn muốn xóa sản phẩm này không?")) {
-    return;
-  }
+const handleDeleteProduct = (productId) => {
+  productIdToDelete.value = productId;
+  isConfirmModalVisible.value = true; 
+};
+
+const confirmDelete = async () => {
+  isConfirmModalVisible.value = false;
+  if (!productIdToDelete.value) return;
 
   try {
-    await delete_product_api(productId);
-    products.value = products.value.filter(product => product.ID !== productId);
-    alert("Xóa sản phẩm thành công!");
+    await delete_product_api(productIdToDelete.value);
+    products.value = products.value.filter(product => product.ID !== productIdToDelete.value);
+    showNotification("Xóa sản phẩm thành công!");
   } catch (error) {
     console.error("Failed to delete product:", error);
-    alert("Xóa sản phẩm thất bại. Vui lòng thử lại.");
+    showNotification("Xóa sản phẩm thất bại. Vui lòng thử lại.", "error");
+  } finally {
+    productIdToDelete.value = null;
   }
 };
 
-const formatPrice = (value) => {
-  return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(value);
+const cancelDelete = () => {
+  isConfirmModalVisible.value = false;
+  productIdToDelete.value = null;
 };
-
 </script>
 
 <template>
@@ -68,7 +87,8 @@ const formatPrice = (value) => {
               <th>Hành động</th>
             </tr>
           </thead>
-          <tbody>
+          <LoadingSpinner v-if="isLoading" message="Đang tải..." />
+          <tbody v-else>
             <tr v-for="product in products" :key="product.ID">
               <td>
                 <img v-if="product.image_urls && product.image_urls.length > 0" :src="product.image_urls[0]"
@@ -79,10 +99,10 @@ const formatPrice = (value) => {
               <td>{{ formatPrice(product.price) }}</td>
               <td>
                 <div class="table-actions center">
-                  <button class="btn btn-primary" @click="goToEditProduct(product.ID)">
+                  <button class="btn-primary" @click="goToEditProduct(product.ID)">
                     <i class="fas fa-edit"></i> <span>Sửa</span>
                   </button>
-                  <button class="btn btn-primary" @click="handleDeleteProduct(product.ID)">
+                  <button class="btn-primary" @click="handleDeleteProduct(product.ID)">
                     <i class="fas fa-trash"></i> <span>Xóa</span>
                   </button>
                 </div>
@@ -92,6 +112,9 @@ const formatPrice = (value) => {
         </table>
       </div>
     </div>
+    <ConfirmationModal :show="isConfirmModalVisible" title="Xác nhận xóa sản phẩm"
+      message="Bạn có chắc chắn muốn xóa sản phẩm này không? Hành động này không thể hoàn tác." @confirm="confirmDelete"
+      @cancel="cancelDelete" />
   </div>
 </template>
 
@@ -242,6 +265,7 @@ td {
 }
 
 @media (max-width: 480px) {
+
   .admin-table th,
   .admin-table td {
     font-size: 0.8rem;

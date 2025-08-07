@@ -3,13 +3,17 @@ import ProductCard from '@/components/product/Card.vue';
 import { get_products_api } from '@/services/product';
 import { onBeforeMount, ref } from 'vue';
 import { useRouter } from 'vue-router';
+import LoadingSpinner from '@/components/common/LoadingSpinner.vue';
 
 const products = ref([]);
 const router = useRouter();
 
+const isLoding = ref(true)
+
 onBeforeMount(async () => {
+  isLoding.value = true
   await getProducts()
-  console.log(products.value)
+  isLoding.value = false
 })
 
 const getProducts = async () => {
@@ -34,7 +38,8 @@ const goToProductList = () => {
 
     <main class="container product-section">
       <h2 class="page-title">Sản phẩm nổi bật</h2>
-      <div class="product-grid">
+      <LoadingSpinner v-if="isLoding" message="Đang tải..."/>
+      <div v-else class="product-grid">
         <ProductCard v-for="product in products" :key="product.ID" :product="product" />
       </div>
     </main>
@@ -60,7 +65,6 @@ const goToProductList = () => {
   margin-top: 32px;
 }
 
-/* Product Section */
 .product-section {
   padding-top: 60px;
   padding-bottom: 60px;

@@ -1,23 +1,67 @@
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from 'vue';
+import { ref, onMounted, onBeforeUnmount, watch } from 'vue';
+import { searchProductsAPI } from '@/services/product';
+import SearchOverlay from '../product/SearchOverlay.vue';
+
+const searchQuery = ref('');
+const searchResults = ref([]);
+const isSearchActive = ref(false);
+const isLoading = ref(false);
+let debounceTimer = null;
+
+watch(searchQuery, (newQuery) => {
+  clearTimeout(debounceTimer);
+  if (newQuery.length > 1) {
+    isLoading.value = true;
+    debounceTimer = setTimeout(async () => {
+      try {
+        searchResults.value = await searchProductsAPI(newQuery);
+      } catch (error) {
+        console.error("Search failed:", error);
+        searchResults.value = [];
+      } finally {
+        isLoading.value = false;
+      }
+    }, 300);
+  } else {
+    searchResults.value = [];
+    isLoading.value = false;
+  }
+});
+
+const openSearch = () => {
+  isSearchActive.value = true;
+};
+
+const closeSearch = () => {
+  isSearchActive.value = false;
+  searchQuery.value = '';
+};
+
+const handleKeydown = (e) => {
+  if (e.key === 'Escape') {
+    closeSearch();
+  }
+};
 
 const isScrolled = ref(false);
-
 const handleScroll = () => {
   isScrolled.value = window.scrollY > 10;
 };
 
 onMounted(() => {
   window.addEventListener('scroll', handleScroll);
+  window.addEventListener('keydown', handleKeydown);
 });
 
 onBeforeUnmount(() => {
   window.removeEventListener('scroll', handleScroll);
+  window.removeEventListener('keydown', handleKeydown);
 });
 </script>
 
 <template>
-  <header class="navbar" :class="{ 'scrolled': isScrolled }">
+  <header class="navbar" :class="{ 'scrolled': isScrolled, 'search-active': isSearchActive }">
     <div class="container">
       <a href="/" class="logo">
         <img class="favicon-ctn" src="/public/images/image.png" alt="">
@@ -30,28 +74,35 @@ onBeforeUnmount(() => {
         <a href="#contact">Liên hệ</a>
       </nav>
       <div class="nav-actions">
+        <div class="search-container">
+          <input 
+          type="text" 
+          class="search-bar" 
+          placeholder="Tìm kiếm sản phẩm..." 
+          v-model="searchQuery"
+          @focus="openSearch"
+          >
+          <i class="fa-solid fa-magnifying-glass search-icon" @click="openSearch"></i>
+        </div>
+        
+        <button class="action-icon mobile-search-trigger" @click="openSearch">
+           <i class="fa-solid fa-magnifying-glass"></i>
+       </button>
+
         <RouterLink to="/admin" class="action-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M16 18a4 4 0 0 0-8 0a4 4 0 0 0 8 0m-2-8a6 6 0 1 0-12 0a6 6 0 0 0 12 0M2 22s2-4 6-4s4 2 6 2s4-2 6-2" />
-          </svg>
+          <i class="fa-solid fa-user-secret"></i>
         </RouterLink>
+
       </div>
-      <!-- <div class="nav-actions">
-        <input type="text" class="search-bar" placeholder="Tìm kiếm sản phẩm...">
-        <RouterLink to="/admin" class="action-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M16 18a4 4 0 0 0-8 0a4 4 0 0 0 8 0m-2-8a6 6 0 1 0-12 0a6 6 0 0 0 12 0M2 22s2-4 6-4s4 2 6 2s4-2 6-2" />
-          </svg>
-        </RouterLink>
-        <a href="#" class="action-icon cart-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M17 18a2 2 0 0 1-2 2a2 2 0 0 1-2-2c0-1.11.89-2 2-2s2 .89 2 2M1 2h3.27l.94 2H20a1 1 0 0 1 1 1c0 .17-.05.34-.12.5l-3.58 6.47c-.34.61-1 1.03-1.75 1.03H8.1l-.9 1.63l-.03.12a.25.25 0 0 0 .25.25H19v2H7a2 2 0 0 1-2-2c0-.35.09-.68.24-1L6 11.59l-1.35-2.45L3 4H1V2m6 16a2 2 0 0 1-2 2a2 2 0 0 1-2-2c0-1.11.89-2 2-2s2 .89 2 2Z"/></svg>
-          <span class="cart-badge">3</span>
-        </a>
-      </div> -->
     </div>
   </header>
+  <SearchOverlay 
+    :is-active="isSearchActive" 
+    :results="searchResults" 
+    :is-loading="isLoading" 
+    v-model="searchQuery"
+    @close="closeSearch" 
+  />
 </template>
 
 <style scoped>
@@ -62,7 +113,7 @@ onBeforeUnmount(() => {
   width: 100%;
   padding: 15px 0;
   background-color: var(--white-color);
-  z-index: 1000;
+  z-index: 100;
   transition: all var(--transition-speed) ease;
   border-bottom: 1px solid transparent;
   height: 72px;
@@ -129,62 +180,89 @@ onBeforeUnmount(() => {
   transform: scaleX(1);
 }
 
-/* .nav-actions {
+.nav-actions {
   display: flex;
   align-items: center;
   gap: 15px;
 }
 
-.search-bar {
-  border: 1px solid #E5E7EB;
-  border-radius: var(--border-radius);
-  padding: 8px 15px;
-  width: 250px;
-  transition: all var(--transition-speed) ease;
-}
-
-.search-bar:focus {
-  outline: none;
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
-}
-
 .action-icon {
-  position: relative;
   color: var(--secondary-color);
   transition: color var(--transition-speed) ease;
   text-decoration: none;
+  border: none;
+  cursor: pointer;
+  background: none;
 }
 
 .action-icon:hover {
   color: var(--primary-color);
 }
 
-.cart-badge {
-  position: absolute;
-  top: -5px;
-  right: -8px;
-  background-color: var(--primary-color);
-  color: var(--white-color);
-  border-radius: 50%;
-  width: 18px;
-  height: 18px;
-  font-size: 12px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-weight: 500;
-} */
+.fa-user-secret {
+  font-size: 24px;
+}
 
-@media (max-width: 800px) {
+.search-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-bar {
+  border: 1px solid #E5E7EB;
+  border-radius: var(--border-radius); 
+  padding: 8px 15px 8px 40px;
+  width: 250px;
+  transition: all var(--transition-speed) ease;
+  background-color: #f3f4f6;
+}
+
+.search-bar:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+  background-color: var(--white-color);
+}
+
+.search-icon {
+  position: absolute;
+  left: 15px;
+  color: var(--secondary-color);
+  transition: all var(--transition-speed) ease;
+  pointer-events: none;
+}
+
+.search-bar:focus + .search-icon {
+  color: var(--primary-color);
+}
+
+.mobile-search-trigger {
+  display: none;
+  font-size: 1.2rem;
+}
+
+@media (max-width: 960px) {
   .nav-links {
-    gap: 20px;
+    display: none;
   }
 }
 
-@media (max-width: 700px) {
-  .nav-links {
+@media (max-width: 768px) {
+  .nav-actions {
+    gap: 10px;
+  }
+
+  .search-container {
     display: none;
+  }
+
+  .mobile-search-trigger {
+    display: block; 
+  }
+
+  .fa-user-secret, .mobile-search-trigger .fa-magnifying-glass {
+    font-size: 22px;
   }
 }
 </style>

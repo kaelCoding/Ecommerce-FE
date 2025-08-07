@@ -1,19 +1,23 @@
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { get_productID_api, get_products_api } from '@/services/product';
 import { submit_order_api } from '@/services/order';
+import { formatPrice } from '@/composables/useUtils';
+import { useNotification } from '@/composables/useNotification';
 import ProductCard from '@/components/product/Card.vue';
+import LoadingSpinner from '../common/LoadingSpinner.vue';
 
 const route = useRoute();
+const { showNotification } = useNotification();
 
 const product = ref(null);
 const allproducts = ref([])
 
 const isLoading = ref(true);
+const isSubmitting = ref(false)
 
 const quantity = ref(1);
-
 const mainImage = ref('');
 const isCheckoutModalOpen = ref(false);
 const customerInfo = ref({
@@ -23,25 +27,26 @@ const customerInfo = ref({
     paymentMethod: 'cod',
 });
 
-const formatPrice = (value) => {
-    if (!value) return '';
-    return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(value);
-};
-
 const incrementQuantity = () => quantity.value++;
 const decrementQuantity = () => {
     if (quantity.value > 1) quantity.value--;
 };
 
-const openCheckoutModal = () => {
-    isCheckoutModalOpen.value = true;
-};
+const openCheckoutModal = () => { isCheckoutModalOpen.value = true; };
+const closeCheckoutModal = () => { isCheckoutModalOpen.value = false; };
 
-const closeCheckoutModal = () => {
-    isCheckoutModalOpen.value = false;
+const resetForm = () => {
+    customerInfo.value = {
+        name: '',
+        phone: '',
+        address: '',
+        paymentMethod: 'cod',
+    };
+    quantity.value = 1;
 };
 
 const submitOrder = async () => {
+    isSubmitting.value = true
     const orderPayload = {
         productName: product.value.name,
         quantity: quantity.value,
@@ -54,37 +59,30 @@ const submitOrder = async () => {
 
     try {
         await submit_order_api(orderPayload);
-        alert('Đơn hàng của bạn đã được gửi thành công! Chúng tôi sẽ liên hệ để xác nhận.');
+        showNotification('Đặt hàng thành công! Chúng tôi sẽ sớm liên hệ với bạn để xác nhận.')
         closeCheckoutModal();
-        customerInfo.value = {
-            name: '',
-            phone: '',
-            address: '',
-            paymentMethod: 'cod',
-        };
+        resetForm();
     } catch (err) {
         console.error("Failed to submit order:", err);
-        alert('Gửi đơn hàng thất bại. Vui lòng thử lại.');
+        showNotification('Gửi đơn hàng thất bại. Vui lòng thử lại.', 'error');
+    } finally {
+        isSubmitting.value = false;
     }
 };
 
-const getProducts = async () => {
-    await get_products_api().then((res) => {
-        allproducts.value = res
-    })
-}
-
-onMounted(async () => {
-    const productId = route.params.id;
+const fetchProductData = async (productId) => {
     if (!productId) {
         isLoading.value = false;
         return;
     }
+    isLoading.value = true;
     try {
-        const fetchedProduct = await get_productID_api(productId);
-        await getProducts();
-
+        const [fetchedProduct, fetchedAllProducts] = await Promise.all([
+            get_productID_api(productId),
+            get_products_api() //Need change after
+        ]);
         product.value = fetchedProduct;
+        allproducts.value = fetchedAllProducts;
 
         if (product.value.image_urls?.length > 0) {
             mainImage.value = product.value.image_urls[0];
@@ -92,8 +90,20 @@ onMounted(async () => {
     } catch (err) {
         console.error("Failed to fetch product data:", err);
         product.value = null;
+        showNotification('Không thể tải dữ liệu sản phẩm.', 'error');
     } finally {
         isLoading.value = false;
+    }
+};
+
+onMounted(async () => {
+    fetchProductData(route.params.id);
+});
+
+watch(() => route.params.id, (newId) => {
+    if (newId) {
+        window.scrollTo(0, 0);
+        fetchProductData(newId);
     }
 });
 
@@ -104,7 +114,7 @@ const handleCheckout = () => {
 </script>
 
 <template>
-    <div v-if="isLoading" class="page-state">Đang tải...</div>
+    <LoadingSpinner v-if="isLoading" message="Đang tải..." />
     <div v-else-if="!product" class="page-state">Không tìm thấy sản phẩm.</div>
     <div v-else class="container">
         <main class="main-content-grid">
@@ -162,45 +172,54 @@ const handleCheckout = () => {
                 <div class="checkout-modal">
                     <div class="modal-header">
                         <h3>Thông tin đặt hàng</h3>
+                        <button class="close-btn" @click="closeCheckoutModal">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
                     </div>
                     <div class="modal-body">
-                        <p class="summary">Sản phẩm: **{{ product.name }}**</p>
-                        <p class="summary">Số lượng: **{{ quantity }}**</p>
-                        <p class="summary">Tổng tiền: **{{ formatPrice(product.price * quantity) }}**</p>
-
-                        <form @submit.prevent="submitOrder">
-                            <div class="form-group">
-                                <label for="name">Họ và tên</label>
-                                <input id="name" type="text" v-model="customerInfo.name" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="phone">Số điện thoại</label>
-                                <input id="phone" type="tel" v-model="customerInfo.phone" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="address">Địa chỉ</label>
-                                <textarea id="address" v-model="customerInfo.address" required></textarea>
+                        <LoadingSpinner v-if="isSubmitting" message="Đang xử lý đơn hàng..." />
+                        <div v-else>
+                            <div class="order-summary">
+                                <p>Sản phẩm: <strong>{{ product.name }}</strong></p>
+                                <p>Số lượng: <strong>{{ quantity }}</strong></p>
+                                <p>Tổng tiền: <strong>{{ formatPrice(product.price * quantity) }}</strong></p>
                             </div>
 
-                            <div class="form-group">
-                                <label>Phương thức thanh toán</label>
-                                <div class="payment-options">
-                                    <div class="radio-label">
-                                        <input type="radio" v-model="customerInfo.paymentMethod" value="cod">
-                                        <span>Thanh toán khi nhận hàng</span>
-                                    </div>
-                                    <div class="radio-label">
-                                        <input type="radio" v-model="customerInfo.paymentMethod" value="bank_transfer">
-                                        <span>Chuyển khoản ngân hàng</span>
+                            <form @submit.prevent="submitOrder">
+                                <div class="form-group">
+                                    <label for="name">Họ và tên</label>
+                                    <input id="name" type="text" v-model="customerInfo.name" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="phone">Số điện thoại</label>
+                                    <input id="phone" type="tel" v-model="customerInfo.phone" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="address">Địa chỉ</label>
+                                    <textarea id="address" v-model="customerInfo.address" required></textarea>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Phương thức thanh toán</label>
+                                    <div class="payment-options">
+                                        <div class="radio-label">
+                                            <input type="radio" v-model="customerInfo.paymentMethod" value="cod">
+                                            <span>Thanh toán khi nhận hàng</span>
+                                        </div>
+                                        <div class="radio-label">
+                                            <input type="radio" v-model="customerInfo.paymentMethod"
+                                                value="bank_transfer">
+                                            <span>Chuyển khoản ngân hàng</span>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div class="form-actions">
-                                <button type="button" class="btn" @click="closeCheckoutModal">Hủy</button>
-                                <button type="submit" class="btn-primary">Đặt hàng</button>
-                            </div>
-                        </form>
+                                <div class="form-actions">
+                                    <button type="button" class="btn" @click="closeCheckoutModal">Hủy</button>
+                                    <button type="submit" class="btn-primary">Xác nhận đặt hàng</button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -294,7 +313,6 @@ const handleCheckout = () => {
     margin: 24px 0;
 }
 
-/* PANEL THÔNG TIN */
 .info-panel {
     display: flex;
     flex-direction: column;
@@ -333,6 +351,10 @@ const handleCheckout = () => {
 .btn-primary {
     flex-grow: 1;
     gap: 10px;
+}
+
+.order-summary {
+    margin-bottom: 12px;
 }
 
 .trust-bar {
@@ -375,7 +397,6 @@ const handleCheckout = () => {
     border-top: 1px solid black;
 }
 
-/* RESPONSIVE */
 @media (max-width: 992px) {
     .main-content-grid {
         grid-template-columns: 1fr;

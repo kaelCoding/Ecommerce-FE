@@ -72,6 +72,18 @@ img {
   background-color: #2563eb;
 }
 
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: var(--gray-color);
+  transition: color 0.2s ease;
+}
+.close-btn:hover {
+  color: var(--secondary-color);
+}
+
 @keyframes fadeInUp {
   from {
     opacity: 0;

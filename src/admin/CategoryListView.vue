@@ -1,42 +1,63 @@
 <script setup>
 import { useRouter } from 'vue-router';
-import { get_category_api } from '@/services/category';
-import { ref } from 'vue';
-import { onBeforeMount } from 'vue';
-import { delete_category_api, update_category_api } from '@/services/category';
+import { get_category_api, delete_category_api } from '@/services/category';
+import { onBeforeMount, ref } from 'vue';
+import { useNotification } from '@/composables/useNotification';
+import LoadingSpinner from '@/components/common/LoadingSpinner.vue';
+import ConfirmationModal from '@/components/common/ConfirmationModal.vue';
 
+const { showNotification } = useNotification();
 const router = useRouter();
+const isLoading = ref(true)
+
+const isConfirmModalVisible = ref(false);
+const categoryIdToDelete = ref(null); 
 
 const categorys = ref([])
 
 onBeforeMount(async () => {
   await getCategory()
-  console.log(categorys.value)
+  isLoading.value = false
 })
 
 const getCategory = async () => {
-  await get_category_api().then((res) => {
-    categorys.value = res
-  })
+  try {
+    const res = await get_category_api();
+    categorys.value = res;
+  } catch (error) {
+    console.error("Failed to get categorys:", error);
+    showNotification("Tải danh sách danh mục thất bại.", "error");
+  }
 }
 
 const goToEditCategory = (categoryId) => {
   router.push({ name: 'admin-categories-edit', params: { id: categoryId } });
 };
 
-const handleDeleteCategory = async (categoryId) => {
-  if (!window.confirm("Bạn có chắc chắn muốn xóa danh mục này không?")) {
-    return;
-  }
+const handleDeleteCategory = (categoryId) => {
+  categoryIdToDelete.value = categoryId;
+  isConfirmModalVisible.value = true; 
+};
+
+const confirmDelete = async () => {
+  isConfirmModalVisible.value = false;
+  if (!categoryIdToDelete.value) return;
 
   try {
-    await delete_category_api(categoryId);
-    categorys.value = categorys.value.filter(category => category.ID !== categoryId);
-    alert("Xóa sản phẩm thành công!");
+    await delete_category_api(categoryIdToDelete.value);
+    categorys.value = categorys.value.filter(category => category.ID !== categoryIdToDelete.value);
+    showNotification("Xóa danh mục thành công!");
   } catch (error) {
-    console.error("Failed to delete product:", error);
-    alert("Xóa sản phẩm thất bại. Vui lòng thử lại.");
+    console.error("Failed to delete category:", error);
+    showNotification("Xóa danh mục thất bại. Vui lòng thử lại.", "error");
+  } finally {
+    categoryIdToDelete.value = null;
   }
+};
+
+const cancelDelete = () => {
+  isConfirmModalVisible.value = false;
+  categoryIdToDelete.value = null;
 };
 </script>
 
@@ -61,16 +82,17 @@ const handleDeleteCategory = async (categoryId) => {
               <th>Hành động</th>
             </tr>
           </thead>
-          <tbody>
+          <LoadingSpinner v-if="isLoading" message="Đang tải..."/>
+          <tbody v-else>
             <tr v-for="category in categorys" :key="category.id">
               <td>{{ category.ID }}</td>
               <td>{{ category.name }}</td>
               <td>
                 <div class="table-actions center">
-                  <button class="btn btn-primary" @click="goToEditCategory(category.ID)">
+                  <button class="btn-primary" @click="goToEditCategory(category.ID)">
                     <i class="fas fa-edit"></i> <span>Sửa</span>
                   </button>
-                  <button class="btn btn-primary" @click="handleDeleteCategory(category.ID)">
+                  <button class="btn-primary" @click="handleDeleteCategory(category.ID)">
                     <i class="fas fa-trash"></i> <span>Xóa</span>
                   </button>
                 </div>
@@ -80,6 +102,9 @@ const handleDeleteCategory = async (categoryId) => {
         </table>
       </div>
     </div>
+    <ConfirmationModal :show="isConfirmModalVisible" title="Xác nhận xóa danh mục"
+      message="Bạn có chắc chắn muốn xóa danh mục này không? Hành động này không thể hoàn tác." @confirm="confirmDelete"
+      @cancel="cancelDelete" />
   </div>
 </template>
 

@@ -3,12 +3,15 @@ import { onMounted, ref } from 'vue';
 import { get_products_api } from '@/services/product';
 import { get_category_api } from '@/services/category';
 import { get_users_api } from '@/services/auth';
+import { useNotification } from '@/composables/useNotification';
+import LoadingSpinner from '@/components/common/LoadingSpinner.vue';
+
+const { showNotification } = useNotification();
 
 const products = ref([]);
 const categories = ref([]);
 const users = ref([]);
 const isLoading = ref(true);
-const error = ref(null);
 
 onMounted(async () => {
   try {
@@ -24,7 +27,7 @@ onMounted(async () => {
 
   } catch (err) {
     console.error("Failed to fetch dashboard data:", err);
-    error.value = "Không thể tải dữ liệu tổng quan.";
+    showNotification("Không thể tải dữ liệu tổng quan.", "error")
   } finally {
     isLoading.value = false;
   }
@@ -37,9 +40,7 @@ onMounted(async () => {
       <h1>Tổng Quan</h1>
     </div>
 
-    <div v-if="isLoading">Đang tải dữ liệu...</div>
-    <div v-else-if="error" style="color: red;">{{ error }}</div>
-
+    <LoadingSpinner v-if="isLoading" message="Đang tải dữ liệu..."/>
     <div v-else class="dashboard-grid">
       <div class="stat-card">
         <h3>Sản phẩm</h3>

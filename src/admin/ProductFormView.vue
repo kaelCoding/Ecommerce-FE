@@ -3,12 +3,15 @@ import { ref, onMounted, computed, reactive } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { add_product_api, get_productID_api, update_product_api } from '@/services/product';
 import { get_category_api } from '@/services/category';
+import { useNotification } from '@/composables/useNotification';
+import LoadingSpinner from '@/components/common/LoadingSpinner.vue';
+
+const { showNotification } = useNotification();
 
 const route = useRoute()
 const router = useRouter()
 
 const isLoading = ref(false);
-const error = ref(null);
 const categories = ref([])
 
 const selectedFiles = ref([]);
@@ -23,7 +26,7 @@ onMounted(async () => {
         categories.value = await get_category_api();
     } catch (err) {
         console.error("Failed to fetch categories:", err);
-        error.value = "Không thể tải danh sách danh mục.";
+        showNotification("Không thể tải danh sách danh mục.", "error")
     }
 
     if (isEditing.value) {
@@ -40,7 +43,7 @@ onMounted(async () => {
             existingImageUrls.value = fetchedProduct.image_urls || [];
         } catch (err) {
             console.error("Failed to fetch product data:", err);
-            error.value = "Không tìm thấy sản phẩm.";
+            showNotification("Không tìm thấy sản phẩm.", "error")
         } finally {
             isLoading.value = false;
         }
@@ -62,12 +65,11 @@ const handleFileChange = (event) => {
 
 const handleSubmit = async () => {
     if (!isEditing.value && selectedFiles.value.length === 0) {
-        error.value = "Please select at least one image.";
+        showNotification("Please select at least one image.", "error")
         return;
     }
 
     isLoading.value = true;
-    error.value = null;
 
     const formData = new FormData();
 
@@ -85,15 +87,15 @@ const handleSubmit = async () => {
     try {
         if (isEditing.value) {
             await update_product_api(route.params.id, formData);
-            console.log("update product oke")
+            showNotification("Cập nhật sản phẩm thành công!")
         } else {
             await add_product_api(formData);
-            console.log("add product oke")
+            showNotification("Thêm sản phẩm thành công!")
         }
         router.push({ name: 'admin-products' });
     } catch (err) {
         console.error('Submit failed:', err);
-        error.value = err.message || 'Đã có lỗi xảy ra.';
+        showNotification("Đã có lỗi xảy ra.", "error")
     } finally {
         isLoading.value = false;
     }
@@ -106,7 +108,7 @@ const handleSubmit = async () => {
             <h1>{{ pageTitle }}</h1>
         </div>
         <div class="content-area">
-            <div v-if="isLoading" class="loading-indicator">Đang tải...</div>
+            <LoadingSpinner v-if="isLoading" message="Đang tải..."/>
             <form v-else @submit.prevent="handleSubmit">
                 <div class="form-group">
                     <label for="name">Tên sản phẩm</label>
@@ -145,8 +147,6 @@ const handleSubmit = async () => {
                         }}</label>
                     <input type="file" id="images" @change="handleFileChange" multiple accept="image/*" />
                 </div>
-
-                <div v-if="error" class="error-message">{{ error }}</div>
 
                 <div class="form-action-buttons">
                     <button type="button" class="btn" @click="router.back()">Hủy</button>
@@ -189,16 +189,6 @@ const handleSubmit = async () => {
 
 .btn {
     width: auto !important;
-}
-
-.error-message {
-    color: red;
-    margin-bottom: 1rem;
-}
-
-.loading-indicator {
-    text-align: center;
-    padding: 2rem;
 }
 
 .existing-images {

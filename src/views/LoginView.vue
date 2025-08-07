@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from "vue"
-import { get_auth_info, save_token_local, get_auth_user } from "@/stores/auth";
+import { get_auth_info, save_token_local } from "@/stores/auth";
 import { useRoute, useRouter } from "vue-router"
 import { auth_login_api } from "@/services/auth";
 
