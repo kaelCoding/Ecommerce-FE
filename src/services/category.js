@@ -8,7 +8,7 @@ export const add_category_api = async (data) => {
     }
 }
 
-export const get_category_api = async () => {
+export const get_categories_api = async () => {
     try {
         return await api("GET", "/category")
     } catch (error) {
@@ -39,3 +39,12 @@ export const delete_category_api = async (id) => {
         throw error
     }
 }
+
+export const get_products_by_category_api = async (categoryId) => {
+    try {
+        return await api("GET", `/category/${categoryId}/products`);
+    } catch (error) {
+        console.error(`Error fetching products for category ${categoryId}:`, error);
+        return [];
+    }
+};

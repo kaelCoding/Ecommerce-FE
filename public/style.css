@@ -11,6 +11,15 @@
   --transition-speed: 300ms;
 }
 
+html[data-theme="dark"] {
+  --primary-color: #3b82f6;
+  --secondary-color: #e5e7eb;
+  --light-gray-color: #374151;
+  --text-color: #d1d5db;
+  --white-color: #111827;
+  --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -172,15 +181,6 @@ img {
 }
 
 /* DARK MODE */
-html[data-theme="dark"] {
-  --primary-color: #3b82f6;
-  --secondary-color: #e5e7eb;
-  --light-gray-color: #374151;
-  --text-color: #d1d5db;
-  --white-color: #111827;
-  --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-}
-
 html[data-theme="dark"] .navbar,
 html[data-theme="dark"] .checkout-modal {
   background-color: #1f2937;
@@ -191,7 +191,6 @@ html[data-theme="dark"] .navbar.scrolled {
   border-bottom-color: #374151;
 }
 
-html[data-theme="dark"] .hero-subtitle,
 html[data-theme="dark"] .logo,
 html[data-theme="dark"] .nav-links a,
 html[data-theme="dark"] .action-icon,

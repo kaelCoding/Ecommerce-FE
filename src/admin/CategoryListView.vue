@@ -1,6 +1,6 @@
 <script setup>
 import { useRouter } from 'vue-router';
-import { get_category_api, delete_category_api } from '@/services/category';
+import { get_categories_api, delete_category_api } from '@/services/category';
 import { onBeforeMount, ref } from 'vue';
 import { useNotification } from '@/composables/useNotification';
 import LoadingSpinner from '@/components/common/LoadingSpinner.vue';
@@ -22,7 +22,7 @@ onBeforeMount(async () => {
 
 const getCategory = async () => {
   try {
-    const res = await get_category_api();
+    const res = await get_categories_api();
     categorys.value = res;
   } catch (error) {
     console.error("Failed to get categorys:", error);

@@ -1,26 +1,42 @@
 <script setup>
 import ProductCard from '@/components/product/Card.vue';
-import { get_products_api } from '@/services/product';
+import LoadingSpinner from '@/components/common/LoadingSpinner.vue';
+import UserFeedbackForm from '@/components/common/UserFeedbackForm.vue';
 import { onBeforeMount, ref } from 'vue';
 import { useRouter } from 'vue-router';
-import LoadingSpinner from '@/components/common/LoadingSpinner.vue';
+import { get_categories_api, get_products_by_category_api } from '@/services/category';
 
-const products = ref([]);
 const router = useRouter();
+const isLoading = ref(true);
 
-const isLoding = ref(true)
+const categoriesWithProducts = ref([]);
 
 onBeforeMount(async () => {
-  isLoding.value = true
-  await getProducts()
-  isLoding.value = false
+  await fetchData();
 })
 
-const getProducts = async () => {
-  await get_products_api().then((res) => {
-    products.value = res
-  })
-}
+const fetchData = async () => {
+  isLoading.value = true;
+  try {
+    const categories = await get_categories_api();
+    if (!categories || categories.length === 0) return;
+
+    const productPromises = categories.map(category =>
+      get_products_by_category_api(category.ID).then(products => ({
+        ...category,
+        products: products
+      }))
+    );
+
+    const results = await Promise.all(productPromises);
+    categoriesWithProducts.value = results.filter(cat => cat.products && cat.products.length > 0);
+
+  } catch (error) {
+    console.error("Failed to fetch data for home view:", error);
+  } finally {
+    isLoading.value = false;
+  }
+};
 
 const goToProductList = () => {
   router.push({ name: 'product-list' });
@@ -32,21 +48,61 @@ const goToProductList = () => {
     <section class="hero-section">
       <div class="container">
         <button @click="goToProductList" class="btn-primary">MUA NGAY !</button>
-        <p class="hero-subtitle">Hóa thân thành huyền thoại, chiến đấu vì công lý. Sưu tập ngay các mô hình siêu nhân mạnh mẽ nhất!</p>
       </div>
     </section>
 
-    <main class="container product-section">
-      <h2 class="page-title">Sản phẩm nổi bật</h2> <br>
-      <LoadingSpinner v-if="isLoding" message="Đang tải..."/>
-      <div v-else class="product-grid">
-        <ProductCard v-for="product in products" :key="product.ID" :product="product" />
+    <section class="intro-section">
+      <div class="container intro-content">
+        <div class="intro-image-wrapper">
+          <img src="/public/images/background.jpg" alt="Các mô hình siêu nhân chất lượng cao" class="intro-image" />
+        </div>
+        <div class="intro-text">
+          <h2 class="section-title">
+            <span>Thế Giới Siêu Nhân</span>
+            <span>Nơi Đam Mê Hội Tụ !</span>
+          </h2>
+          <p>
+            Chúng tôi chuyên cung cấp các mô hình siêu nhân chất lượng cao, từ các series huyền thoại đến những nhân vật
+            mới nhất. Mỗi sản phẩm đều được chọn lọc kỹ lưỡng, đảm bảo độ chi tiết và sự chân thực, mang đến trải nghiệm
+            sưu tầm tuyệt vời nhất cho những người hâm mộ. Khám phá ngay bộ sưu tập của chúng tôi và tìm thấy người hùng
+            của riêng bạn!
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <LoadingSpinner v-if="isLoading" message="Đang tải dữ liệu..." />
+    <main v-else class="container">
+      <div class="products-ctn">
+        <section v-for="categoryData in categoriesWithProducts" :key="categoryData.ID" class="product-section">
+          <h2 class="page-title">{{ categoryData.name }}</h2>
+          <div class="product-grid">
+            <ProductCard v-for="product in categoryData.products" :key="product.ID" :product="product" />
+          </div>
+        </section>
+
+        <div v-if="!isLoading && categoriesWithProducts.length === 0" class="text-center">
+          <p>Không có sản phẩm nào để hiển thị.</p>
+        </div>
       </div>
     </main>
+
+    <br><br>
+    <section class="container">
+      <UserFeedbackForm/>
+    </section>
+    <br><br>
   </div>
 </template>
 
 <style scoped>
+/* GENERAL STYLES & LAYOUT */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
 .hero-section {
   background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('/public/images/SUPER.jpg') no-repeat center center/cover;
   height: 60vh;
@@ -58,28 +114,80 @@ const goToProductList = () => {
   animation: fadeIn 1s ease-in-out;
 }
 
-.hero-subtitle {
-  font-size: 1.25rem;
-  margin-bottom: 2rem;
-  font-weight: 500;
-  margin-top: 32px;
+.intro-section {
+  padding: 80px 0;
+  background-color: var(--white-color);
+  text-align: center;
+}
+
+.intro-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+}
+
+.intro-image-wrapper {
+  width: 100%;
+  max-width: 600px;
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  box-shadow: var(--box-shadow);
+  animation: fadeInUp 1s ease-in-out;
+}
+
+.intro-image {
+  width: 100%;
+  height: auto;
+  display: block;
+  transition: transform var(--transition-speed);
+}
+
+.intro-image:hover {
+  transform: scale(1.05);
+}
+
+/* INTRO-TEXT STYLES - RESPONSIVE & OPTIMIZED */
+.intro-text {
+  max-width: 600px;
+}
+
+.intro-text .section-title {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  margin-bottom: 20px;
+  color: var(--secondary-color);
+  font-size: clamp(1.8rem, 4vw, 2.5rem);
+}
+
+.intro-text p {
+  font-size: clamp(1rem, 2.5vw, 1.1rem);
+  line-height: 1.6;
+  color: var(--text-color);
+}
+
+/* PRODUCT SECTION STYLES */
+.products-ctn {
+  border-bottom: 1px solid var(--light-gray-color);
+  border-top: 1px solid var(--light-gray-color);
+  padding-top: 32px;
 }
 
 .product-section {
-  padding-top: 60px;
-  padding-bottom: 60px;
+  margin-bottom: 4rem;
 }
 
-.section-title {
+.page-title {
   text-align: center;
-  font-size: 2rem;
+  font-size: clamp(1.5rem, 4vw, 2rem);
   font-weight: 600;
   margin-bottom: 40px;
   color: var(--secondary-color);
   position: relative;
 }
 
-.section-title::after {
+.page-title::after {
   content: '';
   position: absolute;
   bottom: -10px;
@@ -90,14 +198,41 @@ const goToProductList = () => {
   background-color: var(--primary-color);
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+/* MEDIA QUERIES */
+@media (min-width: 768px) {
+  .intro-content {
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
   }
 
-  to {
-    opacity: 1;
+  .intro-text {
+    text-align: left;
   }
+}
+
+@media (max-width: 768px) {
+  .intro-section {
+    padding: 40px 0;
+  }
+  .intro-content {
+    gap: 20px;
+  }
+  .hero-section {
+    height: 40vh;
+  }
+}
+
+/* ANIMATIONS */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 @keyframes fadeInUp {
@@ -105,7 +240,6 @@ const goToProductList = () => {
     opacity: 0;
     transform: translateY(20px);
   }
-
   to {
     opacity: 1;
     transform: translateY(0);

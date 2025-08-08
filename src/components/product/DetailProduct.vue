@@ -229,256 +229,323 @@ const handleCheckout = () => {
 
 <style scoped>
 .container {
-    margin: 40px auto;
+  margin: 40px auto;
+  padding: 0 20px;
 }
 
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+/* --- PRODUCT DETAIL PAGE LAYOUT --- */
 .main-content-grid {
-    display: grid;
-    grid-template-columns: 7fr 3fr;
-    gap: 60px;
-    width: 100%;
+  display: grid;
+  grid-template-columns: 7fr 3fr;
+  gap: 60px;
 }
 
 .image-gallery {
-    flex: 1 1 50%;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
 
 .main-image-wrapper {
-    display: flex;
-    aspect-ratio: 1 / 0.7;
-    background-color: var(--light-gray-color);
-    border-radius: var(--border-radius-lg);
-    overflow: hidden;
-    position: relative;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  aspect-ratio: 1 / 0.7;
+  background-color: var(--light-gray-color);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  box-shadow: var(--box-shadow);
 }
 
 .main-image-wrapper img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.3s ease;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
 }
 
 .main-image-wrapper img:hover {
-    transform: scale(1.05);
+  transform: scale(1.05);
 }
 
 .thumbnail-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-    gap: 12px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  gap: 12px;
 }
 
 .thumbnail-list img {
-    width: 100%;
-    aspect-ratio: 1/1;
-    border-radius: 8px;
-    border: 2px solid var(--border-color);
-    cursor: pointer;
-    object-fit: cover;
-    transition: all 0.2s ease;
+  width: 100%;
+  aspect-ratio: 1/1;
+  border-radius: 8px;
+  border: 2px solid var(--border-color);
+  cursor: pointer;
+  object-fit: cover;
+  transition: all 0.2s ease;
 }
 
 .thumbnail-list img.active,
 .thumbnail-list img:hover {
-    border-color: var(--primary-color);
-    opacity: 1;
+  border-color: var(--primary-color);
+  opacity: 1;
 }
 
+/* --- INFO PANEL STYLES (RESPONSIVE) --- */
 .product-brand {
-    font-size: 0.9rem;
-    font-weight: 500;
-    color: var(--text-light);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 8px;
+  font-size: clamp(0.8rem, 2vw, 0.9rem);
+  font-weight: 500;
+  color: var(--text-light);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
 }
 
 .product-title {
-    font-size: 2.8rem;
-    font-weight: 700;
-    color: var(--text-dark);
-    line-height: 1.2;
-    margin: 0;
+  font-size: clamp(2rem, 5vw, 2.8rem);
+  font-weight: 700;
+  color: var(--text-dark);
+  line-height: 1.2;
 }
 
 .product-price {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: var(--primary-color);
-    margin: 24px 0;
-}
-
-.info-panel {
-    display: flex;
-    flex-direction: column;
+  font-size: clamp(2rem, 5vw, 2.5rem);
+  font-weight: 700;
+  color: var(--primary-color);
+  margin: 24px 0;
 }
 
 .actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 16px;
-    margin-bottom: 32px;
-    align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 32px;
+  align-items: center;
 }
 
 .quantity-selector {
-    display: flex;
-    align-items: center;
-    border: 2px solid var(--border-color);
-    border-radius: var(--border-radius);
-    overflow: hidden;
+  display: flex;
+  align-items: center;
+  border: 2px solid var(--border-color);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  height: clamp(40px, 5vh, 48px);
 }
 
 .quantity-selector input {
-    width: 50px;
-    height: 48px;
-    text-align: center;
-    background-color: var(--white-color);
-    color: var(--text-color);
-    border: none;
-    font-size: 1.1rem;
-    font-weight: 600;
+  width: clamp(40px, 6vw, 50px);
+  height: 100%;
+  text-align: center;
+  background-color: var(--white-color);
+  color: var(--text-color);
+  border: none;
+  font-size: clamp(0.9rem, 2vw, 1.1rem);
+  font-weight: 600;
 }
 
 .quantity-selector button {
-    background-color: var(--light-gray-color);
-    color: var(--text-color);
-    border: none;
-    width: 40px;
-    height: 48px;
-    font-size: 1.2rem;
-    cursor: pointer;
-    transition: background-color var(--transition-speed);
+  background-color: var(--light-gray-color);
+  color: var(--text-color);
+  border: none;
+  width: clamp(35px, 5vw, 40px);
+  height: 100%;
+  font-size: clamp(1rem, 2.5vw, 1.2rem);
+  cursor: pointer;
+  transition: background-color var(--transition-speed);
 }
 
-
 .quantity-selector button:hover {
-    background-color: #d1d5db;
+  background-color: #d1d5db;
 }
 
 .btn-primary {
-    flex-grow: 1;
-    gap: 10px;
-    height: 48px; 
-}
-
-.order-summary {
-    margin-bottom: 12px;
+  flex-grow: 1;
+  gap: 10px;
+  height: clamp(40px, 5vh, 48px);
+  font-size: clamp(0.9rem, 2vw, 1rem);
 }
 
 .trust-bar {
-    display: flex;
-    flex-flow: column;
-    gap: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
 }
 
 .trust-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    color: var(--text-color);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-color);
+  font-size: clamp(0.9rem, 2vw, 1rem);
 }
 
 .extended-info-grid {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 60px;
-    padding-top: 40px;
-    border-top: 1px solid var(--border-color);
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 60px;
+  padding-top: 32px;
+  margin-top: 60px;
+  border-top: 1px solid var(--light-gray-color);
 }
 
 .description-section h3,
-.specs-section h3,
 .related-products-section h2 {
-    font-size: 1.5rem;
-    color: var(--text-color);
-    margin-bottom: 16px;
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  color: var(--text-color);
+  margin-bottom: 16px;
 }
 
 .description-section p {
-    line-height: 1.8;
-    color: var(--text-color);
+  font-size: clamp(0.9rem, 2vw, 1rem);
+  line-height: 1.8;
+  color: var(--text-color);
 }
 
 .related-products-section {
-    padding-top: 32px;
-    margin-top: 60px;
-    border-top: 1px solid black;
+  padding-top: 32px;
+  margin-top: 60px;
+  border-top: 1px solid var(--light-gray-color);
 }
 
+/* --- CHECKOUT MODAL STYLES (RESPONSIVE) --- */
+.checkout-modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.checkout-modal {
+  background: var(--white-color);
+  border-radius: var(--border-radius);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  width: 90%;
+  max-width: 500px;
+  padding: clamp(20px, 4vw, 30px);
+  transition: all 0.3s ease;
+  transform: scale(1);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.modal-header h3 {
+  font-size: clamp(1.2rem, 3vw, 1.5rem);
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: clamp(1.2rem, 3vw, 1.5rem);
+  cursor: pointer;
+  color: var(--text-light);
+  transition: color var(--transition-speed);
+}
+
+.close-btn:hover {
+  color: var(--primary-color);
+}
+
+.order-summary {
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px dashed var(--border-color);
+}
+
+.order-summary p {
+  font-size: clamp(0.9rem, 2.5vw, 1rem);
+  color: var(--text-color);
+  line-height: 1.5;
+}
+
+.order-summary strong {
+  color: var(--text-dark);
+}
+
+.form-group {
+  margin-bottom: clamp(15px, 3vw, 20px);
+}
+
+label {
+  font-size: clamp(0.9rem, 2.5vw, 1rem);
+  font-weight: 500;
+  color: var(--text-dark);
+  margin-bottom: 5px;
+  display: block;
+}
+
+.form-input {
+  width: 100%;
+  padding: clamp(8px, 2.5vw, 12px);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  font-size: clamp(0.9rem, 2.5vw, 1rem);
+  transition: border-color var(--transition-speed);
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+}
+
+.payment-options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.radio-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: clamp(0.9rem, 2.5vw, 1rem);
+  color: var(--text-color);
+  cursor: pointer;
+}
+
+.radio-label input {
+  transform: scale(1.2);
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.form-actions .btn {
+  padding: clamp(8px, 2.5vw, 12px) clamp(16px, 4vw, 24px);
+  font-size: clamp(0.9rem, 2.5vw, 1rem);
+}
+
+.form-actions .btn-primary {
+  padding: clamp(8px, 2.5vw, 12px) clamp(16px, 4vw, 24px);
+  font-size: clamp(0.9rem, 2.5vw, 1rem);
+}
+
+/* --- MEDIA QUERIES --- */
 @media (max-width: 992px) {
-    .main-content-grid {
-        grid-template-columns: 1fr;
-        gap: 40px;
-    }
-
-    .extended-info-grid {
-        grid-template-columns: 1fr;
-    }
-}
-
-@media (max-width: 768px) {
-    .product-title {
-        font-size: 2.2rem;
-    }
-
-    .product-price {
-        font-size: 2rem;
-    }
-
-    .quantity-selector input {
-        width: 60px;
-        font-size: 1rem;
-    }
-
-    .quantity-selector button {
-        width: 45px;
-        height: 100%;
-        font-size: 1.1rem;
-    }
-
-    .btn-primary {
-        width: 100%;
-        height: 45px;
-        font-size: 1rem;
-        padding: 0;
-    }
-
-    .actions {
-        flex-wrap: nowrap;
-    }
-}
-
-@media (max-width: 480px) {
-    .actions {
-        flex-direction: column;
-        flex-wrap: nowrap;
-        gap: 10px;
-        margin-bottom: 20px;
-    }
-
-    .quantity-selector {
-        height: 40px;
-    }
-
-    .quantity-selector input {
-        width: 50px;
-        font-size: 0.9rem;
-    }
-
-    .quantity-selector button {
-        width: 40px;
-        font-size: 1rem;
-    }
-
-    .btn-primary {
-        height: 40px;
-        font-size: 0.9rem;
-    }
+  .main-content-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  .extended-info-grid {
+    grid-template-columns: 1fr;
+  }
 }
 </style>

@@ -2,7 +2,7 @@
 import { ref, onMounted, computed, reactive } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { add_product_api, get_productID_api, update_product_api } from '@/services/product';
-import { get_category_api } from '@/services/category';
+import { get_categories_api } from '@/services/category';
 import { useNotification } from '@/composables/useNotification';
 import LoadingSpinner from '@/components/common/LoadingSpinner.vue';
 
@@ -23,7 +23,7 @@ const submitButtonText = computed(() => isEditing.value ? 'Cập Nhật' : 'Thê
 
 onMounted(async () => {
     try {
-        categories.value = await get_category_api();
+        categories.value = await get_categories_api();
     } catch (err) {
         console.error("Failed to fetch categories:", err);
         showNotification("Không thể tải danh sách danh mục.", "error")

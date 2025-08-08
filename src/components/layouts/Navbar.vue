@@ -104,7 +104,7 @@ onBeforeUnmount(() => {
   top: 0;
   left: 0;
   width: 100%;
-  padding: 15px 0;
+  padding: clamp(10px, 2vh, 15px) 0; 
   background-color: var(--white-color);
   z-index: 100;
   transition: all var(--transition-speed) ease;
@@ -121,21 +121,22 @@ onBeforeUnmount(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 0 20px; 
 }
 
 .logo {
   display: flex;
   align-items: center;
-  gap: 10px;
-  font-size: 1.5rem;
+  gap: clamp(5px, 2vw, 10px); 
+  font-size: clamp(1.2rem, 3vw, 1.5rem); 
   font-weight: 700;
   color: var(--secondary-color);
   text-decoration: none;
 }
 
 .favicon-ctn {
-  width: 42px;
-  height: 42px;
+  width: clamp(32px, 5vw, 42px); 
+  height: clamp(32px, 5vw, 42px);
   border-radius: 50%;
 }
 
@@ -150,6 +151,7 @@ onBeforeUnmount(() => {
   transition: color var(--transition-speed) ease;
   color: var(--secondary-color);
   text-decoration: none;
+  font-size: clamp(0.9rem, 2vw, 1rem); 
 }
 
 .nav-links a:hover {
@@ -176,7 +178,7 @@ onBeforeUnmount(() => {
 .nav-actions {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: clamp(10px, 3vw, 15px);
 }
 
 .action-icon {
@@ -186,6 +188,7 @@ onBeforeUnmount(() => {
   border: none;
   cursor: pointer;
   background: none;
+  font-size: clamp(1.1rem, 3vw, 1.5rem); 
 }
 
 .action-icon:hover {
@@ -193,10 +196,10 @@ onBeforeUnmount(() => {
 }
 
 .fa-user-secret {
-  font-size: 24px;
   margin-top: 4px;
 }
 
+/* --- SEARCH BAR --- */
 .search-container {
   position: relative;
   display: flex;
@@ -206,10 +209,11 @@ onBeforeUnmount(() => {
 .search-bar {
   border: 1px solid #E5E7EB;
   border-radius: var(--border-radius);
-  padding: 8px 15px 8px 40px;
-  width: 250px;
+  padding: clamp(6px, 2vw, 8px) clamp(10px, 3vw, 15px) clamp(6px, 2vw, 8px) clamp(30px, 6vw, 40px);
+  width: clamp(180px, 25vw, 250px);
   transition: all var(--transition-speed) ease;
   background-color: #f3f4f6;
+  font-size: clamp(0.9rem, 2vw, 1rem);
 }
 
 .search-bar:focus {
@@ -221,7 +225,8 @@ onBeforeUnmount(() => {
 
 .search-icon {
   position: absolute;
-  left: 15px;
+  left: clamp(10px, 3vw, 15px);
+  font-size: clamp(0.9rem, 2vw, 1rem);
   color: var(--secondary-color);
   transition: all var(--transition-speed) ease;
   pointer-events: none;
@@ -233,7 +238,6 @@ onBeforeUnmount(() => {
 
 .mobile-search-trigger {
   display: none;
-  font-size: 1.2rem;
 }
 
 @media (max-width: 960px) {
@@ -243,10 +247,6 @@ onBeforeUnmount(() => {
 }
 
 @media (max-width: 768px) {
-  .nav-actions {
-    gap: 10px;
-  }
-
   .search-container {
     display: none;
   }
@@ -255,9 +255,8 @@ onBeforeUnmount(() => {
     display: block;
   }
 
-  .fa-user-secret,
-  .mobile-search-trigger .fa-searchengin {
-    font-size: 22px;
+  .fa-user-secret, .mobile-search-trigger .fa-searchengin {
+    font-size: clamp(1.2rem, 4vw, 1.5rem);
   }
 
   .fa-searchengin {

@@ -1,7 +1,7 @@
 <script setup>
 import { onMounted, ref } from 'vue';
 import { get_products_api } from '@/services/product';
-import { get_category_api } from '@/services/category';
+import { get_categories_api } from '@/services/category';
 import { get_users_api } from '@/services/auth';
 import { useNotification } from '@/composables/useNotification';
 import LoadingSpinner from '@/components/common/LoadingSpinner.vue';
@@ -17,7 +17,7 @@ onMounted(async () => {
   try {
     const [productsRes, categoriesRes, usersRes] = await Promise.all([
       get_products_api(),
-      get_category_api(),
+      get_categories_api(),
       get_users_api()
     ]);
 
