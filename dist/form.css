@@ -117,6 +117,30 @@ select.form-input {
   color: var(--secondary-color);
 }
 
+.form-switch-text {
+  text-align: center; 
+  margin-top: 1.5rem; 
+  font-size: clamp(0.9rem, 2vw, 1rem);
+  color: var(--secondary-color);
+}
+
+.form-switch-text a {
+  font-weight: 600; 
+  color: var(--primary-color);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.form-switch-text a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 480px) {
+  .form-switch-text {
+    line-height: 1.5; 
+  }
+}
+
 @media (max-width: 480px) {
   .form-container {
     margin: 20px;

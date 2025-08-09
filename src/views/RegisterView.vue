@@ -29,20 +29,22 @@ const register = async () => {
       <form @submit.prevent="register">
         <div class="form-group">
           <label for="fullname">Họ và tên</label>
-          <input v-model="dataRegister.username" type="text" id="fullname" placeholder="Nguyễn Văn A"
+          <input class="form-input" v-model="dataRegister.username" type="text" id="fullname" placeholder="Nguyễn Văn A"
             required>
         </div>
         <div class="form-group">
           <label for="email">Email</label>
-          <input v-model="dataRegister.email" type="email" id="email" placeholder="your@email.com"
+          <input class="form-input" v-model="dataRegister.email" type="email" id="email" placeholder="your@email.com"
             required>
         </div>
         <div class="form-group">
           <label for="password">Mật khẩu</label>
-          <input v-model="dataRegister.password" type="password" id="password" placeholder="••••••••"
+          <input class="form-input" v-model="dataRegister.password" type="password" id="password" placeholder="••••••••"
             required>
         </div>
-        <button type="submit" class="btn-primary">Tạo tài khoản</button>
+        <div class="form-actions">
+          <button type="submit" class="btn-primary">Tạo tài khoản</button>
+        </div>
         <p class="form-switch-text">
           Đã có tài khoản? <router-link to="/login">Đăng nhập</router-link>
         </p>

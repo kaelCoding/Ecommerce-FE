@@ -31,13 +31,13 @@ const { theme, toggleTheme } = useTheme();
 .fa-sun,
 .fa-moon {
   font-size: clamp(1.1rem, 3vw, 1.5rem); 
-  margin-bottom: 2px;
 }
 
 @media (max-width: 768px) {
   .fa-moon,
   .fa-sun {
     font-size: clamp(1.2rem, 4vw, 1.5rem);
+    color: var(--secondary-color);
   }
 }
 </style>

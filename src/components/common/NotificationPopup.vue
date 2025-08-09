@@ -26,15 +26,37 @@ const { notification } = useNotification();
   align-items: center;
   gap: 10px;
   font-weight: 500;
-  z-index: 200;
+  z-index: 2000;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  font-size: clamp(1rem, 2vw, 1.1rem);
+}
+
+.toast-popup i {
+  font-size: 1.2em;
+}
+
+.toast-fade-enter-active,
+.toast-fade-leave-active {
+  transition: all 0.3s ease;
+}
+
+.toast-fade-enter-from,
+.toast-fade-leave-to {
+  opacity: 0;
+  transform: translateY(-20px);
 }
 
 .toast--success {
-  background-color: #4CAF50; 
+  background-color: #4CAF50;
 }
 
 .toast--error {
-  background-color: #F44336; 
+  background-color: #F44336;
+}
+
+@media (max-width: 768px) {
+  .toast-popup {
+    width: 90%; 
+  }
 }
 </style>

@@ -2,7 +2,7 @@ import { api } from "@/models/api";
 
 export const add_category_api = async (data) => {
     try {
-        return await api("POST", "/category", data)
+        return await api("POST", "/api/v1/admin/categories", data)
     } catch (error) {
         throw error
     }
@@ -10,7 +10,7 @@ export const add_category_api = async (data) => {
 
 export const get_categories_api = async () => {
     try {
-        return await api("GET", "/category")
+        return await api("GET", "/api/v1/categories")
     } catch (error) {
         throw error
     }
@@ -18,7 +18,7 @@ export const get_categories_api = async () => {
 
 export const get_categoryID_api = async (id) => {
     try {
-        return await api("GET", `/category/${id}`)
+        return await api("GET", `/api/v1/categories/${id}`)
     } catch (error) {
         throw error
     }
@@ -26,7 +26,7 @@ export const get_categoryID_api = async (id) => {
 
 export const update_category_api = async (id, data) => {
     try {
-        return await api("PUT", `/category/${id}`, data)
+        return await api("PUT", `/api/v1/admin/categories/${id}`, data)
     } catch (error) {
         throw error
     }
@@ -34,7 +34,7 @@ export const update_category_api = async (id, data) => {
 
 export const delete_category_api = async (id) => {
     try {
-        return await api("DELETE", `/category/${id}`)
+        return await api("DELETE", `/api/v1/admin/categories/${id}`)
     } catch (error) {
         throw error
     }
@@ -42,9 +42,8 @@ export const delete_category_api = async (id) => {
 
 export const get_products_by_category_api = async (categoryId) => {
     try {
-        return await api("GET", `/category/${categoryId}/products`);
+        return await api("GET", `/api/v1/categories/${categoryId}/products`);
     } catch (error) {
-        console.error(`Error fetching products for category ${categoryId}:`, error);
-        return [];
+        throw error;
     }
 };

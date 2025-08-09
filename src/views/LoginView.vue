@@ -8,7 +8,7 @@ const router = useRouter()
 const route = useRoute()
 
 const dataLogin = ref({
-  username: "",
+  email: "",
   password: "",
 })
 
@@ -18,8 +18,8 @@ const login = async () => {
     save_token_local(data.token)
     await get_auth_info()
 
-    const redirectPath = route.query.redirect || '/admin';
-    router.push(redirectPath)
+    const redirectPath = route.query.redirect || '/';
+    router.push(redirectPath);
   } catch (error) {
     console.log('on login error ', error)
   }
@@ -32,8 +32,8 @@ const login = async () => {
       <h1 class="form-title">Đăng nhập</h1>
       <form @submit.prevent="login">
         <div class="form-group">
-          <label for="name">Name</label>
-          <input v-model="dataLogin.username" type="text" class="form-input" id="name" placeholder="Enter name"
+          <label for="email">Email</label>
+          <input v-model="dataLogin.email" type="text" class="form-input" id="email" placeholder="Enter email"
             required>
         </div>
         <div class="form-group">
@@ -44,9 +44,10 @@ const login = async () => {
         <div class="form-actions">
           <button type="submit" class="btn-primary">Đăng nhập</button>
         </div>
-        <!-- <p class="form-switch-text">
-          Chưa có tài khoản? <router-link class="" to="/register">Đăng ký ngay</router-link>
-        </p> -->
+        <p class="form-switch-text">
+          <span>Chưa có tài khoản?</span> 
+          <router-link to="/register"> Đăng ký ngay</router-link>
+        </p>
       </form>
     </div>
   </div>

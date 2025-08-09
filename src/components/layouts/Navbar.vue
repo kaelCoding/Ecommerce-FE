@@ -1,14 +1,20 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount, watch } from 'vue';
 import { searchProductsAPI } from '@/services/product';
+import { get_auth_user, logout_user } from '@/stores/auth';
+import { useRouter } from 'vue-router';
 import SearchOverlay from '../product/SearchOverlay.vue';
 import ThemeToggle from '../common/ThemeToggle.vue';
+
+const router = useRouter();
 
 const searchQuery = ref('');
 const searchResults = ref([]);
 const isSearchActive = ref(false);
 const isLoading = ref(false);
 let debounceTimer = null;
+
+const isUserMenuOpen = ref(false);
 
 watch(searchQuery, (newQuery) => {
   clearTimeout(debounceTimer);
@@ -50,14 +56,28 @@ const handleScroll = () => {
   isScrolled.value = window.scrollY > 10;
 };
 
+const closeUserMenu = (event) => {
+  if (isUserMenuOpen.value && !event.target.closest('.user-menu-container')) {
+    isUserMenuOpen.value = false;
+  }
+};
+
+const handleLogout = () => {
+  logout_user();
+  isUserMenuOpen.value = false;
+  router.push('/login');
+};
+
 onMounted(() => {
   window.addEventListener('scroll', handleScroll);
   window.addEventListener('keydown', handleKeydown);
+  window.addEventListener('click', closeUserMenu);
 });
 
 onBeforeUnmount(() => {
   window.removeEventListener('scroll', handleScroll);
   window.removeEventListener('keydown', handleKeydown);
+  window.removeEventListener('click', closeUserMenu);
 });
 </script>
 
@@ -85,11 +105,21 @@ onBeforeUnmount(() => {
           <i class="fa-brands fa-searchengin"></i>
         </button>
 
-        <RouterLink to="/admin" class="action-icon">
+        <RouterLink v-if="!get_auth_user" to="/login" class="action-icon">
           <i class="fa-solid fa-user-secret"></i>
         </RouterLink>
-
-        <ThemeToggle />
+        <div v-else class="user-menu-container">
+          <i class="fa-solid fa-user-secret action-icon" @click.stop="isUserMenuOpen = !isUserMenuOpen"></i>
+          <div v-if="isUserMenuOpen" class="user-dropdown">
+            <ThemeToggle @click="isUserMenuOpen = false" />
+            <RouterLink to="/admin" v-if="get_auth_user.admin" class="dropdown-item" @click="isUserMenuOpen = false">
+              Quản trị
+            </RouterLink>
+            <button class="dropdown-item" @click="handleLogout">
+              Đăng xuất
+            </button>
+          </div>
+        </div>
       </div>
     </div>
     <SearchOverlay :is-active="isSearchActive" :results="searchResults" :is-loading="isLoading" v-model="searchQuery"
@@ -234,6 +264,69 @@ onBeforeUnmount(() => {
 
 .mobile-search-trigger {
   display: none;
+}
+
+/* --- USER MENU --- */
+.user-menu-container {
+  position: relative;
+}
+
+.username-display {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--secondary-color);
+  font-size: clamp(0.9rem, 2vw, 1rem);
+  padding: 8px 12px;
+  border-radius: var(--border-radius);
+  transition: all var(--transition-speed) ease;
+  border: 1px solid var(--secondary-color);
+  background-color: var(--white-color);
+
+}
+
+.username-display:hover {
+  background-color: var(--primary-color);
+}
+
+.user-dropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  background-color: var(--white-color);
+  border: 1px solid var(--light-gray-color);
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  min-width: 150px;
+  z-index: 1000;
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(10px, 3vw, 12px);
+}
+
+.dropdown-item {
+  display: block;
+  padding: 0.75rem 1rem;
+  text-align: left;
+  color: var(--secondary-color);
+  text-decoration: none;
+  background: none;
+  border: none;
+  width: 100%;
+  cursor: pointer;
+  border-radius: var(--border-radius);
+  transition: all var(--transition-speed) ease;
+  font-size: 0.9rem;
+  border-top: 1px solid var(--light-gray-color);
+}
+
+.dropdown-item:hover {
+  background-color: var(--primary-color);
+}
+
+.fa-user-secret,
+.fa-searchengin {
+  font-size: clamp(1.1rem, 3vw, 1.5rem);
 }
 
 @media (max-width: 960px) {

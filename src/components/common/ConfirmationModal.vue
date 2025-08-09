@@ -70,9 +70,4 @@ const onCancel = () => {
 html[data-theme="dark"] .modal-backdrop {
   background-color: rgba(0, 0, 0, 0.75); 
 }
-
-html[data-theme="dark"] .modal-container {
-  background-color: #1f2937; 
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4); 
-}
 </style>

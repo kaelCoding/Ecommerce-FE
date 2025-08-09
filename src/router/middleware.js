@@ -10,19 +10,27 @@ export default class {
 
     checkAuthRoutes() {
         this.#router.beforeEach((to, from, next) => {
-            const requiresAuth = to.matched.some(record => record.path.startsWith('/admin'));
             const isAdminPage = to.matched.some(record => record.path.startsWith('/admin'));
             const isAuthenticated = !!get_auth_user.value;
+            const user = get_auth_user.value;
+            const isAdmin = user && user.admin;
 
-            if (requiresAuth && !isAuthenticated) {
+            if (isAdminPage && !isAuthenticated) {
                 next({
                     path: '/login',
                     query: { redirect: to.fullPath } 
                 });
             }
-            else if (isAuthenticated && (to.path === '/login' || to.path === '/register')) {
-                next({ name: 'admin-dashboard' });
+            else if (isAdminPage && isAuthenticated && !isAdmin) {
+                next({ path: '/' });
             }
+            else if (isAuthenticated && (to.path === '/login' || to.path === '/register')) {
+                if (isAdmin) {
+                    next({ path: '/admin' });
+                } else {
+                    next({ path: '/' });
+                }
+            } 
             else {
                 next();
             }

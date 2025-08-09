@@ -29,7 +29,7 @@ export const init_auth = async () => {
     }
 }
 
-export const logout = () => {
+export const logout_user = () => {
     token.value = null
     auth_user.value = null
     localStorage.clear()

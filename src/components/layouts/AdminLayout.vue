@@ -1,5 +1,6 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue';
+import ThemeToggle from '../common/ThemeToggle.vue';
 
 const isSidebarOpen = ref(false);
 const sidebar = ref(null);
@@ -33,10 +34,13 @@ onBeforeUnmount(() => {
 <template>
   <div class="admin-wrapper">
     <div class="admin-mobile-header">
-      <h2>KAEL Admin</h2>
-      <button class="menu-toggle" @click="toggleSidebar">
-        <i class="fas fa-bars"></i>
-      </button>
+      <h2 style="color: var(--secondary-color)">KAEL Admin</h2>
+      <div class="actions-ctn">
+        <button class="menu-toggle" @click="toggleSidebar">
+          <i class="fas fa-bars"></i>
+        </button>
+        <ThemeToggle/>
+      </div>
     </div>
 
     <aside class="sidebar" :class="{ 'is-open': isSidebarOpen }">
@@ -164,10 +168,21 @@ onBeforeUnmount(() => {
 .menu-toggle {
   background: none;
   border: none;
-  color: var(--white-color);
-  font-size: clamp(1.2rem, 4vw, 1.5rem);
+  font-size: clamp(1.1rem, 3vw, 1.5rem); 
+  color: var(--secondary-color);
   cursor: pointer;
   padding: 0;
+  line-height: 1;
+  transition: color var(--transition-speed) ease;
+}
+
+.menu-toggle:hover {
+  color: var(--primary-color);
+}
+
+.actions-ctn {
+  display: flex;
+  gap: 12px;
 }
 
 /* =========================================================
@@ -201,7 +216,7 @@ onBeforeUnmount(() => {
     top: 0;
     left: 0;
     width: 100%;
-    background-color: var(--secondary-color);
+    background-color: var(--white-color);
     color: var(--white-color);
     padding: 15px 20px;
     justify-content: space-between;
@@ -228,6 +243,10 @@ onBeforeUnmount(() => {
   .sidebar.is-open~.main-content::before {
     opacity: 1;
     visibility: visible;
+  }
+
+  .menu-toggle {
+    font-size: clamp(1.2rem, 4vw, 1.5rem);
   }
 }
 </style>
