@@ -65,7 +65,7 @@ onBeforeUnmount(() => {
   <header class="navbar" :class="{ 'scrolled': isScrolled, 'search-active': isSearchActive }">
     <div class="container">
       <a href="/" class="logo">
-        <img class="favicon-ctn" src="/public/images/image.png" alt="">
+        <img class="favicon-ctn" src="/public/images/favicon.jpg" alt="">
         <span>TUNI TOKU</span>
       </a>
       <nav class="nav-links">
@@ -90,12 +90,11 @@ onBeforeUnmount(() => {
         </RouterLink>
 
         <ThemeToggle />
-        
       </div>
     </div>
+    <SearchOverlay :is-active="isSearchActive" :results="searchResults" :is-loading="isLoading" v-model="searchQuery"
+      @close="closeSearch" />
   </header>
-  <SearchOverlay :is-active="isSearchActive" :results="searchResults" :is-loading="isLoading" v-model="searchQuery"
-    @close="closeSearch" />
 </template>
 
 <style scoped>
@@ -104,7 +103,7 @@ onBeforeUnmount(() => {
   top: 0;
   left: 0;
   width: 100%;
-  padding: clamp(10px, 2vh, 15px) 0; 
+  padding: clamp(10px, 2vh, 15px) 0;
   background-color: var(--white-color);
   z-index: 100;
   transition: all var(--transition-speed) ease;
@@ -121,23 +120,24 @@ onBeforeUnmount(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 20px; 
+  padding: 0 20px;
+  height: 100%;
 }
 
 .logo {
   display: flex;
   align-items: center;
-  gap: clamp(5px, 2vw, 10px); 
-  font-size: clamp(1.2rem, 3vw, 1.5rem); 
+  gap: clamp(6px, 2vw, 12px);
+  font-size: clamp(1.2rem, 3vw, 1.5rem);
   font-weight: 700;
   color: var(--secondary-color);
   text-decoration: none;
 }
 
 .favicon-ctn {
-  width: clamp(32px, 5vw, 42px); 
+  width: clamp(32px, 5vw, 42px);
   height: clamp(32px, 5vw, 42px);
-  border-radius: 50%;
+  border-radius: var(--border-radius);
 }
 
 .nav-links {
@@ -151,7 +151,7 @@ onBeforeUnmount(() => {
   transition: color var(--transition-speed) ease;
   color: var(--secondary-color);
   text-decoration: none;
-  font-size: clamp(0.9rem, 2vw, 1rem); 
+  font-size: clamp(0.9rem, 2vw, 1rem);
 }
 
 .nav-links a:hover {
@@ -188,15 +188,11 @@ onBeforeUnmount(() => {
   border: none;
   cursor: pointer;
   background: none;
-  font-size: clamp(1.1rem, 3vw, 1.5rem); 
+  font-size: clamp(1.1rem, 3vw, 1.5rem);
 }
 
 .action-icon:hover {
   color: var(--primary-color);
-}
-
-.fa-user-secret {
-  margin-top: 4px;
 }
 
 /* --- SEARCH BAR --- */
@@ -255,12 +251,9 @@ onBeforeUnmount(() => {
     display: block;
   }
 
-  .fa-user-secret, .mobile-search-trigger .fa-searchengin {
+  .fa-user-secret,
+  .mobile-search-trigger .fa-searchengin {
     font-size: clamp(1.2rem, 4vw, 1.5rem);
-  }
-
-  .fa-searchengin {
-    margin-top: 2px;
   }
 }
 </style>

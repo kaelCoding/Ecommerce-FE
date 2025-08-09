@@ -35,13 +35,13 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="content-area">
+  <div class="container">
     <div class="main-header">
       <h1>Tổng Quan</h1>
     </div>
 
     <LoadingSpinner v-if="isLoading" message="Đang tải dữ liệu..."/>
-    <div v-else class="dashboard-grid">
+    <div v-else class="dashboard-grid content-area">
       <div class="stat-card">
         <h3>Sản phẩm</h3>
         <p>{{ products.length }}</p>
@@ -59,48 +59,37 @@ onMounted(async () => {
 </template>
 
 <style scoped>
-.main-header {
-  background-color: var(--white-color);
-  padding: 20px 30px;
-  margin-bottom: 30px;
-  border-radius: var(--border-radius);
-  box-shadow: var(--box-shadow);
-}
-
-.main-header h1 {
-  font-size: 1.8rem;
-  font-weight: 600;
-  color: var(--text-color);
-}
-
-.content-area {
-  background-color: var(--white-color);
-  padding: 30px;
-  border-radius: var(--border-radius);
-  box-shadow: var(--box-shadow);
-}
-
 .dashboard-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(clamp(150px, 30vw, 250px), 1fr));
+  gap: clamp(15px, 3vw, 20px); 
+  align-items: stretch; 
 }
 
 .stat-card {
-  background-color: var(--light-gray-color);
-  padding: 20px;
+  background-color: var(--white-color); 
+  padding: clamp(15px, 4vw, 25px);
   border-radius: var(--border-radius);
   box-shadow: var(--box-shadow);
   color: var(--text-color);
+  transition: transform 0.2s ease, box-shadow 0.2s ease; 
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--box-shadow-hover);
 }
 
 .stat-card h3 {
-  font-size: 1.2rem;
+  font-size: clamp(1rem, 2.5vw, 1.2rem);
+  margin-bottom: clamp(5px, 1.5vw, 10px);
+  color: var(--gray-color);
 }
 
 .stat-card p {
-  font-size: 2rem;
-  font-weight: 600;
+  font-size: clamp(1.8rem, 5vw, 2.5rem); 
+  font-weight: 700; 
   color: var(--primary-color);
+  line-height: 1.2;
 }
 </style>

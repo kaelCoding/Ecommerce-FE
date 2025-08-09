@@ -54,7 +54,7 @@ const goToProductList = () => {
     <section class="intro-section">
       <div class="container intro-content">
         <div class="intro-image-wrapper">
-          <img src="/public/images/background.jpg" alt="Các mô hình siêu nhân chất lượng cao" class="intro-image" />
+          <img src="/public/images/img2.jpg" alt="Các mô hình siêu nhân chất lượng cao" class="intro-image" />
         </div>
         <div class="intro-text">
           <h2 class="section-title">
@@ -96,13 +96,6 @@ const goToProductList = () => {
 </template>
 
 <style scoped>
-/* GENERAL STYLES & LAYOUT */
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
-}
-
 .hero-section {
   background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('/public/images/SUPER.jpg') no-repeat center center/cover;
   height: 60vh;
@@ -134,6 +127,7 @@ const goToProductList = () => {
   overflow: hidden;
   box-shadow: var(--box-shadow);
   animation: fadeInUp 1s ease-in-out;
+  max-height: 320px;
 }
 
 .intro-image {
@@ -178,32 +172,6 @@ const goToProductList = () => {
   margin-bottom: 4rem;
 }
 
-.page-title {
-  text-align: center;
-  font-size: clamp(1.5rem, 4vw, 2rem);
-  font-weight: 600;
-  margin-bottom: 40px;
-  color: var(--secondary-color);
-  position: relative;
-}
-
-.page-title::after {
-  content: '';
-  position: absolute;
-  bottom: -10px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 60px;
-  height: 3px;
-  background-color: var(--primary-color);
-}
-
-.product-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 20px;
-}
-
 /* MEDIA QUERIES */
 @media (min-width: 768px) {
   .intro-content {
@@ -226,23 +194,6 @@ const goToProductList = () => {
   }
   .hero-section {
     height: 40vh;
-  }
-}
-
-/* ANIMATIONS */
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
   }
 }
 </style>

@@ -148,7 +148,7 @@ const handleSubmit = async () => {
                     <input type="file" id="images" @change="handleFileChange" multiple accept="image/*" />
                 </div>
 
-                <div class="form-action-buttons">
+                <div class="form-actions">
                     <button type="button" class="btn" @click="router.back()">Hủy</button>
                     <button type="submit" class="btn-primary" :disabled="isLoading">
                         {{ isLoading ? 'Đang xử lý...' : submitButtonText }}
@@ -160,155 +160,9 @@ const handleSubmit = async () => {
 </template>
 
 <style scoped>
-.main-header {
-    background-color: var(--white-color);
-    padding: 20px 30px;
-    margin-bottom: 30px;
-    border-radius: var(--border-radius);
-    box-shadow: var(--box-shadow);
-}
-
-.main-header h1 {
-    font-size: 1.8rem;
-    font-weight: 600;
-}
-
-.content-area {
-    background-color: var(--white-color);
-    padding: 30px;
-    border-radius: var(--border-radius);
-    box-shadow: var(--box-shadow);
-    color: var(--text-color);
-}
-
-.form-group {
-    margin-bottom: 20px;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 500;
-    color: var(--text-color);
-}
-
-.form-input,
-select.form-input,
-textarea.form-input {
-    width: 100%;
-    padding: 12px 15px;
-    font-size: 1rem;
-    border: 1px solid #d1d5db;
-    border-radius: var(--border-radius);
-    background-color: var(--light-gray-color);
-    color: var(--text-color);
-    transition: all 0.3s ease;
-}
-
-.form-input:focus,
-select.form-input:focus,
-textarea.form-input:focus {
-    outline: none;
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
-    background-color: var(--white-color);
-}
-
-select.form-input {
-    appearance: none;
-    -webkit-appearance: none;
-    background-image: url('data:image/svg+xml;utf8,<svg fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" fill-rule="evenodd"></path></svg>');
-    background-repeat: no-repeat;
-    background-position: right 1rem center;
-    background-size: 1.5em;
-    padding-right: 2.5rem;
-}
-
-textarea.form-input {
-    min-height: 120px;
-    resize: vertical;
-}
-
-.form-action-buttons {
-    display: flex;
-    gap: 10px;
-    justify-content: flex-end;
-    margin-top: 20px;
-}
-
-.btn {
-    width: auto !important;
-}
-
 .existing-images {
     display: flex;
     gap: 10px;
     flex-wrap: wrap;
-}
-
-.table-img {
-    width: 80px;
-    height: 80px;
-    object-fit: cover;
-    border-radius: 4px;
-}
-
-@media (max-width: 992px) {
-  .main-header {
-    padding: 15px 20px;
-    margin-bottom: 20px;
-  }
-  .main-header h1 {
-    font-size: 1.5rem;
-  }
-  .content-area {
-    padding: 20px;
-  }
-  
-  .form-group label {
-    font-size: 0.95rem;
-  }
-  
-  .form-input, select.form-input, textarea.form-input {
-    font-size: 0.9rem;
-  }
-
-  .table-img {
-    width: 60px;
-    height: 60px;
-  }
-}
-
-@media (max-width: 768px) {
-  .main-header h1 {
-    font-size: 1.2rem;
-  }
-  .content-area {
-    padding: 15px;
-  }
-
-  .form-group label {
-    font-size: 0.9rem;
-  }
-
-  .form-input, select.form-input, textarea.form-input {
-    font-size: 0.85rem;
-    padding: 10px;
-  }
-  
-  .form-action-buttons {
-    flex-direction: column;
-    justify-content: center;
-    gap: 10px;
-  }
-  
-  .btn {
-    width: 100% !important;
-  }
-  
-  .table-img {
-    width: 50px;
-    height: 50px;
-  }
 }
 </style>

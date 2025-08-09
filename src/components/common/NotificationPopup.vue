@@ -20,13 +20,13 @@ const { notification } = useNotification();
   top: 20px;
   right: 20px;
   padding: 15px 25px;
-  border-radius: var(--border-radius-md, 8px);
+  border-radius: var(--border-radius, 8px);
   color: #fff;
   display: flex;
   align-items: center;
   gap: 10px;
   font-weight: 500;
-  z-index: 9999;
+  z-index: 200;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
@@ -36,16 +36,5 @@ const { notification } = useNotification();
 
 .toast--error {
   background-color: #F44336; 
-}
-
-.toast-fade-enter-active,
-.toast-fade-leave-active {
-  transition: opacity 0.5s, transform 0.5s;
-}
-
-.toast-fade-enter-from,
-.toast-fade-leave-to {
-  opacity: 0;
-  transform: translateY(-20px);
 }
 </style>

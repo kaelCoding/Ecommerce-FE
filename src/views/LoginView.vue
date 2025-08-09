@@ -27,21 +27,23 @@ const login = async () => {
 </script>
 
 <template>
-  <div>
+  <div class="container">
     <div class="form-container">
       <h1 class="form-title">Đăng nhập</h1>
       <form @submit.prevent="login">
         <div class="form-group">
           <label for="name">Name</label>
-          <input v-model="dataLogin.username" type="text" id="name" placeholder="Enter name"
+          <input v-model="dataLogin.username" type="text" class="form-input" id="name" placeholder="Enter name"
             required>
         </div>
         <div class="form-group">
           <label for="password">Mật khẩu</label>
-          <input v-model="dataLogin.password" type="password" id="password" placeholder="••••••••"
+          <input v-model="dataLogin.password" type="password" class="form-input" id="password" placeholder="••••••••"
             required>
         </div>
-        <button type="submit" class="btn-primary">Đăng nhập</button>
+        <div class="form-actions">
+          <button type="submit" class="btn-primary">Đăng nhập</button>
+        </div>
         <!-- <p class="form-switch-text">
           Chưa có tài khoản? <router-link class="" to="/register">Đăng ký ngay</router-link>
         </p> -->

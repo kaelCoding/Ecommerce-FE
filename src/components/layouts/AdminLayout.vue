@@ -61,7 +61,7 @@ onBeforeUnmount(() => {
             </router-link>
           </li>
           <li>
-            <RouterLink to="/" >
+            <RouterLink to="/">
               <i class="fas fa-sign-out-alt"></i> Đăng Xuất
             </RouterLink>
           </li>
@@ -80,42 +80,36 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.3s ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-
 .admin-wrapper {
   display: flex;
   min-height: 100vh;
   background-color: var(--light-gray-color);
+  font-family: 'Inter', sans-serif;
 }
 
 .sidebar {
-  width: 250px;
+  width: clamp(200px, 20vw, 250px);
   background-color: var(--secondary-color);
   color: var(--white-color);
-  padding: 20px;
+  padding: clamp(15px, 2vw, 20px);
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
   transition: transform 0.3s ease;
+  position: sticky;
+  top: 0;
+  height: 100vh;
 }
 
 .sidebar-header {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 40px;
+  margin-bottom: 16px;
 }
 
 .sidebar-header h2 {
-  font-size: 1.5rem;
+  font-size: clamp(1.2rem, 2.5vw, 1.5rem);
   margin: 0;
 }
 
@@ -128,33 +122,41 @@ onBeforeUnmount(() => {
 .sidebar-nav ul li a {
   display: flex;
   align-items: center;
-  gap: 15px;
-  padding: 15px 20px;
-  margin-bottom: 10px;
+  gap: clamp(10px, 2vw, 15px);
+  padding: clamp(10px, 2.5vw, 15px) clamp(15px, 3vw, 20px);
+  margin-bottom: clamp(5px, 1vw, 10px);
   border-radius: var(--border-radius);
   font-weight: 500;
   transition: background-color var(--transition-speed) ease;
   color: var(--white-color);
   text-decoration: none;
+  font-size: clamp(0.9rem, 2vw, 1rem);
 }
 
 .sidebar-nav ul li a:hover,
-.sidebar-nav ul li a.router-link-exact-active { 
+.sidebar-nav ul li a.router-link-exact-active {
   background-color: var(--primary-color);
 }
 
 .sidebar-nav ul li a i {
-  font-size: 1.2rem;
+  font-size: clamp(1rem, 2.5vw, 1.2rem);
   width: 20px;
   text-align: center;
 }
 
+/* =========================================================
+   Nội dung chính
+   ========================================================= */
 .main-content {
   flex-grow: 1;
-  padding: 40px;
+  padding: clamp(20px, 4vw, 40px);
   overflow-y: auto;
+  transition: margin-left 0.3s ease;
 }
 
+/* =========================================================
+   Header Mobile và Nút toggle
+   ========================================================= */
 .admin-mobile-header {
   display: none;
 }
@@ -163,23 +165,29 @@ onBeforeUnmount(() => {
   background: none;
   border: none;
   color: var(--white-color);
-  font-size: 1.5rem;
+  font-size: clamp(1.2rem, 4vw, 1.5rem);
   cursor: pointer;
+  padding: 0;
 }
 
+/* =========================================================
+   Media Queries cho Mobile
+   ========================================================= */
 @media (max-width: 768px) {
   .admin-wrapper {
     flex-direction: column;
+    position: relative;
   }
 
   .sidebar {
     position: fixed;
-    top: 0;
+    top: 72px;
     left: 0;
     height: 100%;
     transform: translateX(-100%);
     width: 250px;
     z-index: 1000;
+    padding: 20px;
   }
 
   .sidebar.is-open {
@@ -199,7 +207,8 @@ onBeforeUnmount(() => {
     justify-content: space-between;
     align-items: center;
     z-index: 1001;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--box-shadow);
+    height: 72px;
   }
 
   .admin-wrapper::before {
@@ -219,10 +228,6 @@ onBeforeUnmount(() => {
   .sidebar.is-open~.main-content::before {
     opacity: 1;
     visibility: visible;
-  }
-
-  .main-content {
-    padding: 20px;
   }
 }
 </style>

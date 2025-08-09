@@ -16,8 +16,8 @@ const props = defineProps(["product"])
       </div>
     </div>
     <div class="card-content">
-      <h3 class="product-name2">{{ product.name }}</h3>
-      <p class="product-price2">{{ formatPrice(product.price) }}</p>
+      <h3 class="product-name">{{ product.name }}</h3>
+      <p class="product-price">{{ formatPrice(product.price) }}</p>
     </div>
   </div>
 </template>
@@ -80,28 +80,31 @@ const props = defineProps(["product"])
 }
 
 .card-content {
+  display: flex;
+  flex-flow: column;
   padding: 15px;
   flex-grow: 1;
 }
 
-.product-name2 {
+.product-name {
   font-size: 1rem;
   font-weight: 600;
   margin-bottom: 5px;
   color: var(--secondary-color);
 }
 
-.product-brand2 {
+.product-brand {
   font-size: 0.85rem;
   color: #6B7280;
   margin-bottom: 10px;
 }
 
-.product-price2 {
+.product-price {
   font-size: 1.1rem;
   font-weight: 700;
   color: var(--primary-color);
   text-align: start;
+  margin-top: auto;
 }
 
 @media (max-width: 768px) {

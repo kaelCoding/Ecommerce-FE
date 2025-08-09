@@ -34,7 +34,7 @@ watch(() => props.isActive, (newVal) => {
               ref="searchInput"
               type="text" 
               class="search-input" 
-              placeholder="Tìm kiếm sản phẩm bạn muốn..."
+              placeholder="Tìm kiếm sản phẩm..."
               :value="modelValue" 
               @input="emit('update:modelValue', $event.target.value)"
             />
@@ -75,25 +75,6 @@ watch(() => props.isActive, (newVal) => {
 </template>
 
 <style scoped>
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.3s ease;
-}
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-
-.slide-down-enter-active,
-.slide-down-leave-active {
-  transition: transform 0.3s ease, opacity 0.3s ease;
-}
-.slide-down-enter-from,
-.slide-down-leave-to {
-  opacity: 0;
-  transform: translateY(-30px);
-}
-
 .search-overlay-wrapper {
   position: fixed;
   top: 0;
@@ -117,6 +98,7 @@ watch(() => props.isActive, (newVal) => {
   box-shadow: var(--box-shadow-lg);
   display: flex;
   flex-direction: column;
+  max-height: clamp(250px, 50vh, 400px);
 }
 
 .search-input-header {
@@ -128,7 +110,7 @@ watch(() => props.isActive, (newVal) => {
 }
 
 .search-icon {
-  color: var(--gray-color);
+  color: var(--light-gray-color);
 }
 
 .search-input {
@@ -144,17 +126,17 @@ watch(() => props.isActive, (newVal) => {
 .results-content {
   max-height: 60vh;
   overflow-y: auto;
-  padding: 10px;
+  padding: clamp(10px, 2vw, 15px);
 }
 
 .empty-state {
   text-align: center;
-  padding: 40px 20px;
+  padding: clamp(20px, 5vw, 40px) clamp(10px, 3vw, 20px);
   color: var(--gray-color);
 }
 
 .empty-icon {
-  font-size: 2rem;
+  font-size: clamp(1.5rem, 4vw, 2rem);
   margin-bottom: 10px;
   color: #d1d5db;
 }
@@ -162,8 +144,8 @@ watch(() => props.isActive, (newVal) => {
 .result-item {
   display: flex;
   align-items: center;
-  gap: 15px;
-  padding: 10px;
+  gap: clamp(10px, 2vw, 15px);
+  padding: clamp(8px, 2vw, 12px);
   border-radius: var(--border-radius);
   transition: background-color 0.2s ease;
   text-decoration: none;
@@ -174,8 +156,8 @@ watch(() => props.isActive, (newVal) => {
 }
 
 .result-item-image {
-  width: 50px;
-  height: 50px;
+  width: clamp(40px, 8vw, 50px);
+  height: clamp(40px, 8vw, 50px);
   object-fit: cover;
   border-radius: 4px;
   flex-shrink: 0;
@@ -185,34 +167,28 @@ watch(() => props.isActive, (newVal) => {
 .result-item-info {
   flex-grow: 1;
 }
+
 .result-item-name {
   font-weight: 600;
   color: var(--secondary-color);
   margin-bottom: 4px;
+  font-size: clamp(0.9rem, 2.5vw, 1rem);
 }
+
 .result-item-price {
-  font-size: 0.9rem;
+  font-size: clamp(0.8rem, 2vw, 0.9rem);
   color: var(--primary-color);
 }
 
-@media (max-width: 768px) {
-  .search-overlay-wrapper {
-    padding-top: 0; 
-    align-items: stretch;
-    z-index: 101;
-  }
+ @media (max-width: 768px) {
   .search-results-container {
-    max-width: 100%;
-    height: 100%;
-    border-radius: 0;
-    max-height: 100vh;
+    max-width: 90%;
   }
-  .slide-down-enter-from,
-  .slide-down-leave-to {
-    transform: translateY(0); 
+
+  .result-item-name,
+  .result-item-price {
+    font-size: 0.9rem;
   }
-  .results-content {
-    max-height: calc(100vh - 65px);
-  }
+
 }
 </style>

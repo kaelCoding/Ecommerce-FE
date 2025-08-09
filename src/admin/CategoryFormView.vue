@@ -68,9 +68,8 @@ const handleSubmit = async () => {
                     <input v-model="category.name" type="text" id="name" class="form-input" placeholder="Nhập danh mục" required>
                 </div>
 
-                <div class="form-action-buttons">
-                    <button type="button" class="btn" @click="router.back()"
-                        style="background-color: #6B7280; color: white;">Hủy</button>
+                <div class="form-actions">
+                    <button type="button" class="btn" @click="router.back()">Hủy</button>
                     <button type="submit" class="btn-primary" :disabled="isLoading">
                         {{ isLoading ? 'Đang xử lý...' : submitButtonText }}
                     </button>
@@ -81,79 +80,4 @@ const handleSubmit = async () => {
 </template>
 
 <style scoped>
-.main-header {
-    background-color: var(--white-color);
-    padding: 20px 30px;
-    margin-bottom: 30px;
-    border-radius: var(--border-radius);
-    box-shadow: var(--box-shadow);
-}
-
-.main-header h1 {
-    font-size: 1.8rem;
-    font-weight: 600;
-}
-
-.content-area {
-    background-color: var(--white-color);
-    padding: 30px;
-    border-radius: var(--border-radius);
-    box-shadow: var(--box-shadow);
-    max-width: 600px;
-}
-
-.form-action-buttons {
-    display: flex;
-    gap: 10px;
-    justify-content: flex-end;
-    margin-top: 20px;
-}
-
-@media (max-width: 992px) {
-    .main-header {
-        padding: 15px 20px;
-        margin-bottom: 20px;
-    }
-
-    .main-header h1 {
-        font-size: 1.5rem;
-    }
-
-    .content-area {
-        padding: 20px;
-        max-width: 100%;
-    }
-
-    .form-group label {
-        font-size: 0.95rem;
-    }
-
-    .form-input {
-        font-size: 0.9rem;
-    }
-}
-
-@media (max-width: 768px) {
-    .main-header h1 {
-        font-size: 1.2rem;
-    }
-
-    .content-area {
-        padding: 15px;
-    }
-
-    .form-group label {
-        font-size: 0.9rem;
-    }
-
-    .form-input {
-        font-size: 0.85rem;
-        padding: 10px;
-    }
-
-    .form-action-buttons {
-        flex-direction: column;
-        gap: 10px;
-    }
-}
 </style>
