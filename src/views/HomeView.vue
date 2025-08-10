@@ -5,6 +5,9 @@ import UserFeedbackForm from '@/components/common/UserFeedbackForm.vue';
 import { onBeforeMount, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { get_categories_api, get_products_by_category_api } from '@/services/category';
+import { useNotification } from '@/composables/useNotification';
+
+const showNotification = useNotification()
 
 const router = useRouter();
 const isLoading = ref(true);
@@ -31,8 +34,9 @@ const fetchData = async () => {
     const results = await Promise.all(productPromises);
     categoriesWithProducts.value = results.filter(cat => cat.products && cat.products.length > 0);
 
-  } catch (error) {
-    console.error("Failed to fetch data for home view:", error);
+  } catch (err) {
+    console.error("Failed to fetch data for home view:", err);
+    showNotification(err, "error")
   } finally {
     isLoading.value = false;
   }
@@ -77,10 +81,13 @@ const goToProductList = () => {
         <section v-for="categoryData in categoriesWithProducts" :key="categoryData.ID" class="product-section">
           <h2 class="page-title">{{ categoryData.name }}</h2>
           <div class="product-grid">
-            <ProductCard v-for="product in categoryData.products" :key="product.ID" :product="product" />
+            <ProductCard v-for="product in categoryData.products.slice(0, 4)" :key="product.ID" :product="product" />
           </div>
         </section>
 
+        <div class="more-ctn">
+          <RouterLink class="btn-primary" to="/products">Xem nhiều hơn</RouterLink>
+        </div>
         <div v-if="!isLoading && categoriesWithProducts.length === 0" class="text-center">
           <p>Không có sản phẩm nào để hiển thị.</p>
         </div>
@@ -170,6 +177,14 @@ const goToProductList = () => {
 
 .product-section {
   margin-bottom: 4rem;
+}
+
+.more-ctn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 24px;
 }
 
 /* MEDIA QUERIES */

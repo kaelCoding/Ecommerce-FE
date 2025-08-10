@@ -27,7 +27,7 @@ onMounted(async () => {
             category.value.name = fetchedCategory.name;
         } catch (err) {
             console.error("Failed to fetch category data:", err);
-            showNotification("Không tìm thấy danh mục.", "error");
+            showNotification(err, "error");
         } finally {
             isLoading.value = false;
         }
@@ -48,7 +48,7 @@ const handleSubmit = async () => {
         router.push({ name: 'admin-categories' });
     } catch (err) {
         console.error('Submit failed:', err);
-        showNotification("Đã có lỗi xảy ra.", "error")
+        showNotification(err, "error")
     } finally {
         isLoading.value = false;
     }

@@ -65,6 +65,11 @@ onBeforeUnmount(() => {
             </router-link>
           </li>
           <li>
+            <router-link to="/admin/users" @click="closeSidebar">
+              <i class="fas fa-user"></i> Người Dùng
+            </router-link>
+          </li>
+          <li>
             <RouterLink to="/">
               <i class="fas fa-sign-out-alt"></i> Đăng Xuất
             </RouterLink>

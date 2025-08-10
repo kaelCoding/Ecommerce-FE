@@ -66,11 +66,11 @@ const router = createRouter({
           name: "admin-categories-edit",
           component: () => import("../admin/CategoryFormView.vue"),
         },
-        // {
-        //   path: "users",
-        //   name: "admin-users",
-        //   component: () => import("../admin/UserListView.vue"),
-        // },
+        {
+          path: "users",
+          name: "admin-users",
+          component: () => import("../admin/UserListView.vue"),
+        },
       ],
     },
   ],

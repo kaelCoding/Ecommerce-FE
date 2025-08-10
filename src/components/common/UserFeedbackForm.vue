@@ -29,10 +29,10 @@ const submitFeedback = async () => {
         userEmail.value = '';
         feedback.value = '';
 
-    } catch (error) {
-        console.error("Failed to send feedback:", error);
-        const errorMessage = error.message || "Gửi góp ý thất bại. Vui lòng thử lại sau.";
-        showNotification(errorMessage, "error");
+        showNotification("Cảm ơn bạn! Góp ý của bạn đã được gửi đi thành công.")
+    } catch (err) {
+        console.error("Failed to send feedback:", err);
+        showNotification(err, "error");
     } finally {
         isLoading.value = false;
     }
@@ -44,7 +44,8 @@ const submitFeedback = async () => {
     <h3 class="form-title">Hãy cho chúng tôi biết cảm nhận của bạn !</h3>
     <p class="form-subtitle">Góp ý của bạn giúp chúng tôi cải thiện dịch vụ tốt hơn.</p>
 
-    <form @submit.prevent="submitFeedback" v-if="!isSubmitted">
+    <loading-spinner v-if="isLoading" message="Đang gửi..."/>
+    <form @submit.prevent="submitFeedback" v-else>
       <div class="form-group">
         <label for="name">Tên của bạn</label>
         <input class="form-input" type="text" id="name" v-model="userName" required placeholder="Nhập tên của bạn">
@@ -62,15 +63,10 @@ const submitFeedback = async () => {
 
       <div class="form-actions">
         <button type="submit" class="btn-primary" :disabled="isLoading">
-          <loading-spinner v-if="isLoading" message="Đang gửi..."/>
-          <span v-else>Gửi góp ý</span>
+          <span>Gửi góp ý</span>
         </button>
       </div>
     </form>
-    <div v-else class="thank-you-message">
-        <h4>Cảm ơn bạn!</h4>
-        <p>Góp ý của bạn đã được gửi đi thành công.</p>
-    </div>
   </div>
 </template>
 

@@ -26,7 +26,7 @@ onMounted(async () => {
         categories.value = await get_categories_api();
     } catch (err) {
         console.error("Failed to fetch categories:", err);
-        showNotification("Không thể tải danh sách danh mục.", "error")
+        showNotification(err, "error")
     }
 
     if (isEditing.value) {
@@ -43,7 +43,7 @@ onMounted(async () => {
             existingImageUrls.value = fetchedProduct.image_urls || [];
         } catch (err) {
             console.error("Failed to fetch product data:", err);
-            showNotification("Không tìm thấy sản phẩm.", "error")
+            showNotification(err, "error")
         } finally {
             isLoading.value = false;
         }
@@ -95,7 +95,7 @@ const handleSubmit = async () => {
         router.push({ name: 'admin-products' });
     } catch (err) {
         console.error('Submit failed:', err);
-        showNotification("Đã có lỗi xảy ra.", "error")
+        showNotification(err, "error")
     } finally {
         isLoading.value = false;
     }

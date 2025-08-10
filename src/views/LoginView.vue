@@ -3,6 +3,9 @@ import { ref } from "vue"
 import { get_auth_info, save_token_local } from "@/stores/auth";
 import { useRoute, useRouter } from "vue-router"
 import { auth_login_api } from "@/services/auth";
+import { useNotification } from "@/composables/useNotification";
+
+const showNotification = useNotification()
 
 const router = useRouter()
 const route = useRoute()
@@ -20,8 +23,9 @@ const login = async () => {
 
     const redirectPath = route.query.redirect || '/';
     router.push(redirectPath);
-  } catch (error) {
-    console.log('on login error ', error)
+  } catch (err) {
+    console.log('on login error ', err)
+    showNotification(err, "error")
   }
 }
 </script>

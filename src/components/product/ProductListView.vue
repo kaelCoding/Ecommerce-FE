@@ -3,6 +3,9 @@ import { ref, onMounted } from 'vue';
 import { get_products_api } from '@/services/product';
 import ProductCard from '@/components/product/Card.vue';
 import LoadingSpinner from '../common/LoadingSpinner.vue';
+import { useNotification } from '@/composables/useNotification';
+
+const showNotification = useNotification();
 
 const products = ref([]);
 const isLoading = ref(true);
@@ -14,6 +17,7 @@ const fetchProducts = async () => {
     products.value = fetchedProducts;
   } catch (err) {
     console.error("Failed to fetch products:", err);
+    showNotification(err, "error")
   } finally {
     isLoading.value = false;
   }

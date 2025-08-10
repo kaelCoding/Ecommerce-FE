@@ -26,9 +26,9 @@ const getProducts = async () => {
   try {
     const res = await get_products_api();
     products.value = res;
-  } catch (error) {
-    console.error("Failed to get products:", error);
-    showNotification("Tải danh sách sản phẩm thất bại.", "error");
+  } catch (err) {
+    console.error("Failed to get products:", err);
+    showNotification(err, "error");
   }
 };
 
@@ -49,9 +49,9 @@ const confirmDelete = async () => {
     await delete_product_api(productIdToDelete.value);
     products.value = products.value.filter(product => product.ID !== productIdToDelete.value);
     showNotification("Xóa sản phẩm thành công!");
-  } catch (error) {
-    console.error("Failed to delete product:", error);
-    showNotification("Xóa sản phẩm thất bại. Vui lòng thử lại.", "error");
+  } catch (err) {
+    console.error("Failed to delete product:", err);
+    showNotification(err, "error");
   } finally {
     productIdToDelete.value = null;
   }

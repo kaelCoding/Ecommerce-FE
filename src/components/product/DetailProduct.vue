@@ -1,7 +1,8 @@
 <script setup>
 import { ref, onMounted, watch } from 'vue';
 import { useRoute } from 'vue-router';
-import { get_productID_api, get_products_api } from '@/services/product';
+import { get_productID_api } from '@/services/product';
+import { get_products_by_category_api } from '@/services/category';
 import { submit_order_api } from '@/services/order';
 import { formatPrice } from '@/composables/useUtils';
 import { useNotification } from '@/composables/useNotification';
@@ -12,7 +13,7 @@ const route = useRoute();
 const { showNotification } = useNotification();
 
 const product = ref(null);
-const allproducts = ref([])
+const relatedProducts = ref([])
 
 const isLoading = ref(true);
 const isSubmitting = ref(false)
@@ -33,10 +34,10 @@ const decrementQuantity = () => {
 };
 
 const openCheckoutModal = () => { isCheckoutModalOpen.value = true; };
-const closeCheckoutModal = () => { 
-  isCheckoutModalOpen.value = false; 
+const closeCheckoutModal = () => {
+  isCheckoutModalOpen.value = false;
   quantity.value = 1;
- };
+};
 
 const resetForm = () => {
   customerInfo.value = {
@@ -67,7 +68,7 @@ const submitOrder = async () => {
     resetForm();
   } catch (err) {
     console.error("Failed to submit order:", err);
-    showNotification('Gửi đơn hàng thất bại. Vui lòng thử lại.', 'error');
+    showNotification(err, 'error');
   } finally {
     isSubmitting.value = false;
   }
@@ -80,20 +81,20 @@ const fetchProductData = async (productId) => {
   }
   isLoading.value = true;
   try {
-    const [fetchedProduct, fetchedAllProducts] = await Promise.all([
-      get_productID_api(productId),
-      get_products_api() //Need change after
+    const [fetchedProduct] = await Promise.all([
+      get_productID_api(productId)
     ]);
     product.value = fetchedProduct;
-    allproducts.value = fetchedAllProducts;
 
     if (product.value.image_urls?.length > 0) {
       mainImage.value = product.value.image_urls[0];
     }
+
+    relatedProducts.value = await get_products_by_category_api(product.value.category_id)
   } catch (err) {
     console.error("Failed to fetch product data:", err);
     product.value = null;
-    showNotification('Không thể tải dữ liệu sản phẩm.', 'error');
+    showNotification(err, 'error');
   } finally {
     isLoading.value = false;
   }
@@ -118,7 +119,6 @@ const handleCheckout = () => {
 
 <template>
   <LoadingSpinner v-if="isLoading" message="Đang tải..." />
-  <div v-else-if="!product" class="page-state">Không tìm thấy sản phẩm.</div>
   <div v-else class="container">
     <main class="main-content-grid">
       <div class="image-gallery">
@@ -164,7 +164,7 @@ const handleCheckout = () => {
     <section class="related-products-section">
       <h2>Sản phẩm tương tự</h2> <br>
       <div class="product-grid">
-        <ProductCard v-for="productitem in allproducts" :key="productitem.ID" :product="productitem" />
+        <ProductCard v-for="productitem in relatedProducts.slice(0, 6)" :key="productitem.ID" :product="productitem" />
       </div>
     </section>
   </div>
@@ -407,6 +407,33 @@ const handleCheckout = () => {
   border-top: 1px solid var(--light-gray-color);
 }
 
+.product-grid {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 20px;
+}
+
+.product-grid .product-card {
+  width: 250px;
+  flex-shrink: 0;
+}
+
+.product-grid::-webkit-scrollbar {
+  height: 8px;
+}
+
+.product-grid::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+}
+
+.product-grid::-webkit-scrollbar-track {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
 /* --- MEDIA QUERIES --- */
 @media (max-width: 992px) {
   .main-content-grid {
@@ -416,6 +443,12 @@ const handleCheckout = () => {
 
   .extended-info-grid {
     grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 768px) {
+  .product-grid .product-card {
+    width: 150px;
+    flex-shrink: 0;
   }
 }
 </style>

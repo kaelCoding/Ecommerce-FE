@@ -26,7 +26,7 @@ const getCategory = async () => {
     categorys.value = res;
   } catch (error) {
     console.error("Failed to get categorys:", error);
-    showNotification("Tải danh sách danh mục thất bại.", "error");
+    showNotification(error, "error");
   }
 }
 
@@ -47,9 +47,9 @@ const confirmDelete = async () => {
     await delete_category_api(categoryIdToDelete.value);
     categorys.value = categorys.value.filter(category => category.ID !== categoryIdToDelete.value);
     showNotification("Xóa danh mục thành công!");
-  } catch (error) {
-    console.error("Failed to delete category:", error);
-    showNotification("Xóa danh mục thất bại. Vui lòng thử lại.", "error");
+  } catch (err) {
+    console.error("Failed to delete category:", err);
+    showNotification(err, "error");
   } finally {
     categoryIdToDelete.value = null;
   }

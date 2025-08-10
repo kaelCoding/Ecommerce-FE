@@ -93,12 +93,6 @@ const props = defineProps(["product"])
   color: var(--secondary-color);
 }
 
-.product-brand {
-  font-size: 0.85rem;
-  color: #6B7280;
-  margin-bottom: 10px;
-}
-
 .product-price {
   font-size: 1.1rem;
   font-weight: 700;

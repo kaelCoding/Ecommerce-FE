@@ -27,7 +27,7 @@ onMounted(async () => {
 
   } catch (err) {
     console.error("Failed to fetch dashboard data:", err);
-    showNotification("Không thể tải dữ liệu tổng quan.", "error")
+    showNotification(err, "error")
   } finally {
     isLoading.value = false;
   }

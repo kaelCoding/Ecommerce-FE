@@ -89,21 +89,6 @@ select.form-input {
   font-size: clamp(0.9rem, 2.5vw, 1rem);
 }
 
-.thank-you-message {
-  text-align: center;
-}
-
-.thank-you-message h4 {
-  font-size: clamp(1.2rem, 3vw, 1.5rem);
-  color: var(--secondary-color);
-  margin-bottom: 10px;
-}
-
-.thank-you-message p {
-  font-size: clamp(0.9rem, 2vw, 1rem);
-  color: var(--text-color);
-}
-
 .close-btn {
   background: none;
   border: none;
