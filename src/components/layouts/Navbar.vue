@@ -84,10 +84,10 @@ onBeforeUnmount(() => {
 <template>
   <header class="navbar" :class="{ 'scrolled': isScrolled, 'search-active': isSearchActive }">
     <div class="container">
-      <a href="/" class="logo">
-        <img class="favicon-ctn" src="/public/images/favicon.jpg" alt="">
+      <RouterLink to="/" class="logo">
+        <img class="favicon-ctn" src="/public/images/favicon.jpg" alt="tokusatsu">
         <span>TUNI TOKU</span>
-      </a>
+      </RouterLink>
       <nav class="nav-links">
         <RouterLink to="/">Trang chủ</RouterLink>
         <RouterLink to="/products">Sản phẩm</RouterLink>

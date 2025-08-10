@@ -58,7 +58,7 @@ const goToProductList = () => {
     <section class="intro-section">
       <div class="container intro-content">
         <div class="intro-image-wrapper">
-          <img src="/public/images/img2.jpg" alt="Các mô hình siêu nhân chất lượng cao" class="intro-image" />
+          <img src="/public/images/img2.jpg" alt="kamen raider tokusatsu" class="intro-image" />
         </div>
         <div class="intro-text">
           <h2 class="section-title">
@@ -88,7 +88,7 @@ const goToProductList = () => {
         <div class="more-ctn">
           <RouterLink class="btn-primary" to="/products">Xem nhiều hơn</RouterLink>
         </div>
-        <div v-if="!isLoading && categoriesWithProducts.length === 0" class="text-center">
+        <div v-if="!isLoading && categoriesWithProducts.length === 0">
           <p>Không có sản phẩm nào để hiển thị.</p>
         </div>
       </div>
