@@ -1,18 +1,17 @@
 <script setup>
 import { ref, onMounted, computed, reactive } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { add_product_api, get_productID_api, update_product_api } from '@/services/product';
-import { get_categories_api } from '@/services/category';
+import { add_product_api, update_product_api } from '@/services/product';
 import { useNotification } from '@/composables/useNotification';
+import { useAdminStore } from '@/stores/admin';
 import LoadingSpinner from '@/components/common/LoadingSpinner.vue';
 
 const { showNotification } = useNotification();
-
-const route = useRoute()
-const router = useRouter()
-
+const adminStore = useAdminStore();
 const isLoading = ref(false);
-const categories = ref([])
+
+const route = useRoute();
+const router = useRouter();
 
 const selectedFiles = ref([]);
 const existingImageUrls = ref([]);
@@ -22,28 +21,23 @@ const pageTitle = computed(() => isEditing.value ? 'Sửa Sản Phẩm' : 'Thêm
 const submitButtonText = computed(() => isEditing.value ? 'Cập Nhật' : 'Thêm Sản Phẩm');
 
 onMounted(async () => {
-    try {
-        categories.value = await get_categories_api();
-    } catch (err) {
-        console.error("Failed to fetch categories:", err);
-        showNotification(err, "error")
-    }
+    await adminStore.fetchCategories();
 
     if (isEditing.value) {
+        isLoading.value = true;
         try {
-            isLoading.value = true;
-            const fetchedProduct = await get_productID_api(route.params.id);
+            const productId = Number(route.params.id);
+            const fetchedProduct = await adminStore.fetchProductById(productId);
 
+            product.id = fetchedProduct.ID;
             product.name = fetchedProduct.name;
             product.description = fetchedProduct.description;
             product.price = fetchedProduct.price;
             product.categoryId = fetchedProduct.category_id;
-            product.category_name = fetchedProduct.category_name;
-
             existingImageUrls.value = fetchedProduct.image_urls || [];
         } catch (err) {
             console.error("Failed to fetch product data:", err);
-            showNotification(err, "error")
+            showNotification(err, "error");
         } finally {
             isLoading.value = false;
         }
@@ -51,21 +45,20 @@ onMounted(async () => {
 });
 
 const product = reactive({
+    id: null,
     name: "",
     description: "",
     price: "",
     categoryId: "",
-    category_name: "",
-})
+});
 
 const handleFileChange = (event) => {
     selectedFiles.value = Array.from(event.target.files);
-    console.log(selectedFiles.value)
 };
 
 const handleSubmit = async () => {
     if (!isEditing.value && selectedFiles.value.length === 0) {
-        showNotification("Please select at least one image.", "error")
+        showNotification("Vui lòng chọn ít nhất một ảnh.", "error");
         return;
     }
 
@@ -86,16 +79,19 @@ const handleSubmit = async () => {
 
     try {
         if (isEditing.value) {
-            await update_product_api(route.params.id, formData);
-            showNotification("Cập nhật sản phẩm thành công!")
+            const updatedProduct = await update_product_api(route.params.id, formData);
+            adminStore.updateProduct(updatedProduct); 
+            showNotification("Cập nhật sản phẩm thành công!");
         } else {
-            await add_product_api(formData);
-            showNotification("Thêm sản phẩm thành công!")
+            const newProduct = await add_product_api(formData);
+            adminStore.addProduct(newProduct);
+            showNotification("Thêm sản phẩm thành công!");
         }
+
         router.push({ name: 'admin-products' });
     } catch (err) {
         console.error('Submit failed:', err);
-        showNotification(err, "error")
+        showNotification(err, "error");
     } finally {
         isLoading.value = false;
     }
@@ -108,31 +104,31 @@ const handleSubmit = async () => {
             <h1>{{ pageTitle }}</h1>
         </div>
         <div class="content-area">
-            <LoadingSpinner v-if="isLoading" message="Đang tải..."/>
+            <LoadingSpinner v-if="isLoading" message="Đang tải..." />
             <form v-else @submit.prevent="handleSubmit">
                 <div class="form-group">
                     <label for="name">Tên sản phẩm</label>
-                    <input type="text" id="name" class="form-input" v-model="product.name" placeholder="Nhập tên sản phẩm" required>
+                    <input type="text" id="name" class="form-input" v-model="product.name"
+                        placeholder="Nhập tên sản phẩm" required>
                 </div>
                 <div class="form-group">
                     <label for="category">Danh mục</label>
                     <select id="category" class="form-input" v-model="product.categoryId" required>
                         <option value="" disabled>Chọn danh mục</option>
-                        <option v-for="cat in categories" :key="cat.ID" :value="cat.ID">{{ cat.name }}</option>
+                        <option v-for="cat in adminStore.categories" :key="cat.ID" :value="cat.ID">{{ cat.name }}</option>
                     </select>
                 </div>
 
                 <div class="form-group">
                     <label for="price">Giá</label>
-                    <input type="text" id="price" class="form-input" v-model="product.price" placeholder="Nhập giá" required>
+                    <input type="text" id="price" class="form-input" v-model="product.price" placeholder="Nhập giá"
+                        required>
                 </div>
-                <!-- <div class="form-group">
-                <label for="stock">Kho hàng</label>
-                <input type="number" id="stock" class="form-input" v-model.number="product.stock" required>
-            </div> -->
+                
                 <div class="form-group">
                     <label for="imageUrl">Mô tả</label>
-                    <textarea id="description" class="form-input" v-model="product.description" placeholder="Nhập mô tả"></textarea>
+                    <textarea id="description" class="form-input" v-model="product.description"
+                        placeholder="Nhập mô tả"></textarea>
                 </div>
 
                 <div v-if="isEditing && existingImageUrls.length > 0" class="form-group">
@@ -144,7 +140,7 @@ const handleSubmit = async () => {
 
                 <div class="form-group">
                     <label for="images">{{ isEditing ? 'Tải lên ảnh mới (sẽ thay thế ảnh cũ)' : 'Ảnh sản phẩm'
-                        }}</label>
+                    }}</label>
                     <input type="file" id="images" @change="handleFileChange" multiple accept="image/*" />
                 </div>
 

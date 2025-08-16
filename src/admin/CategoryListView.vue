@@ -1,63 +1,37 @@
 <script setup>
 import { useRouter } from 'vue-router';
-import { get_categories_api, delete_category_api } from '@/services/category';
-import { onBeforeMount, ref } from 'vue';
+import { onBeforeMount } from 'vue';
 import { useNotification } from '@/composables/useNotification';
+import { useAdminStore } from '@/stores/admin';
+import { useConfirmation } from '@/composables/useConfirmation';
 import LoadingSpinner from '@/components/common/LoadingSpinner.vue';
 import ConfirmationModal from '@/components/common/ConfirmationModal.vue';
 
 const { showNotification } = useNotification();
 const router = useRouter();
-const isLoading = ref(true)
+const adminStore = useAdminStore();
 
-const isConfirmModalVisible = ref(false);
-const categoryIdToDelete = ref(null); 
-
-const categorys = ref([])
-
-onBeforeMount(async () => {
-  await getCategory()
-  isLoading.value = false
-})
-
-const getCategory = async () => {
+const { 
+  isConfirmModalVisible, 
+  showConfirmModal: handleDeleteCategory,
+  cancelDelete, 
+  confirmDelete: performDelete
+} = useConfirmation(async (id) => {
   try {
-    const res = await get_categories_api();
-    categorys.value = res;
-  } catch (error) {
-    console.error("Failed to get categorys:", error);
-    showNotification(error, "error");
-  }
-}
-
-const goToEditCategory = (categoryId) => {
-  router.push({ name: 'admin-categories-edit', params: { id: categoryId } });
-};
-
-const handleDeleteCategory = (categoryId) => {
-  categoryIdToDelete.value = categoryId;
-  isConfirmModalVisible.value = true; 
-};
-
-const confirmDelete = async () => {
-  isConfirmModalVisible.value = false;
-  if (!categoryIdToDelete.value) return;
-
-  try {
-    await delete_category_api(categoryIdToDelete.value);
-    categorys.value = categorys.value.filter(category => category.ID !== categoryIdToDelete.value);
+    await adminStore.deleteCategory(id);
     showNotification("Xóa danh mục thành công!");
   } catch (err) {
     console.error("Failed to delete category:", err);
-    showNotification(err, "error");
-  } finally {
-    categoryIdToDelete.value = null;
+    showNotification(err.message || err, "error");
   }
-};
+});
 
-const cancelDelete = () => {
-  isConfirmModalVisible.value = false;
-  categoryIdToDelete.value = null;
+onBeforeMount(async () => {
+  await adminStore.fetchCategories();
+});
+
+const goToEditCategory = (categoryId) => {
+  router.push({ name: 'admin-categories-edit', params: { id: categoryId } });
 };
 </script>
 
@@ -82,9 +56,9 @@ const cancelDelete = () => {
               <th>Hành động</th>
             </tr>
           </thead>
-          <LoadingSpinner v-if="isLoading" message="Đang tải..."/>
+          <LoadingSpinner v-if="adminStore.isLoading.categories" message="Đang tải..."/>
           <tbody v-else>
-            <tr v-for="category in categorys" :key="category.id">
+            <tr v-for="category in adminStore.categories" :key="category.id">
               <td>{{ category.ID }}</td>
               <td>{{ category.name }}</td>
               <td>
@@ -103,7 +77,7 @@ const cancelDelete = () => {
       </div>
     </div>
     <ConfirmationModal :show="isConfirmModalVisible" title="Xác nhận xóa danh mục"
-      message="Bạn có chắc chắn muốn xóa danh mục này không? Hành động này không thể hoàn tác." @confirm="confirmDelete"
+      message="Bạn có chắc chắn muốn xóa danh mục này không? Hành động này không thể hoàn tác." @confirm="performDelete"
       @cancel="cancelDelete" />
   </div>
 </template>

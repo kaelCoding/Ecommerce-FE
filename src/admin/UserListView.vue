@@ -1,29 +1,13 @@
 <script setup>
-import { onBeforeMount, ref } from 'vue';
-import { useNotification } from '@/composables/useNotification';
-import { get_users_api } from '@/services/auth';
+import { onBeforeMount } from 'vue';
+import { useAdminStore } from '@/stores/admin';
 import LoadingSpinner from '@/components/common/LoadingSpinner.vue';
 
-const { showNotification } = useNotification();
-const isLoading = ref(true);
-
-const users = ref([]);
+const adminStore = useAdminStore();
 
 onBeforeMount(async () => {
-  await getUsers()
-  isLoading.value = false
+  adminStore.fetchUsers
 })
-
-const getUsers = async () => {
-  try {
-    const res = await get_users_api();
-    users.value = res;
-  } catch (err) {
-    console.error("Failed to get products:", err);
-    showNotification(err, "error");
-  }
-};
-
 </script>
 
 <template>
@@ -45,9 +29,9 @@ const getUsers = async () => {
               <th>Quyền hạn</th>
             </tr>
           </thead>
-          <LoadingSpinner v-if="isLoading" message="Đang tải..." />
+          <LoadingSpinner v-if="adminStore.isLoading.users" message="Đang tải..." />
           <tbody v-else>
-            <tr v-for="user in users" :key="user.ID">
+            <tr v-for="user in adminStore.users" :key="user.ID">
               <td>{{ user.id }}</td>
               <td>{{ user.email }}</td>
               <td>{{ user.username }}</td>

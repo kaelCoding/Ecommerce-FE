@@ -1,33 +1,40 @@
 <script setup>
-import { ref, onMounted, computed } from 'vue';
+import { reactive, onMounted, computed, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { add_category_api, update_category_api, get_categoryID_api } from '@/services/category';
-import LoadingSpinner from '@/components/common/LoadingSpinner.vue';
+import { add_category_api, update_category_api } from '@/services/category';
 import { useNotification } from '@/composables/useNotification';
+import { useAdminStore } from '@/stores/admin';
+import LoadingSpinner from '@/components/common/LoadingSpinner.vue';
 
 const { showNotification } = useNotification();
+const adminStore = useAdminStore();
+const isLoading = ref(false);
 
 const route = useRoute();
 const router = useRouter();
-const isLoading = ref(false);
-
+ 
 const isEditing = computed(() => !!route.params.id);
 const pageTitle = computed(() => isEditing.value ? 'Sửa Danh Mục' : 'Thêm Danh Mục Mới');
 const submitButtonText = computed(() => isEditing.value ? 'Cập Nhật' : 'Thêm Danh Mục');
 
-const category = ref({
+const category = reactive({
+    id: null,
     name: "",
 });
 
 onMounted(async () => {
     if (isEditing.value) {
+        isLoading.value = true;
         try {
-            isLoading.value = true;
-            const fetchedCategory = await get_categoryID_api(route.params.id);
-            category.value.name = fetchedCategory.name;
+            const categoryId = Number(route.params.id);
+            const fetchedCategory = await adminStore.fetchCategoryById(categoryId);
+            
+            category.id = fetchedCategory.ID;
+            category.name = fetchedCategory.name;
         } catch (err) {
             console.error("Failed to fetch category data:", err);
-            showNotification(err, "error");
+            showNotification(err.message || err, "error");
+            router.push({ name: 'admin-categories' });
         } finally {
             isLoading.value = false;
         }
@@ -36,19 +43,21 @@ onMounted(async () => {
 
 const handleSubmit = async () => {
     isLoading.value = true;
-
     try {
         if (isEditing.value) {
-            await update_category_api(route.params.id, category.value);
-            showNotification("Cập nhật danh mục thành công!")
+            const payload = { name: category.name };
+            const updatedCategory = await update_category_api(category.id, payload);
+            adminStore.updateCategory(updatedCategory);
+            showNotification("Cập nhật danh mục thành công!");
         } else {
-            await add_category_api(category.value);
-            showNotification("Thêm danh mục thành công!")
+            const newCategory = await add_category_api({ name: category.name });
+            adminStore.addCategory(newCategory);
+            showNotification("Thêm danh mục thành công!");
         }
         router.push({ name: 'admin-categories' });
     } catch (err) {
         console.error('Submit failed:', err);
-        showNotification(err, "error")
+        showNotification(err.message || err, "error");
     } finally {
         isLoading.value = false;
     }

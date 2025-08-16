@@ -1,65 +1,38 @@
 <script setup>
 import { useRouter } from 'vue-router';
-import { onBeforeMount, ref } from 'vue';
-import { get_products_api } from '@/services/product';
-import { delete_product_api } from '@/services/product';
+import { onBeforeMount } from 'vue';
 import { useNotification } from '@/composables/useNotification';
 import { formatPrice } from '@/composables/useUtils';
+import { useAdminStore } from '@/stores/admin';
+import { useConfirmation } from '@/composables/useConfirmation';
 import LoadingSpinner from '@/components/common/LoadingSpinner.vue';
 import ConfirmationModal from '@/components/common/ConfirmationModal.vue';
 
 const { showNotification } = useNotification();
 const router = useRouter();
-const isLoading = ref(true);
+const adminStore = useAdminStore();
 
-const isConfirmModalVisible = ref(false);
-const productIdToDelete = ref(null);  
-
-const products = ref([]);
-
-onBeforeMount(async () => {
-  await getProducts()
-  isLoading.value = false
-})
-
-const getProducts = async () => {
+const { 
+  isConfirmModalVisible, 
+  showConfirmModal: handleDeleteProduct,
+  cancelDelete, 
+  confirmDelete: performDelete
+} = useConfirmation(async (id) => {
   try {
-    const res = await get_products_api();
-    products.value = res;
-  } catch (err) {
-    console.error("Failed to get products:", err);
-    showNotification(err, "error");
-  }
-};
-
-const goToEditProduct = (productId) => {
-  router.push({ name: 'admin-products-edit', params: { id: productId } });
-};
-
-const handleDeleteProduct = (productId) => {
-  productIdToDelete.value = productId;
-  isConfirmModalVisible.value = true; 
-};
-
-const confirmDelete = async () => {
-  isConfirmModalVisible.value = false;
-  if (!productIdToDelete.value) return;
-
-  try {
-    await delete_product_api(productIdToDelete.value);
-    products.value = products.value.filter(product => product.ID !== productIdToDelete.value);
+    await adminStore.deleteProduct(id);
     showNotification("Xóa sản phẩm thành công!");
   } catch (err) {
     console.error("Failed to delete product:", err);
-    showNotification(err, "error");
-  } finally {
-    productIdToDelete.value = null;
+    showNotification(err.message || err, "error");
   }
-};
+});
 
-const cancelDelete = () => {
-  isConfirmModalVisible.value = false;
-  productIdToDelete.value = null;
+onBeforeMount(async () => {
+  await adminStore.fetchProducts();
+});
+
+const goToEditProduct = (productId) => {
+  router.push({ name: 'admin-products-edit', params: { id: productId } });
 };
 </script>
 
@@ -83,13 +56,12 @@ const cancelDelete = () => {
               <th>Tên</th>
               <th>Danh mục</th>
               <th>Giá</th>
-              <!-- <th>Kho hàng</th> -->
               <th>Hành động</th>
             </tr>
           </thead>
-          <LoadingSpinner v-if="isLoading" message="Đang tải..." />
+          <LoadingSpinner v-if="adminStore.isLoading.products" message="Đang tải..." />
           <tbody v-else>
-            <tr v-for="product in products" :key="product.ID">
+            <tr v-for="product in adminStore.products" :key="product.ID">
               <td>
                 <img v-if="product.image_urls && product.image_urls.length > 0" :src="product.image_urls[0]"
                   :alt="product.name" class="table-img">
@@ -113,11 +85,9 @@ const cancelDelete = () => {
       </div>
     </div>
     <ConfirmationModal :show="isConfirmModalVisible" title="Xác nhận xóa sản phẩm"
-      message="Bạn có chắc chắn muốn xóa sản phẩm này không? Hành động này không thể hoàn tác." @confirm="confirmDelete"
+      message="Bạn có chắc chắn muốn xóa sản phẩm này không? Hành động này không thể hoàn tác." @confirm="performDelete"
       @cancel="cancelDelete" />
   </div>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

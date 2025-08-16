@@ -25,7 +25,7 @@ export const init_auth = async () => {
     load_token_local();
 
     if(token.value){
-        console.log("hello world!")
+        return
     }
 }
 

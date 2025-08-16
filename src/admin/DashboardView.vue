@@ -1,35 +1,19 @@
 <script setup>
-import { onMounted, ref } from 'vue';
-import { get_products_api } from '@/services/product';
-import { get_categories_api } from '@/services/category';
-import { get_users_api } from '@/services/auth';
+import { onMounted } from 'vue';
+import { useAdminStore } from '@/stores/admin';
 import { useNotification } from '@/composables/useNotification';
 import LoadingSpinner from '@/components/common/LoadingSpinner.vue';
 
 const { showNotification } = useNotification();
 
-const products = ref([]);
-const categories = ref([]);
-const users = ref([]);
-const isLoading = ref(true);
+const adminStore = useAdminStore();
 
 onMounted(async () => {
   try {
-    const [productsRes, categoriesRes, usersRes] = await Promise.all([
-      get_products_api(),
-      get_categories_api(),
-      get_users_api()
-    ]);
-
-    products.value = productsRes;
-    categories.value = categoriesRes;
-    users.value = usersRes;
-
+    await adminStore.fetchAllDashboardData();
   } catch (err) {
     console.error("Failed to fetch dashboard data:", err);
-    showNotification(err, "error")
-  } finally {
-    isLoading.value = false;
+    showNotification(err, "error");
   }
 });
 </script>
@@ -40,19 +24,19 @@ onMounted(async () => {
       <h1>Tổng Quan</h1>
     </div>
 
-    <LoadingSpinner v-if="isLoading" message="Đang tải dữ liệu..."/>
+    <LoadingSpinner v-if="adminStore.isLoading.all" message="Đang tải dữ liệu..."/>
     <div v-else class="dashboard-grid content-area">
       <div class="stat-card">
         <h3>Sản phẩm</h3>
-        <p>{{ products.length }}</p>
+        <p>{{ adminStore.products.length }}</p>
       </div>
       <div class="stat-card">
         <h3>Danh mục</h3>
-        <p>{{ categories.length }}</p>
+        <p>{{ adminStore.categories.length }}</p>
       </div>
       <div class="stat-card">
         <h3>Người dùng</h3>
-        <p>{{ users.length }}</p>
+        <p>{{ adminStore.users.length }}</p>
       </div>
     </div>
   </div>

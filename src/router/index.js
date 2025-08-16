@@ -72,6 +72,7 @@ const router = createRouter({
           component: () => import("../admin/UserListView.vue"),
         },
       ],
+
     },
   ],
 });

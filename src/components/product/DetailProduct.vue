@@ -25,6 +25,7 @@ const customerInfo = ref({
   name: '',
   phone: '',
   address: '',
+  email : '',
   paymentMethod: 'cod',
 });
 
@@ -44,6 +45,7 @@ const resetForm = () => {
     name: '',
     phone: '',
     address: '',
+    email : '',
     paymentMethod: 'cod',
   };
   quantity.value = 1;
@@ -58,6 +60,7 @@ const submitOrder = async () => {
     customerName: customerInfo.value.name,
     customerPhone: customerInfo.value.phone,
     customerAddress: customerInfo.value.address,
+    customerEmail: customerInfo.value.email,
     paymentMethod: customerInfo.value.paymentMethod,
   };
 
@@ -193,6 +196,11 @@ const handleCheckout = () => {
                   <label for="name">Họ và tên</label>
                   <input id="name" type="text" class="form-input" v-model="customerInfo.name"
                     placeholder="Nhập tên của bạn" required>
+                </div>
+                <div class="form-group">
+                  <label for="email">Email</label>
+                  <input id="email" type="email" class="form-input" v-model="customerInfo.email"
+                    placeholder="Nhập email của bạn" required>
                 </div>
                 <div class="form-group">
                   <label for="phone">Số điện thoại</label>

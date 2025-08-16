@@ -2,45 +2,23 @@
 import ProductCard from '@/components/product/Card.vue';
 import LoadingSpinner from '@/components/common/LoadingSpinner.vue';
 import UserFeedbackForm from '@/components/common/UserFeedbackForm.vue';
-import { onBeforeMount, ref } from 'vue';
+import { onBeforeMount } from 'vue';
 import { useRouter } from 'vue-router';
-import { get_categories_api, get_products_by_category_api } from '@/services/category';
 import { useNotification } from '@/composables/useNotification';
+import { useProductStore } from '@/stores/product';
 
-const showNotification = useNotification()
-
+const showNotification = useNotification();
 const router = useRouter();
-const isLoading = ref(true);
 
-const categoriesWithProducts = ref([]);
+const productStore = useProductStore();
 
 onBeforeMount(async () => {
-  await fetchData();
-})
-
-const fetchData = async () => {
-  isLoading.value = true;
   try {
-    const categories = await get_categories_api();
-    if (!categories || categories.length === 0) return;
-
-    const productPromises = categories.map(category =>
-      get_products_by_category_api(category.ID).then(products => ({
-        ...category,
-        products: products
-      }))
-    );
-
-    const results = await Promise.all(productPromises);
-    categoriesWithProducts.value = results.filter(cat => cat.products && cat.products.length > 0);
-
+    await productStore.fetchCategoriesAndProducts();
   } catch (err) {
-    console.error("Failed to fetch data for home view:", err);
-    showNotification(err, "error")
-  } finally {
-    isLoading.value = false;
+    showNotification(err, "error");
   }
-};
+});
 
 const goToProductList = () => {
   router.push({ name: 'product-list' });
@@ -75,10 +53,10 @@ const goToProductList = () => {
       </div>
     </section>
 
-    <LoadingSpinner v-if="isLoading" message="Đang tải dữ liệu..." />
+    <LoadingSpinner v-if="productStore.isLoading" message="Đang tải dữ liệu..." />
     <main v-else class="container">
       <div class="products-ctn">
-        <section v-for="categoryData in categoriesWithProducts" :key="categoryData.ID" class="product-section">
+        <section v-for="categoryData in productStore.categoriesWithProducts" :key="categoryData.ID" class="product-section">
           <h2 class="page-title">{{ categoryData.name }}</h2>
           <div class="product-grid">
             <ProductCard v-for="product in categoryData.products.slice(0, 4)" :key="product.ID" :product="product" />
@@ -88,7 +66,7 @@ const goToProductList = () => {
         <div class="more-ctn">
           <RouterLink class="btn-primary" to="/products">Xem nhiều hơn</RouterLink>
         </div>
-        <div v-if="!isLoading && categoriesWithProducts.length === 0">
+        <div v-if="!productStore.isLoading && productStore.categoriesWithProducts.length === 0">
           <p>Không có sản phẩm nào để hiển thị.</p>
         </div>
       </div>

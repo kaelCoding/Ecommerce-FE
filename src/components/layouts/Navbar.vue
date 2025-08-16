@@ -105,19 +105,21 @@ onBeforeUnmount(() => {
           <i class="fa-brands fa-searchengin"></i>
         </button>
 
-        <RouterLink v-if="!get_auth_user" to="/login" class="action-icon">
-          <i class="fa-solid fa-user-secret"></i>
-        </RouterLink>
-        <div v-else class="user-menu-container">
+        <div class="user-menu-container">
           <i class="fa-solid fa-user-secret action-icon" @click.stop="isUserMenuOpen = !isUserMenuOpen"></i>
           <div v-if="isUserMenuOpen" class="user-dropdown">
             <ThemeToggle @click="isUserMenuOpen = false" />
-            <RouterLink to="/admin" v-if="get_auth_user.admin" class="dropdown-item" @click="isUserMenuOpen = false">
+            <span v-if="get_auth_user" class="dropdown-item" @click="isUserMenuOpen = false">{{ get_auth_user.email }}</span>
+            <RouterLink to="/admin" v-if="get_auth_user && get_auth_user.admin" class="dropdown-item" @click="isUserMenuOpen = false">
               Quản trị
             </RouterLink>
-            <button class="dropdown-item" @click="handleLogout">
+
+            <RouterLink v-if="!get_auth_user" to="/login" class="dropdown-item" @click="isUserMenuOpen = false">
+              Đăng nhập 
+            </RouterLink>
+            <span v-else class="dropdown-item" @click="handleLogout">
               Đăng xuất
-            </button>
+            </span>
           </div>
         </div>
       </div>
