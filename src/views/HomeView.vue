@@ -14,7 +14,7 @@ const productStore = useProductStore();
 
 onBeforeMount(async () => {
   try {
-    await productStore.fetchCategoriesAndProducts();
+    await productStore.fetchLimitedProductsForCategories();
   } catch (err) {
     showNotification(err, "error");
   }

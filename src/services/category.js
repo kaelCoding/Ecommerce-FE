@@ -47,3 +47,11 @@ export const get_products_by_category_api = async (categoryId) => {
         throw error;
     }
 };
+
+export const get_productslimit_by_category_api = async (categoryId) => {
+    try {
+        return await api("GET", `/api/v1/categories/${categoryId}/products/limit`);
+    } catch (error) {
+        throw error;
+    }
+};

@@ -2,24 +2,35 @@
     <footer class="main-footer">
         <div class="container footer-content">
             <div id="about-us" class="footer-column about-us">
-                <h3 class="footer-heading">TONI TOKU</h3>
+                <a href="https://www.facebook.com/W.A.T.St0re" target="_blank" class="social-links">
+                    <h3>Tuni Toku</h3>
+                </a>
                 <p class="footer-text">
-                    Chuyên cung mô hình cấp đồ chơi chất lượng cao, an toàn và đa dạng cho mọi lứa tuổi.
+                   TUNI TOKU là điểm đến của những người hâm mộ Tokusatsu. Chúng tôi chuyên cung cấp mô hình và đồ chơi chính hãng, chất lượng cao, an toàn và đa dạng. Cùng TUNI TOKU thỏa mãn đam mê sưu tầm và khám phá thế giới siêu anh hùng!
                 </p>
-                <div class="social-links">
-                    <a href="https://www.facebook.com/tungthanh.1504" target="_blank" class="social-icon"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
-                </div>
             </div>
 
             <div id="contact" class="footer-column contact-info">
-                <h3 class="footer-heading">Liên hệ</h3>
+                <h3 class="footer-heading">Hỗ trợ & Liên hệ</h3>
+                <a href="https://www.facebook.com/W.A.T.St0re" target="_blank">
+                    <p class="footer-text">
+                        <i class="fa-brands fa-facebook-f"></i> Tuni Toku
+                    </p>
+                </a>
                 <p class="footer-text">
                     <i class="fas fa-phone"></i> +84 869553209
-                </p>
+                </p> 
                 <p class="footer-text">
                     <i class="fas fa-envelope"></i> hdtt1504@gmail.com
                 </p>
+            </div>
+
+            <div class="footer-column quick-links">
+                <h3 class="footer-heading">Liên kết nhanh</h3>
+                <router-link class="footer-text" to="/">Trang chủ</router-link>
+                <router-link class="footer-text" to="/products">Sản phẩm</router-link>
+                <router-link class="footer-text" to="/about">Về chúng tôi</router-link>
+                <router-link class="footer-text" to="/contact">Liên hệ</router-link>
             </div>
         </div>
         <div class="footer-bottom">
@@ -39,9 +50,19 @@
     border-top: 5px solid var(--secondary-color);
 }
 
+h3, a {
+    width: max-content;
+}
+
+.footer-column {
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+}
+
 .footer-content {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: 1fr 1fr 1fr;
     gap: 30px;
     margin-bottom: 40px;
 }
@@ -60,38 +81,21 @@
     display: flex;
     align-items: center;
     gap: 10px;
-}
-
-.footer-links {
-    list-style: none;
-    padding: 0;
-}
-
-.footer-links li a {
-    color: #ccc;
-    text-decoration: none;
-    font-size: 0.9rem;
     transition: color var(--transition-speed);
-    line-height: 2.2;
+    display: inline-block;
 }
 
-.footer-links li a:hover {
+a:hover {
     color: var(--primary-color);
 }
 
 .social-links {
     display: flex;
-    gap: 15px;
-}
-
-.social-icon {
-    color: #ccc;
+    color: #ffffff;
+    margin-bottom: 20px;
     font-size: 1.2rem;
+    font-weight: 600;
     transition: color var(--transition-speed);
-}
-
-.social-icon:hover {
-    color: var(--primary-color);
 }
 
 .footer-bottom {
@@ -104,11 +108,12 @@
 
 @media (max-width: 768px) {
     .footer-content {
-        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-        text-align: left;
+        grid-template-columns: 1fr;
+        text-align: center;
         gap: 20px;
     }
 
+    .quick-links,
     .about-us,
     .contact-info {
         text-align: left;
@@ -124,12 +129,7 @@
 }
 
 @media (max-width: 576px) {
-    .footer-content {
-        grid-template-columns: 1fr;
-        text-align: center;
-        gap: 30px;
-    }
-
+    .quick-links,
     .about-us,
     .contact-info {
         text-align: center;

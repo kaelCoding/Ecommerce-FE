@@ -42,6 +42,10 @@ a {
   color: inherit;
 }
 
+a:hover {
+  color: var(--primary-color);
+}
+
 img {
   max-width: 100%;
   display: block;

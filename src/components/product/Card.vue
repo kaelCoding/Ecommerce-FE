@@ -91,6 +91,9 @@ const props = defineProps(["product"])
   font-weight: 600;
   margin-bottom: 5px;
   color: var(--secondary-color);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .product-price {
