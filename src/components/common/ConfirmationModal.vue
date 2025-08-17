@@ -52,7 +52,8 @@ const onCancel = () => {
 
 <style scoped>
 .modal-footer {
-  margin-top: 32px;
+  margin-top: 20px;
+  padding-top: 15px;
   display: flex;
   justify-content: flex-end;
   gap: 12px;

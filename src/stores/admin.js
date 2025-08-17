@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { get_products_api, delete_product_api, get_productID_api } from "@/services/product";
-import { get_categories_api, delete_category_api } from "@/services/category";
+import { get_categories_api, delete_category_api, get_categoryID_api } from "@/services/category";
 import { get_users_api } from "@/services/auth";
 
 async function _fetchResource(

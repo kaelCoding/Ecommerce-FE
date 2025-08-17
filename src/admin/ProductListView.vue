@@ -53,8 +53,7 @@ const goToEditProduct = (productId) => {
           <thead>
             <tr>
               <th>Ảnh</th>
-              <th>Tên</th>
-              <th>Danh mục</th>
+              <th class="name-ctn">Tên</th>
               <th>Giá</th>
               <th>Hành động</th>
             </tr>
@@ -66,8 +65,7 @@ const goToEditProduct = (productId) => {
                 <img v-if="product.image_urls && product.image_urls.length > 0" :src="product.image_urls[0]"
                   :alt="product.name" class="table-img">
               </td>
-              <td>{{ product.name }}</td>
-              <td>{{ product.category_name }}</td>
+              <td class="name-ctn">{{ product.name }}</td>
               <td>{{ formatPrice(product.price) }}</td>
               <td>
                 <div class="table-actions center">
@@ -90,4 +88,21 @@ const goToEditProduct = (productId) => {
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.name-ctn {
+  max-width: 25vw;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 767px) {
+  .admin-table thead th:nth-child(3) {
+    display: none;
+  }
+  
+  .admin-table tbody td:nth-child(3) {
+    display: none;
+  }
+}
+</style>

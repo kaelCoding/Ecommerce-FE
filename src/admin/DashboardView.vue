@@ -5,7 +5,6 @@ import { useNotification } from '@/composables/useNotification';
 import LoadingSpinner from '@/components/common/LoadingSpinner.vue';
 
 const { showNotification } = useNotification();
-
 const adminStore = useAdminStore();
 
 onMounted(async () => {

@@ -1,15 +1,17 @@
 <script setup>
 import { ref, onMounted, watch } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { get_productID_api } from '@/services/product';
 import { get_products_by_category_api } from '@/services/category';
 import { submit_order_api } from '@/services/order';
 import { formatPrice } from '@/composables/useUtils';
 import { useNotification } from '@/composables/useNotification';
+import { get_auth_user } from '@/stores/auth';
 import ProductCard from '@/components/product/Card.vue';
 import LoadingSpinner from '../common/LoadingSpinner.vue';
 
 const route = useRoute();
+const router = useRouter();
 const { showNotification } = useNotification();
 
 const product = ref(null);
@@ -115,7 +117,15 @@ watch(() => route.params.id, (newId) => {
 });
 
 const handleCheckout = () => {
-  openCheckoutModal();
+  if (get_auth_user.value) {
+    openCheckoutModal();
+  } else {
+    showNotification('Bạn cần đăng nhập để tiến hành thanh toán.', 'error');
+    router.push({
+      path: '/login',
+      query: { redirect: route.fullPath }
+    });
+  }
 };
 
 </script>
