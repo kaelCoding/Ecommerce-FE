@@ -1,5 +1,5 @@
 <script setup>
-import { onBeforeMount } from 'vue';
+import { onBeforeMount, onBeforeUnmount } from 'vue';
 import ProductCard from '@/components/product/Card.vue';
 import LoadingSpinner from '../common/LoadingSpinner.vue';
 import { useNotification } from '@/composables/useNotification';
@@ -14,6 +14,10 @@ onBeforeMount(async () => {
   } catch (err) {
     showNotification(err, "error");
   }
+});
+
+onBeforeUnmount(() => {
+  productStore.stopAllProductsTimer();
 });
 </script>
 

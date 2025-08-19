@@ -2,7 +2,7 @@
 import ProductCard from '@/components/product/Card.vue';
 import LoadingSpinner from '@/components/common/LoadingSpinner.vue';
 import UserFeedbackForm from '@/components/common/UserFeedbackForm.vue';
-import { onBeforeMount } from 'vue';
+import { onBeforeMount, onBeforeUnmount } from 'vue';
 import { useRouter } from 'vue-router';
 import { useNotification } from '@/composables/useNotification';
 import { useProductStore } from '@/stores/product';
@@ -18,6 +18,10 @@ onBeforeMount(async () => {
   } catch (err) {
     showNotification(err, "error");
   }
+});
+
+onBeforeUnmount(() => {
+  productStore.stopLimitedProductsTimer();
 });
 
 const goToProductList = () => {
