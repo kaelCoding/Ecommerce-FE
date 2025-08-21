@@ -128,6 +128,17 @@ const handleCheckout = () => {
   }
 };
 
+const gotoChat = () => {
+  if (get_auth_user.value) {
+    router.push("/chat")
+  } else {
+    showNotification('Bạn cần đăng nhập để nhắn tin.', 'error');
+    router.push({
+      path: '/login',
+      query: { redirect: route.fullPath }
+    });
+  }
+}
 </script>
 
 <template>
@@ -156,6 +167,9 @@ const handleCheckout = () => {
           </div>
           <button class="btn-primary" @click="handleCheckout">
             <i class="fas fa-credit-card"></i> THANH TOÁN
+          </button>
+          <button class="btn-primary" @click="gotoChat">
+            <i class="fa-solid fa-comments"></i> NHẮN TIN TUNI
           </button>
         </div>
 
@@ -255,7 +269,6 @@ const handleCheckout = () => {
   margin: 40px auto;
 }
 
-/* --- PRODUCT DETAIL PAGE LAYOUT --- */
 .main-content-grid {
   display: grid;
   grid-template-columns: 7fr 3fr;
@@ -309,7 +322,6 @@ const handleCheckout = () => {
   opacity: 1;
 }
 
-/* --- INFO PANEL STYLES (RESPONSIVE) --- */
 .product-brand {
   font-size: clamp(0.8rem, 2vw, 0.9rem);
   font-weight: 500;
@@ -344,7 +356,6 @@ const handleCheckout = () => {
 .quantity-selector {
   display: flex;
   align-items: center;
-  border: 2px solid var(--border-color);
   border-radius: var(--border-radius);
   overflow: hidden;
   height: clamp(40px, 5vh, 48px);
@@ -452,7 +463,6 @@ const handleCheckout = () => {
   background-color: rgba(0, 0, 0, 0.1);
 }
 
-/* --- MEDIA QUERIES --- */
 @media (max-width: 992px) {
   .main-content-grid {
     grid-template-columns: 1fr;

@@ -45,5 +45,8 @@ onBeforeMount(async () => {
 </template>
 
 <style scoped>
-
+.container {
+  height: 100%;
+  overflow-y: hidden;
+}
 </style>

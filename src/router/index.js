@@ -18,6 +18,11 @@ const router = createRouter({
       component: () => import("../views/LoginView.vue"),
     },
     {
+      path: "/chat",
+      name: "chat",
+      component: () => import("../views/ChatView.vue"),
+    },
+    {
       path: "/products",
       name: "product-list",
       component: () => import("../components/product/ProductListView.vue"),
@@ -70,6 +75,11 @@ const router = createRouter({
           path: "users",
           name: "admin-users",
           component: () => import("../admin/UserListView.vue"),
+        },
+        {
+          path: "chat",
+          name: "admin-chat",
+          component: () => import("../admin/ChatAdminView.vue"),
         },
       ],
 

@@ -1,6 +1,3 @@
-/* =========================================================
-   THUỘC TÍNH CHUNG CHO FORM (GLOBAL)
-   ========================================================= */
 .form-container {
   max-width: 600px;
   margin: 40px auto;
@@ -75,7 +72,6 @@ select.form-input {
   padding-right: 2.5rem;
 }
 
-/* Form actions (buttons) */
 .form-actions {
   display: flex;
   justify-content: flex-end;
@@ -143,11 +139,6 @@ select.form-input {
   }
 }
 
-/* =========================================================
-   CÁC PHẦN TỬ RIÊNG BIỆT TRONG FORM
-   ========================================================= */
-
-/* Thanh toán (Payment) */
 .payment-options {
   display: flex;
   flex-direction: column;
@@ -163,7 +154,6 @@ select.form-input {
   cursor: pointer;
 }
 
-/* Radio button */
 .radio-label input[type="radio"] {
   width: 18px;
   height: 18px;

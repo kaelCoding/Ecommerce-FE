@@ -7,7 +7,7 @@ import { useRouter } from 'vue-router';
 import { useNotification } from '@/composables/useNotification';
 import { useProductStore } from '@/stores/product';
 
-const showNotification = useNotification();
+const { showNotification } = useNotification();
 const router = useRouter();
 
 const productStore = useProductStore();
@@ -32,9 +32,7 @@ const goToProductList = () => {
 <template>
   <div>
     <section class="hero-section">
-      <div class="container">
-        <button @click="goToProductList" class="btn-primary">MUA NGAY !</button>
-      </div>
+      <button @click="goToProductList" class="btn-primary">MUA NGAY !</button>
     </section>
 
     <section class="intro-section">
@@ -130,7 +128,6 @@ const goToProductList = () => {
   transform: scale(1.05);
 }
 
-/* INTRO-TEXT STYLES - RESPONSIVE & OPTIMIZED */
 .intro-text {
   max-width: 600px;
 }
@@ -150,7 +147,6 @@ const goToProductList = () => {
   color: var(--text-color);
 }
 
-/* PRODUCT SECTION STYLES */
 .products-ctn {
   border-bottom: 1px solid var(--light-gray-color);
   border-top: 1px solid var(--light-gray-color);
@@ -169,7 +165,6 @@ const goToProductList = () => {
   padding-bottom: 24px;
 }
 
-/* MEDIA QUERIES */
 @media (min-width: 768px) {
   .intro-content {
     flex-direction: row;

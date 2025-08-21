@@ -9,7 +9,8 @@ import { computed } from 'vue';
 const route = useRoute();
 
 const shouldShowFooter = computed(() =>
- !route.path.startsWith('/admin') &&
+  !route.path.startsWith('/admin') &&
+  !route.path.startsWith('/chat') &&
   route.path !== '/login' &&
   route.path !== '/register'
 );
@@ -23,8 +24,7 @@ useTheme();
     <main class="page-wrapper">
       <router-view />
     </main>
-    <Footer v-if="shouldShowFooter"/>
+    <Footer v-if="shouldShowFooter" />
     <NotificationPopup />
   </div>
 </template>
-

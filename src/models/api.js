@@ -2,9 +2,10 @@ import { token } from "@/stores/auth";
 
 // const API_BASE_URL = "http://localhost:8080";
 const API_BASE_URL = "https://ecommerce-be-production-856c.up.railway.app";
+const API_PREFIX = "/api/v1";
 
 export const api = async (method, url, data) => {
-    const urlApi = API_BASE_URL + url;
+    const urlApi = API_BASE_URL + API_PREFIX + url;
     let body;
     if(data){
         body = JSON.stringify(data)
@@ -58,4 +59,9 @@ export const apiFormData = async (method, url, formData) => {
         console.error("API FormData request error:", error);
         throw error.error || 'An unknown error occurred';
     }
+};
+
+export const getWebSocketUrl = () => {
+    const wsBaseUrl = API_BASE_URL.replace(/^http/, 'ws');
+    return `${wsBaseUrl}${API_PREFIX}/ws`;
 };

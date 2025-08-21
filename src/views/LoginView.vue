@@ -5,7 +5,7 @@ import { useRoute, useRouter } from "vue-router"
 import { auth_login_api } from "@/services/auth";
 import { useNotification } from "@/composables/useNotification";
 
-const showNotification = useNotification()
+const { showNotification } = useNotification();
 
 const router = useRouter()
 const route = useRoute()
@@ -21,6 +21,7 @@ const login = async () => {
     save_token_local(data.token)
     await get_auth_info()
 
+    showNotification("Đăng nhập thành công.")
     const redirectPath = route.query.redirect || '/';
     router.push(redirectPath);
   } catch (err) {

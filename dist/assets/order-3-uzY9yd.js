@@ -1,1 +1,0 @@
-import{K as t}from"./index-Cmxnodc5.js";const o=async r=>{try{return await t("POST","/api/v1/orders",r)}catch(a){throw a}},s=async r=>{try{return await t("POST","/api/v1/feedback",r)}catch(a){throw a}};export{o as a,s};

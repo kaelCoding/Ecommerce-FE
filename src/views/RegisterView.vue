@@ -4,7 +4,7 @@ import { useRouter } from "vue-router"
 import { auth_register_api } from "@/services/auth";
 import { useNotification } from "@/composables/useNotification";
 
-const showNotification = useNotification()
+const { showNotification } = useNotification();
 
 const router = useRouter()
 
@@ -19,6 +19,7 @@ const register = async () => {
     await auth_register_api(dataRegister.value).then(res => {
       router.push("/login")
     })
+    showNotification("Đăng ký thành công.")
   } catch (err) {
     console.log(err)
     showNotification(err, "error")

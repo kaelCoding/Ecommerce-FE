@@ -113,6 +113,9 @@ onBeforeUnmount(() => {
             <RouterLink to="/admin" v-if="get_auth_user && get_auth_user.admin" class="dropdown-item" @click="isUserMenuOpen = false">
               Quản trị
             </RouterLink>
+            <router-link to="/chat" v-if="get_auth_user && !get_auth_user.admin" class="dropdown-item" @click="isUserMenuOpen = false" title="Chat">
+              Nhắn tin TUNI
+            </router-link>
 
             <RouterLink v-if="!get_auth_user" to="/login" class="dropdown-item" @click="isUserMenuOpen = false">
               Đăng nhập 
@@ -227,7 +230,6 @@ onBeforeUnmount(() => {
   color: var(--primary-color);
 }
 
-/* --- SEARCH BAR --- */
 .search-container {
   position: relative;
   display: flex;
@@ -268,7 +270,6 @@ onBeforeUnmount(() => {
   display: none;
 }
 
-/* --- USER MENU --- */
 .user-menu-container {
   position: relative;
 }

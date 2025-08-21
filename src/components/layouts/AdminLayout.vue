@@ -39,7 +39,7 @@ onBeforeUnmount(() => {
         <button class="menu-toggle" @click="toggleSidebar">
           <i class="fas fa-bars"></i>
         </button>
-        <ThemeToggle/>
+        <ThemeToggle />
       </div>
     </div>
 
@@ -70,6 +70,11 @@ onBeforeUnmount(() => {
             </router-link>
           </li>
           <li>
+            <router-link to="/admin/chat"  @click="closeSidebar">
+              <i class="fa-solid fa-comments"></i> <span>Chat</span>
+            </router-link>
+          </li>
+          <li>
             <RouterLink to="/">
               <i class="fas fa-sign-out-alt"></i> Đăng Xuất
             </RouterLink>
@@ -91,7 +96,8 @@ onBeforeUnmount(() => {
 <style scoped>
 .admin-wrapper {
   display: flex;
-  min-height: 100vh;
+  height: calc(100vh - 72px);
+  overflow-y: hidden;
   background-color: var(--light-gray-color);
   font-family: 'Inter', sans-serif;
 }
@@ -107,7 +113,7 @@ onBeforeUnmount(() => {
   transition: transform 0.3s ease;
   position: sticky;
   top: 0;
-  height: 100vh;
+  height: 100%;
 }
 
 .sidebar-header {
@@ -153,14 +159,12 @@ onBeforeUnmount(() => {
   text-align: center;
 }
 
-/* =========================================================
-   Nội dung chính
-   ========================================================= */
 .main-content {
   flex-grow: 1;
   padding: clamp(20px, 4vw, 40px);
   overflow-y: auto;
   transition: margin-left 0.3s ease;
+  height: 100%;
 }
 
 /* =========================================================
@@ -173,7 +177,7 @@ onBeforeUnmount(() => {
 .menu-toggle {
   background: none;
   border: none;
-  font-size: clamp(1.1rem, 3vw, 1.5rem); 
+  font-size: clamp(1.1rem, 3vw, 1.5rem);
   color: var(--secondary-color);
   cursor: pointer;
   padding: 0;
@@ -197,13 +201,13 @@ onBeforeUnmount(() => {
   .admin-wrapper {
     flex-direction: column;
     position: relative;
+    overflow-y: hidden;
   }
 
   .sidebar {
     position: fixed;
     top: 72px;
     left: 0;
-    height: 100%;
     transform: translateX(-100%);
     width: 250px;
     z-index: 1000;
@@ -252,6 +256,11 @@ onBeforeUnmount(() => {
 
   .menu-toggle {
     font-size: clamp(1.2rem, 4vw, 1.5rem);
+  }
+
+  .main-content {
+    height: auto;
+    overflow-y: auto;
   }
 }
 </style>

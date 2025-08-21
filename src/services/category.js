@@ -2,7 +2,7 @@ import { api } from "@/models/api";
 
 export const add_category_api = async (data) => {
     try {
-        return await api("POST", "/api/v1/admin/categories", data)
+        return await api("POST", "/admin/categories", data)
     } catch (error) {
         throw error
     }
@@ -10,7 +10,7 @@ export const add_category_api = async (data) => {
 
 export const get_categories_api = async () => {
     try {
-        return await api("GET", "/api/v1/categories")
+        return await api("GET", "/categories")
     } catch (error) {
         throw error
     }
@@ -18,7 +18,7 @@ export const get_categories_api = async () => {
 
 export const get_categoryID_api = async (id) => {
     try {
-        return await api("GET", `/api/v1/categories/${id}`)
+        return await api("GET", `/categories/${id}`)
     } catch (error) {
         throw error
     }
@@ -26,7 +26,7 @@ export const get_categoryID_api = async (id) => {
 
 export const update_category_api = async (id, data) => {
     try {
-        return await api("PUT", `/api/v1/admin/categories/${id}`, data)
+        return await api("PUT", `/admin/categories/${id}`, data)
     } catch (error) {
         throw error
     }
@@ -34,7 +34,7 @@ export const update_category_api = async (id, data) => {
 
 export const delete_category_api = async (id) => {
     try {
-        return await api("DELETE", `/api/v1/admin/categories/${id}`)
+        return await api("DELETE", `/admin/categories/${id}`)
     } catch (error) {
         throw error
     }
@@ -42,7 +42,7 @@ export const delete_category_api = async (id) => {
 
 export const get_products_by_category_api = async (categoryId) => {
     try {
-        return await api("GET", `/api/v1/categories/${categoryId}/products`);
+        return await api("GET", `/categories/${categoryId}/products`);
     } catch (error) {
         throw error;
     }
@@ -50,7 +50,7 @@ export const get_products_by_category_api = async (categoryId) => {
 
 export const get_productslimit_by_category_api = async (categoryId) => {
     try {
-        return await api("GET", `/api/v1/categories/${categoryId}/products/limit`);
+        return await api("GET", `/categories/${categoryId}/products/limit`);
     } catch (error) {
         throw error;
     }
