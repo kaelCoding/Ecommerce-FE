@@ -62,7 +62,6 @@ const setupFCM = async () => {
             vapidKey: "BMJYrDhHREPAVJuzDYrBQb6APXLLy4KEGMMds0SMf-PtNIAS9-lnPOmoXlbVi00w2hhAjgO8CxW8BnmRDhHMx3w"
         });
         if (currentToken) {
-            console.log("FCM registration token:", currentToken);
             await updateFCMToken(currentToken);
         } else {
             console.log('No registration token available. Request permission to generate one.');

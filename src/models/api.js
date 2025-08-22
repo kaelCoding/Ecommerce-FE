@@ -36,7 +36,7 @@ export const api = async (method, url, data) => {
 }
 
 export const apiFormData = async (method, url, formData) => {
-    const urlApi = API_BASE_URL + url;
+    const urlApi = API_BASE_URL + API_PREFIX + url;
 
     try {
         const response = await fetch(urlApi, {

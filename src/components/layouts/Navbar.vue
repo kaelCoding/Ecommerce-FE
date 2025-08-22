@@ -109,16 +109,21 @@ onBeforeUnmount(() => {
           <i class="fa-solid fa-user-secret action-icon" @click.stop="isUserMenuOpen = !isUserMenuOpen"></i>
           <div v-if="isUserMenuOpen" class="user-dropdown">
             <ThemeToggle @click="isUserMenuOpen = false" />
-            <span v-if="get_auth_user" class="dropdown-item" @click="isUserMenuOpen = false">{{ get_auth_user.email }}</span>
-            <RouterLink to="/admin" v-if="get_auth_user && get_auth_user.admin" class="dropdown-item" @click="isUserMenuOpen = false">
+            <RouterLink to="/profile" v-if="get_auth_user && !get_auth_user.admin" class="dropdown-item"
+              @click="isUserMenuOpen = false" title="Hồ sơ cá nhân">
+              Profile
+            </RouterLink>
+            <RouterLink to="/admin" v-if="get_auth_user && get_auth_user.admin" class="dropdown-item"
+              @click="isUserMenuOpen = false">
               Quản trị
             </RouterLink>
-            <router-link to="/chat" v-if="get_auth_user && !get_auth_user.admin" class="dropdown-item" @click="isUserMenuOpen = false" title="Chat">
+            <router-link to="/chat" v-if="get_auth_user && !get_auth_user.admin" class="dropdown-item"
+              @click="isUserMenuOpen = false" title="Chat">
               Nhắn tin TUNI
             </router-link>
 
             <RouterLink v-if="!get_auth_user" to="/login" class="dropdown-item" @click="isUserMenuOpen = false">
-              Đăng nhập 
+              Đăng nhập
             </RouterLink>
             <span v-else class="dropdown-item" @click="handleLogout">
               Đăng xuất

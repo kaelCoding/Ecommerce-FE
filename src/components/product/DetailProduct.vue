@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, watch } from 'vue';
+import { ref, onMounted, watch, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { get_productID_api } from '@/services/product';
 import { get_products_by_category_api } from '@/services/category';
@@ -31,6 +31,19 @@ const customerInfo = ref({
   paymentMethod: 'cod',
 });
 
+const authUser = get_auth_user;
+
+const discountPercentage = computed(() => {
+  return authUser.value?.discountPercentage  || 0;
+});
+
+const discountedPrice = computed(() => {
+  if (product.value && discountPercentage.value > 0) {
+    return product.value.price * (1 - discountPercentage.value);
+  }
+  return product.value?.price;
+});
+
 const incrementQuantity = () => quantity.value++;
 const decrementQuantity = () => {
   if (quantity.value > 1) quantity.value--;
@@ -56,9 +69,10 @@ const resetForm = () => {
 const submitOrder = async () => {
   isSubmitting.value = true
   const orderPayload = {
+    productID: product.value.ID,
     productName: product.value.name,
     quantity: quantity.value,
-    totalPrice: product.value.price * quantity.value,
+    totalPrice: product.value.price * quantity.value, 
     customerName: customerInfo.value.name,
     customerPhone: customerInfo.value.phone,
     customerAddress: customerInfo.value.address,
@@ -158,7 +172,12 @@ const gotoChat = () => {
       <div class="info-panel">
         <p class="product-brand">{{ product.category_name }}</p>
         <h1 class="product-title">{{ product.name }}</h1>
-        <p class="product-price">{{ formatPrice(product.price) }}</p>
+        <div v-if="discountPercentage > 0" class="price-info">
+          <p class="original-price">{{ formatPrice(product.price) }}</p>
+          <p class="product-price">{{ formatPrice(discountedPrice) }}</p>
+        </div>
+        <p v-else class="product-price">{{ formatPrice(product.price) }}</p>
+        
         <div class="actions">
           <div class="quantity-selector">
             <button @click="decrementQuantity" aria-label="Giảm số lượng">-</button>
@@ -213,6 +232,7 @@ const gotoChat = () => {
                 <p>Sản phẩm: <strong>{{ product.name }}</strong></p>
                 <p>Số lượng: <strong>{{ quantity }}</strong></p>
                 <p>Tổng tiền: <strong>{{ formatPrice(product.price * quantity) }}</strong></p>
+                <p v-if="discountPercentage > 0">Thanh toán: <strong>{{ formatPrice(discountedPrice * quantity) }}</strong></p>
               </div>
 
               <form @submit.prevent="submitOrder">
@@ -338,11 +358,33 @@ const gotoChat = () => {
   line-height: 1.2;
 }
 
+.price-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin: 24px 0;
+}
+
+.original-price {
+  font-size: clamp(1.4rem, 4vw, 2rem);
+  color: #999;
+  text-decoration: line-through;
+}
+
 .product-price {
   font-size: clamp(2rem, 5vw, 2.5rem);
   font-weight: 700;
   color: var(--primary-color);
-  margin: 24px 0;
+  margin: 0;
+}
+
+.discount-badge {
+  background-color: var(--primary-color);
+  color: #fff;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: var(--border-radius);
+  font-size: 0.9rem;
 }
 
 .actions {

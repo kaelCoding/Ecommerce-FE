@@ -1,10 +1,23 @@
 <script setup>
-import { defineProps } from 'vue';
+import { defineProps, computed } from 'vue';
 import { goToDetailProduct } from '@/composables/useUtils';
 import { formatPrice } from '@/composables/useUtils';
+import { get_auth_user } from '@/stores/auth';
 
 const props = defineProps(["product"])
 
+const authUser = get_auth_user;
+
+const discountPercentage = computed(() => {
+  return authUser.value?.discountPercentage || 0;
+});
+
+const discountedPrice = computed(() => {
+  if (props.product && discountPercentage.value > 0) {
+    return props.product.price * (1 - discountPercentage.value);
+  }
+  return props.product?.price;
+});
 </script>
 
 <template>
@@ -17,7 +30,11 @@ const props = defineProps(["product"])
     </div>
     <div class="card-content">
       <h3 class="product-name">{{ product.name }}</h3>
-      <p class="product-price">{{ formatPrice(product.price) }}</p>
+      <div v-if="discountPercentage > 0" class="price-info">
+        <p class="original-price">{{ formatPrice(product.price) }}</p>
+        <p class="discounted-price">{{ formatPrice(discountedPrice) }}</p>
+      </div>
+      <p v-else class="product-price">{{ formatPrice(product.price) }}</p>
     </div>
   </div>
 </template>
@@ -94,6 +111,26 @@ const props = defineProps(["product"])
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.price-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: auto;
+}
+
+.original-price {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #999;
+  text-decoration: line-through;
+}
+
+.discounted-price {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--primary-color);
 }
 
 .product-price {
