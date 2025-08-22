@@ -23,7 +23,7 @@ const discountedPrice = computed(() => {
 <template>
   <div class="product-card" @click="goToDetailProduct(product.ID)">
     <div class="card-image-wrapper">
-      <img :src="product.image_urls[0]" :alt="product.name" class="product-image">
+      <img :src="product.image_urls[0]" :alt="product.name" loading="lazy" class="product-image">
       <div class="overlay">
         <button class="btn-primary">Xem chi tiết</button>
       </div>

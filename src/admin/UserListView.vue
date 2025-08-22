@@ -6,7 +6,8 @@ import LoadingSpinner from '@/components/common/LoadingSpinner.vue';
 const adminStore = useAdminStore();
 
 onBeforeMount(async () => {
-  adminStore.fetchUsers
+  adminStore.fetchUsers;
+  console.log(adminStore.users)
 })
 </script>
 
@@ -26,7 +27,7 @@ onBeforeMount(async () => {
               <th>ID</th>
               <th>Email</th>
               <th>Tên</th>
-              <th>Quyền hạn</th>
+              <th>Vip</th>
             </tr>
           </thead>
           <LoadingSpinner v-if="adminStore.isLoading.users" message="Đang tải..." />
@@ -35,7 +36,7 @@ onBeforeMount(async () => {
               <td>{{ user.id }}</td>
               <td>{{ user.email }}</td>
               <td>{{ user.username }}</td>
-              <td>{{ user.admin ? 'admin' : 'user' }}</td>
+              <td>{{ user.vipLevel }}</td>
             </tr>
           </tbody>
         </table>

@@ -85,7 +85,7 @@ onBeforeUnmount(() => {
   <header class="navbar" :class="{ 'scrolled': isScrolled, 'search-active': isSearchActive }">
     <div class="container">
       <RouterLink to="/" class="logo">
-        <img class="favicon-ctn" src="/public/images/favicon.jpg" alt="tokusatsu">
+        <img class="favicon-ctn" loading="lazy" src="/public/images/favicon.jpg" alt="tokusatsu">
         <span>TUNI TOKU</span>
       </RouterLink>
       <nav class="nav-links">
@@ -111,7 +111,7 @@ onBeforeUnmount(() => {
             <ThemeToggle @click="isUserMenuOpen = false" />
             <RouterLink to="/profile" v-if="get_auth_user && !get_auth_user.admin" class="dropdown-item"
               @click="isUserMenuOpen = false" title="Hồ sơ cá nhân">
-              Profile
+              Rank Vip
             </RouterLink>
             <RouterLink to="/admin" v-if="get_auth_user && get_auth_user.admin" class="dropdown-item"
               @click="isUserMenuOpen = false">

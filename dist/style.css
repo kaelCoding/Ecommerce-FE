@@ -1,5 +1,3 @@
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
-
 :root {
   --primary-color: #3b82f6;
   --secondary-color: #1f2937;
@@ -193,29 +191,11 @@ img {
   animation: fadeInUp 1s ease-in-out;
 }
 
-/* ANIMATIONS */
 @keyframes fadeIn {
   from {
     opacity: 0;
   }
   to {
     opacity: 1;
-  }
-}
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
   }
 }

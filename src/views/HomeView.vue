@@ -38,7 +38,7 @@ const goToProductList = () => {
     <section class="intro-section">
       <div class="container intro-content">
         <div class="intro-image-wrapper">
-          <img src="/public/images/img2.jpg" alt="kamen raider tokusatsu" class="intro-image" />
+          <img src="/public/images/img2.jpg" loading="lazy" alt="kamenraider tokusatsu" class="intro-image" />
         </div>
         <div class="intro-text">
           <h2 class="section-title">

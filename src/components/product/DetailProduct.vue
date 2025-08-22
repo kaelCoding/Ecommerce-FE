@@ -161,10 +161,10 @@ const gotoChat = () => {
     <main class="main-content-grid">
       <div class="image-gallery">
         <div class="main-image-wrapper">
-          <img :src="mainImage" :alt="product.name" class="img-main" />
+          <img loading="lazy" :src="mainImage" :alt="product.name" class="img-main" />
         </div>
         <div class="thumbnail-list">
-          <img v-for="image in product.image_urls" :key="image" :src="image" :class="{ active: mainImage === image }"
+          <img loading="lazy" v-for="image in product.image_urls" :key="image" :src="image" :class="{ active: mainImage === image }"
             @click="mainImage = image" alt="Thumbnail" />
         </div>
       </div>
