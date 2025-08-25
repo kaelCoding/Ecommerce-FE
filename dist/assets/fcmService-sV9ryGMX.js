@@ -1,4 +1,4 @@
-import{H as C,a3 as v,a4 as S,a5 as E,a6 as B,a7 as y,a8 as H,a9 as W,aa as $,ab as V,ac as U,ad as K,ae as g}from"./index-BXw2fPDX.js";const Ke=async(e=null)=>{try{let t="/chat/history";return e&&(t+=`?userId=${e}`),await C("GET",t)}catch(t){throw t}};/**
+import{G as C,a3 as v,a4 as S,a5 as E,a6 as B,a7 as y,a8 as W,a9 as H,aa as $,ab as V,ac as G,ad as K,ae as g}from"./index-TAlcRXIZ.js";const Ke=async(e=null)=>{try{let t="/chat/history";return e&&(t+=`?userId=${e}`),await C("GET",t)}catch(t){throw t}};/**
  * @license
  * Copyright 2019 Google LLC
  *
@@ -13,7 +13,7 @@ import{H as C,a3 as v,a4 as S,a5 as E,a6 as B,a7 as y,a8 as H,a9 as W,aa as $,ab
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */const G="/firebase-messaging-sw.js",q="/firebase-cloud-messaging-push-scope",P="BDOU99-h67HcA6JeFXHbSNMu7e2yNNu3RzoMj8TM4W88jITfq7ZmPvIM1Iv-4_l2LxQcYwhqby2xGpWwzjfAnG4",Y="https://fcmregistrations.googleapis.com/v1",R="google.c.a.c_id",J="google.c.a.c_l",z="google.c.a.ts",Q="google.c.a.e",I=1e4;var _;(function(e){e[e.DATA_MESSAGE=1]="DATA_MESSAGE",e[e.DISPLAY_NOTIFICATION=3]="DISPLAY_NOTIFICATION"})(_||(_={}));/**
+ */const U="/firebase-messaging-sw.js",q="/firebase-cloud-messaging-push-scope",P="BDOU99-h67HcA6JeFXHbSNMu7e2yNNu3RzoMj8TM4W88jITfq7ZmPvIM1Iv-4_l2LxQcYwhqby2xGpWwzjfAnG4",Y="https://fcmregistrations.googleapis.com/v1",R="google.c.a.c_id",J="google.c.a.c_l",z="google.c.a.ts",Q="google.c.a.e",I=1e4;var _;(function(e){e[e.DATA_MESSAGE=1]="DATA_MESSAGE",e[e.DISPLAY_NOTIFICATION=3]="DISPLAY_NOTIFICATION"})(_||(_={}));/**
  * @license
  * Copyright 2018 Google LLC
  *
@@ -86,7 +86,7 @@ import{H as C,a3 as v,a4 as S,a5 as E,a6 as B,a7 as y,a8 as H,a9 as W,aa as $,ab
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */const ae={"missing-app-config-values":'Missing App configuration value: "{$valueName}"',"only-available-in-window":"This method is available in a Window context.","only-available-in-sw":"This method is available in a service worker context.","permission-default":"The notification permission was not granted and dismissed instead.","permission-blocked":"The notification permission was not granted and blocked instead.","unsupported-browser":"This browser doesn't support the API's required to use the Firebase SDK.","indexed-db-unsupported":"This browser doesn't support indexedDb.open() (ex. Safari iFrame, Firefox Private Browsing, etc)","failed-service-worker-registration":"We are unable to register the default service worker. {$browserErrorMessage}","token-subscribe-failed":"A problem occurred while subscribing the user to FCM: {$errorInfo}","token-subscribe-no-token":"FCM returned no token when subscribing the user to push.","token-unsubscribe-failed":"A problem occurred while unsubscribing the user from FCM: {$errorInfo}","token-update-failed":"A problem occurred while updating the user from FCM: {$errorInfo}","token-update-no-token":"FCM returned no token when updating the user to push.","use-sw-after-get-token":"The useServiceWorker() method may only be called once and must be called before calling getToken() to ensure your service worker is used.","invalid-sw-registration":"The input to useServiceWorker() must be a ServiceWorkerRegistration.","invalid-bg-handler":"The input to setBackgroundMessageHandler() must be a function.","invalid-vapid-key":"The public VAPID key must be a string.","use-vapid-key-after-get-token":"The usePublicVapidKey() method may only be called once and must be called before calling getToken() to ensure your VAPID key is used."},c=new W("messaging","Messaging",ae);/**
+ */const ae={"missing-app-config-values":'Missing App configuration value: "{$valueName}"',"only-available-in-window":"This method is available in a Window context.","only-available-in-sw":"This method is available in a service worker context.","permission-default":"The notification permission was not granted and dismissed instead.","permission-blocked":"The notification permission was not granted and blocked instead.","unsupported-browser":"This browser doesn't support the API's required to use the Firebase SDK.","indexed-db-unsupported":"This browser doesn't support indexedDb.open() (ex. Safari iFrame, Firefox Private Browsing, etc)","failed-service-worker-registration":"We are unable to register the default service worker. {$browserErrorMessage}","token-subscribe-failed":"A problem occurred while subscribing the user to FCM: {$errorInfo}","token-subscribe-no-token":"FCM returned no token when subscribing the user to push.","token-unsubscribe-failed":"A problem occurred while unsubscribing the user from FCM: {$errorInfo}","token-update-failed":"A problem occurred while updating the user from FCM: {$errorInfo}","token-update-no-token":"FCM returned no token when updating the user to push.","use-sw-after-get-token":"The useServiceWorker() method may only be called once and must be called before calling getToken() to ensure your service worker is used.","invalid-sw-registration":"The input to useServiceWorker() must be a ServiceWorkerRegistration.","invalid-bg-handler":"The input to setBackgroundMessageHandler() must be a function.","invalid-vapid-key":"The public VAPID key must be a string.","use-vapid-key-after-get-token":"The usePublicVapidKey() method may only be called once and must be called before calling getToken() to ensure your VAPID key is used."},c=new H("messaging","Messaging",ae);/**
  * @license
  * Copyright 2019 Google LLC
  *
@@ -191,7 +191,7 @@ import{H as C,a3 as v,a4 as S,a5 as E,a6 as B,a7 as y,a8 as H,a9 as W,aa as $,ab
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */async function ke(e){try{e.swRegistration=await navigator.serviceWorker.register(G,{scope:q}),e.swRegistration.update().catch(()=>{}),await Te(e.swRegistration)}catch(t){throw c.create("failed-service-worker-registration",{browserErrorMessage:t==null?void 0:t.message})}}async function Te(e){return new Promise((t,n)=>{const o=setTimeout(()=>n(new Error(`Service worker not registered after ${I} ms`)),I),i=e.installing||e.waiting;e.active?(clearTimeout(o),t()):i?i.onstatechange=a=>{var s;((s=a.target)==null?void 0:s.state)==="activated"&&(i.onstatechange=null,clearTimeout(o),t())}:(clearTimeout(o),n(new Error("No incoming service worker found.")))})}/**
+ */async function ke(e){try{e.swRegistration=await navigator.serviceWorker.register(U,{scope:q}),e.swRegistration.update().catch(()=>{}),await Te(e.swRegistration)}catch(t){throw c.create("failed-service-worker-registration",{browserErrorMessage:t==null?void 0:t.message})}}async function Te(e){return new Promise((t,n)=>{const o=setTimeout(()=>n(new Error(`Service worker not registered after ${I} ms`)),I),i=e.installing||e.waiting;e.active?(clearTimeout(o),t()):i?i.onstatechange=a=>{var s;((s=a.target)==null?void 0:s.state)==="activated"&&(i.onstatechange=null,clearTimeout(o),t())}:(clearTimeout(o),n(new Error("No incoming service worker found.")))})}/**
  * @license
  * Copyright 2020 Google LLC
  *
@@ -296,7 +296,7 @@ import{H as C,a3 as v,a4 as S,a5 as E,a6 as B,a7 as y,a8 as H,a9 as W,aa as $,ab
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */async function Me(){try{await $()}catch{return!1}return typeof window<"u"&&V()&&U()&&"serviceWorker"in navigator&&"PushManager"in window&&"Notification"in window&&"fetch"in window&&ServiceWorkerRegistration.prototype.hasOwnProperty("showNotification")&&PushSubscription.prototype.hasOwnProperty("getKey")}/**
+ */async function Me(){try{await $()}catch{return!1}return typeof window<"u"&&V()&&G()&&"serviceWorker"in navigator&&"PushManager"in window&&"Notification"in window&&"fetch"in window&&ServiceWorkerRegistration.prototype.hasOwnProperty("showNotification")&&PushSubscription.prototype.hasOwnProperty("getKey")}/**
  * @license
  * Copyright 2020 Google LLC
  *
@@ -326,4 +326,4 @@ import{H as C,a3 as v,a4 as S,a5 as E,a6 as B,a7 as y,a8 as H,a9 as W,aa as $,ab
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */function Pe(e=H()){return Me().then(t=>{if(!t)throw c.create("unsupported-browser")},t=>{throw c.create("indexed-db-unsupported")}),B(y(e),"messaging").getImmediate()}async function Re(e,t){return e=y(e),x(e,t)}function Fe(e,t){return e=y(e),Ne(e,t)}De();const Le=async e=>{try{return await C("POST","/fcm/token",{token:e})}catch(t){throw t}};export{Pe as a,Re as b,Ke as g,Fe as o,Le as u};
+ */function Pe(e=W()){return Me().then(t=>{if(!t)throw c.create("unsupported-browser")},t=>{throw c.create("indexed-db-unsupported")}),B(y(e),"messaging").getImmediate()}async function Re(e,t){return e=y(e),x(e,t)}function Fe(e,t){return e=y(e),Ne(e,t)}De();const Le=async e=>{try{return await C("POST","/fcm/token",{token:e})}catch(t){throw t}};export{Pe as a,Re as b,Ke as g,Fe as o,Le as u};

@@ -111,7 +111,7 @@ onBeforeUnmount(() => {
             <ThemeToggle @click="isUserMenuOpen = false" />
             <RouterLink to="/profile" v-if="get_auth_user && !get_auth_user.admin" class="dropdown-item"
               @click="isUserMenuOpen = false" title="Hồ sơ cá nhân">
-              Rank Vip
+              Rank VIP
             </RouterLink>
             <RouterLink to="/admin" v-if="get_auth_user && get_auth_user.admin" class="dropdown-item"
               @click="isUserMenuOpen = false">

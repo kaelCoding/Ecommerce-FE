@@ -1,11 +1,11 @@
 <script setup>
-import ProductCard from '@/components/product/Card.vue';
-import LoadingSpinner from '@/components/common/LoadingSpinner.vue';
-import UserFeedbackForm from '@/components/common/UserFeedbackForm.vue';
-import { onBeforeMount, onBeforeUnmount } from 'vue';
+import { onBeforeMount } from 'vue';
 import { useRouter } from 'vue-router';
 import { useNotification } from '@/composables/useNotification';
 import { useProductStore } from '@/stores/product';
+import ProductCard from '@/components/product/Card.vue';
+import LoadingSpinner from '@/components/common/LoadingSpinner.vue';
+import UserFeedbackForm from '@/components/common/UserFeedbackForm.vue';
 
 const { showNotification } = useNotification();
 const router = useRouter();
@@ -14,14 +14,10 @@ const productStore = useProductStore();
 
 onBeforeMount(async () => {
   try {
-    await productStore.fetchLimitedProductsForCategories();
+    await productStore.fetchProductsForHome();
   } catch (err) {
     showNotification(err, "error");
   }
-});
-
-onBeforeUnmount(() => {
-  productStore.stopLimitedProductsTimer();
 });
 
 const goToProductList = () => {
@@ -58,17 +54,17 @@ const goToProductList = () => {
     <LoadingSpinner v-if="productStore.isLoading" message="Đang tải dữ liệu..." />
     <main v-else class="container">
       <div class="products-ctn">
-        <section v-for="categoryData in productStore.categoriesWithProducts" :key="categoryData.ID" class="product-section">
+        <section v-for="categoryData in productStore.homePageProducts" :key="categoryData.ID" class="product-section">
           <h2 class="page-title">{{ categoryData.name }}</h2>
           <div class="product-grid">
-            <ProductCard v-for="product in categoryData.products.slice(0, 4)" :key="product.ID" :product="product" />
+            <ProductCard v-for="product in categoryData.products" :key="product.ID" :product="product" />
           </div>
         </section>
 
         <div class="more-ctn">
           <RouterLink class="btn-primary" to="/products">Xem nhiều hơn</RouterLink>
         </div>
-        <div v-if="!productStore.isLoading && productStore.categoriesWithProducts.length === 0">
+        <div v-if="!productStore.isLoading && productStore.homePageProducts.length === 0">
           <p>Không có sản phẩm nào để hiển thị.</p>
         </div>
       </div>

@@ -2,11 +2,11 @@
 import { ref, onMounted, watch, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { get_productID_api } from '@/services/product';
-import { get_products_by_category_api } from '@/services/category';
 import { submit_order_api } from '@/services/order';
 import { formatPrice } from '@/composables/useUtils';
 import { useNotification } from '@/composables/useNotification';
 import { get_auth_user } from '@/stores/auth';
+import { useProductStore } from '@/stores/product';
 import ProductCard from '@/components/product/Card.vue';
 import LoadingSpinner from '../common/LoadingSpinner.vue';
 
@@ -14,6 +14,7 @@ const route = useRoute();
 const router = useRouter();
 const { showNotification } = useNotification();
 
+const productStore = useProductStore();
 const product = ref(null);
 const relatedProducts = ref([])
 
@@ -24,17 +25,13 @@ const quantity = ref(1);
 const mainImage = ref('');
 const isCheckoutModalOpen = ref(false);
 const customerInfo = ref({
-  name: '',
   phone: '',
   address: '',
-  email : '',
   paymentMethod: 'cod',
 });
 
-const authUser = get_auth_user;
-
 const discountPercentage = computed(() => {
-  return authUser.value?.discountPercentage  || 0;
+  return get_auth_user.value?.discountPercentage  || 0;
 });
 
 const discountedPrice = computed(() => {
@@ -52,15 +49,13 @@ const decrementQuantity = () => {
 const openCheckoutModal = () => { isCheckoutModalOpen.value = true; };
 const closeCheckoutModal = () => {
   isCheckoutModalOpen.value = false;
-  quantity.value = 1;
+  resetForm();
 };
 
 const resetForm = () => {
   customerInfo.value = {
-    name: '',
     phone: '',
     address: '',
-    email : '',
     paymentMethod: 'cod',
   };
   quantity.value = 1;
@@ -70,13 +65,11 @@ const submitOrder = async () => {
   isSubmitting.value = true
   const orderPayload = {
     productID: product.value.ID,
-    productName: product.value.name,
     quantity: quantity.value,
-    totalPrice: product.value.price * quantity.value, 
-    customerName: customerInfo.value.name,
+    customerName: get_auth_user.value.username,
     customerPhone: customerInfo.value.phone,
     customerAddress: customerInfo.value.address,
-    customerEmail: customerInfo.value.email,
+    customerEmail: get_auth_user.value.email,
     paymentMethod: customerInfo.value.paymentMethod,
   };
 
@@ -84,7 +77,6 @@ const submitOrder = async () => {
     await submit_order_api(orderPayload);
     showNotification('Đặt hàng thành công! Chúng tôi sẽ sớm liên hệ với bạn để xác nhận.')
     closeCheckoutModal();
-    resetForm();
   } catch (err) {
     console.error("Failed to submit order:", err);
     showNotification(err, 'error');
@@ -100,16 +92,20 @@ const fetchProductData = async (productId) => {
   }
   isLoading.value = true;
   try {
-    const [fetchedProduct] = await Promise.all([
-      get_productID_api(productId)
-    ]);
+    const fetchedProduct = await get_productID_api(productId);
     product.value = fetchedProduct;
 
     if (product.value.image_urls?.length > 0) {
       mainImage.value = product.value.image_urls[0];
     }
 
-    relatedProducts.value = await get_products_by_category_api(product.value.category_id)
+    const categoryId = product.value.category_id;
+    let related = productStore.getRelatedProducts(categoryId, product.value.ID, 6);
+    if (related.length < 6) {
+        await productStore.ensureCategoryProducts(categoryId);
+        related = productStore.getRelatedProducts(categoryId, product.value.ID, 6);
+    }
+    relatedProducts.value = related;
   } catch (err) {
     console.error("Failed to fetch product data:", err);
     product.value = null;
@@ -210,7 +206,7 @@ const gotoChat = () => {
     <section class="related-products-section">
       <h2>Sản phẩm tương tự</h2> <br>
       <div class="product-grid">
-        <ProductCard v-for="productitem in relatedProducts.slice(0, 6)" :key="productitem.ID" :product="productitem" />
+        <ProductCard v-for="productitem in relatedProducts" :key="productitem.ID" :product="productitem" />
       </div>
     </section>
   </div>
@@ -236,16 +232,6 @@ const gotoChat = () => {
               </div>
 
               <form @submit.prevent="submitOrder">
-                <div class="form-group">
-                  <label for="name">Họ và tên</label>
-                  <input id="name" type="text" class="form-input" v-model="customerInfo.name"
-                    placeholder="Nhập tên của bạn" required>
-                </div>
-                <div class="form-group">
-                  <label for="email">Email</label>
-                  <input id="email" type="email" class="form-input" v-model="customerInfo.email"
-                    placeholder="Nhập email của bạn" required>
-                </div>
                 <div class="form-group">
                   <label for="phone">Số điện thoại</label>
                   <input id="phone" type="tel" class="form-input" v-model="customerInfo.phone"

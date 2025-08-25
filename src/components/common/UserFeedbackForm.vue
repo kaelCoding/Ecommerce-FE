@@ -1,41 +1,43 @@
 <script setup>
 import { ref } from 'vue';
 import { send_feedback_api } from '@/services/order';
-import LoadingSpinner from './LoadingSpinner.vue';
 import { useNotification } from '@/composables/useNotification';
+import { get_auth_user } from '@/stores/auth';
+import { useRouter } from 'vue-router';
+import LoadingSpinner from './LoadingSpinner.vue';
 
 const { showNotification } = useNotification();
+const router = useRouter();
 
-const userName = ref('');
-const userEmail = ref('');
 const feedback = ref('');
 const isLoading = ref(false);
 const isSubmitted = ref(false)
 
 const submitFeedback = async () => {
-    isLoading.value = true;
+  if (!get_auth_user.value) {
+    router.push("/login")
+    showNotification("Bạn cần đăng nhập để gửi góp ý!", "error")
+  }
+  isLoading.value = true;
 
-    const feedbackData = {
-        userName: userName.value,
-        userEmail: userEmail.value,
-        feedback: feedback.value,
-    };
+  const feedbackData = {
+    userName: get_auth_user.value.username,
+    userEmail: get_auth_user.value.email,
+    feedback: feedback.value,
+  };
 
-    try {
-        await send_feedback_api(feedbackData);
-        isSubmitted.value = true;
+  try {
+    await send_feedback_api(feedbackData);
+    isSubmitted.value = true;
 
-        userName.value = '';
-        userEmail.value = '';
-        feedback.value = '';
-
-        showNotification("Cảm ơn bạn! Góp ý của bạn đã được gửi đi thành công.")
-    } catch (err) {
-        console.error("Failed to send feedback:", err);
-        showNotification(err, "error");
-    } finally {
-        isLoading.value = false;
-    }
+    feedback.value = '';
+    showNotification("Cảm ơn bạn! Góp ý của bạn đã được gửi đi thành công.")
+  } catch (err) {
+    console.error("Failed to send feedback:", err);
+    showNotification(err, "error");
+  } finally {
+    isLoading.value = false;
+  }
 };
 </script>
 
@@ -44,21 +46,12 @@ const submitFeedback = async () => {
     <h3 class="form-title">Hãy cho chúng tôi biết cảm nhận của bạn !</h3>
     <p class="form-subtitle">Góp ý của bạn giúp chúng tôi cải thiện dịch vụ tốt hơn.</p>
 
-    <loading-spinner v-if="isLoading" message="Đang gửi..."/>
+    <loading-spinner v-if="isLoading" message="Đang gửi..." />
     <form @submit.prevent="submitFeedback" v-else>
       <div class="form-group">
-        <label for="name">Tên của bạn</label>
-        <input class="form-input" type="text" id="name" v-model="userName" required placeholder="Nhập tên của bạn">
-      </div>
-      
-      <div class="form-group">
-        <label for="email">Email</label>
-        <input class="form-input" type="email" id="email" v-model="userEmail" required placeholder="Nhập email của bạn">
-      </div>
-
-      <div class="form-group">
         <label for="feedback">Nội dung góp ý</label>
-        <textarea class="form-input" id="feedback" v-model="feedback" required rows="4" placeholder="Chia sẻ suy nghĩ của bạn về sản phẩm/dịch vụ của chúng tôi..."></textarea>
+        <textarea class="form-input" id="feedback" v-model="feedback" required rows="4"
+          placeholder="Chia sẻ suy nghĩ của bạn về sản phẩm/dịch vụ của chúng tôi..."></textarea>
       </div>
 
       <div class="form-actions">
@@ -86,12 +79,12 @@ const submitFeedback = async () => {
   label {
     margin-bottom: 5px;
   }
-  
+
   input,
   textarea {
     padding: 10px;
   }
-  
+
   .btn-primary {
     padding: 10px 20px;
   }

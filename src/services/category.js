@@ -48,9 +48,14 @@ export const get_products_by_category_api = async (categoryId) => {
     }
 };
 
-export const get_productslimit_by_category_api = async (categoryId) => {
+export const get_productslimit_by_category_api = async (categoryId, limit) => {
+    let url = `/categories/${categoryId}/products/limit`;
+    if (limit && limit > 0) {
+        url += `?limit=${limit}`;
+    }
+
     try {
-        return await api("GET", `/categories/${categoryId}/products/limit`);
+        return await api("GET", url);
     } catch (error) {
         throw error;
     }

@@ -1,23 +1,19 @@
 <script setup>
-import { onBeforeMount, onBeforeUnmount } from 'vue';
-import ProductCard from '@/components/product/Card.vue';
-import LoadingSpinner from '../common/LoadingSpinner.vue';
+import { onBeforeMount } from 'vue';
 import { useNotification } from '@/composables/useNotification';
 import { useProductStore } from '@/stores/product';
+import ProductCard from '@/components/product/Card.vue';
+import LoadingSpinner from '../common/LoadingSpinner.vue';
 
 const showNotification = useNotification();
 const productStore = useProductStore();
 
 onBeforeMount(async () => {
   try {
-    await productStore.fetchCategoriesAndProducts();
+    await productStore.fetchProductsForList();
   } catch (err) {
     showNotification(err, "error");
   }
-});
-
-onBeforeUnmount(() => {
-  productStore.stopAllProductsTimer();
 });
 </script>
 
@@ -27,11 +23,11 @@ onBeforeUnmount(() => {
       <h1 class="page-title">TẤT CẢ SẢN PHẨM</h1>
 
       <LoadingSpinner v-if="productStore.isLoading" message="Đang tải sản phẩm..." />
-      <div v-else-if="!productStore.isLoading && productStore.categoriesWithProducts.length === 0" class="no-products-state">
+      <div v-else-if="!productStore.isLoading && productStore.listPageProducts.length === 0" class="no-products-state">
         <p>Không có sản phẩm nào để hiển thị.</p>
       </div>
       <div v-else class="products-ctn">
-        <section v-for="categoryData in productStore.categoriesWithProducts" :key="categoryData.ID" class="product-section">
+        <section v-for="categoryData in productStore.listPageProducts" :key="categoryData.ID" class="product-section">
           <h2 class="category-title">{{ categoryData.name }}</h2>
           <div class="product-grid">
             <ProductCard v-for="product in categoryData.products" :key="product.ID" :product="product" />
