@@ -55,6 +55,16 @@ onBeforeUnmount(() => {
             </router-link>
           </li>
           <li>
+            <router-link to="/admin/orders" @click="closeSidebar">
+              <i class="fas fa-receipt"></i> Đơn Hàng
+            </router-link>
+          </li>
+          <li>
+            <router-link to="/admin/rewards" @click="closeSidebar">
+              <i class="fas fa-gift"></i> Phần Thưởng
+            </router-link>
+          </li>
+          <li>
             <router-link to="/admin/products" @click="closeSidebar">
               <i class="fas fa-box"></i> Sản Phẩm
             </router-link>
@@ -70,7 +80,7 @@ onBeforeUnmount(() => {
             </router-link>
           </li>
           <li>
-            <router-link to="/admin/chat"  @click="closeSidebar">
+            <router-link to="/admin/chat" @click="closeSidebar">
               <i class="fa-solid fa-comments"></i> <span>Chat</span>
             </router-link>
           </li>

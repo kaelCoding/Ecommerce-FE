@@ -12,6 +12,8 @@ const shouldShowFooter = computed(() =>
   !route.path.startsWith('/admin') &&
   !route.path.startsWith('/chat') &&
   !route.path.startsWith('/profile') &&
+  !route.path.startsWith('/lucky-spin') &&
+  !route.path.startsWith('/products/detail') &&
   route.path !== '/login' &&
   route.path !== '/register'
 );

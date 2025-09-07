@@ -85,14 +85,13 @@ onBeforeUnmount(() => {
   <header class="navbar" :class="{ 'scrolled': isScrolled, 'search-active': isSearchActive }">
     <div class="container">
       <RouterLink to="/" class="logo">
-        <img class="favicon-ctn" loading="lazy" src="/public/images/favicon.jpg" alt="tokusatsu">
+        <!-- <img class="favicon-ctn" loading="lazy" src="/public/images/favicon.jpg" alt="tokusatsu"> -->
         <span>TUNI TOKU</span>
       </RouterLink>
       <nav class="nav-links">
         <RouterLink to="/">Trang chủ</RouterLink>
         <RouterLink to="/products">Sản phẩm</RouterLink>
-        <a href="#about-us">Về chúng tôi</a>
-        <a href="#contact">Liên hệ</a>
+        <RouterLink to="/lucky-spin">Vòng quay may mắn</RouterLink>
       </nav>
       <div class="nav-actions">
         <div class="search-container">
@@ -106,12 +105,12 @@ onBeforeUnmount(() => {
         </button>
 
         <div class="user-menu-container">
-          <i class="fa-solid fa-user-secret action-icon" @click.stop="isUserMenuOpen = !isUserMenuOpen"></i>
+          <i class="fa-solid fa-user action-icon" @click.stop="isUserMenuOpen = !isUserMenuOpen"></i>
           <div v-if="isUserMenuOpen" class="user-dropdown">
             <ThemeToggle @click="isUserMenuOpen = false" />
             <RouterLink to="/profile" v-if="get_auth_user && !get_auth_user.admin" class="dropdown-item"
               @click="isUserMenuOpen = false" title="Hồ sơ cá nhân">
-              Rank VIP
+              Hồ sơ
             </RouterLink>
             <RouterLink to="/admin" v-if="get_auth_user && get_auth_user.admin" class="dropdown-item"
               @click="isUserMenuOpen = false">
@@ -119,7 +118,7 @@ onBeforeUnmount(() => {
             </RouterLink>
             <router-link to="/chat" v-if="get_auth_user && !get_auth_user.admin" class="dropdown-item"
               @click="isUserMenuOpen = false" title="Chat">
-              Nhắn tin TUNI
+              Nhắn tin
             </router-link>
 
             <RouterLink v-if="!get_auth_user" to="/login" class="dropdown-item" @click="isUserMenuOpen = false">
@@ -144,11 +143,11 @@ onBeforeUnmount(() => {
   left: 0;
   width: 100%;
   padding: clamp(10px, 2vh, 15px) 0;
-  background-color: var(--white-color);
+  background-color: var(--body-color);
   z-index: 100;
   transition: all var(--transition-speed) ease;
-  border-bottom: 1px solid transparent;
   height: 72px;
+  border-color: #374151;
 }
 
 .navbar.scrolled {

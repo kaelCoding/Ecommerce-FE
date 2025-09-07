@@ -27,14 +27,16 @@ const discountedPrice = computed(() => {
       <div class="overlay">
         <button class="btn-primary">Xem chi tiết</button>
       </div>
+       <div v-if="discountPercentage > 0" class="discount-badge">
+        -{{ discountPercentage }}%
+      </div>
     </div>
     <div class="card-content">
       <h3 class="product-name">{{ product.name }}</h3>
-      <div v-if="discountPercentage > 0" class="price-info">
-        <p class="original-price">{{ formatPrice(product.price) }}</p>
-        <p class="discounted-price">{{ formatPrice(discountedPrice) }}</p>
+      <div class="price-container">
+        <p v-if="discountPercentage > 0" class="original-price">{{ formatPrice(product.price) }}</p>
+        <p class="product-price">{{ formatPrice(discountedPrice) }}</p>
       </div>
-      <p v-else class="product-price">{{ formatPrice(product.price) }}</p>
     </div>
   </div>
 </template>
@@ -55,7 +57,7 @@ const discountedPrice = computed(() => {
 }
 
 .product-card {
-  background-color: var(--white-color);
+  background-color: var(--body-color);
   border-radius: var(--border-radius);
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(0,0,0,0.05);

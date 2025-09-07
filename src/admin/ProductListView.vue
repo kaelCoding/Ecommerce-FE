@@ -89,21 +89,11 @@ const goToEditProduct = (productId) => {
 </template>
 
 <style scoped>
-.container {
-  height: 100%;
-  overflow-y: hidden;
-}
-
 .name-ctn {
   max-width: 25vw;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-
-.content-area {
-  height: 100%;
-  overflow-y: auto;
 }
 
 @media (max-width: 767px) {

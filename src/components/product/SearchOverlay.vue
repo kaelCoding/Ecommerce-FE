@@ -110,7 +110,7 @@ watch(() => props.isActive, (newVal) => {
 }
 
 .search-icon {
-  color: var(--light-gray-color);
+  color: var(--secondary-color);
 }
 
 .search-input {

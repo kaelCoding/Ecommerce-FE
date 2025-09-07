@@ -18,8 +18,8 @@ const router = createRouter({
       component: () => import("../views/LoginView.vue"),
     },
     {
-      path: '/profile',
-      name: 'profile',
+      path: "/profile",
+      name: "profile",
       component: () => import("../components/layouts/UserProfile.vue"),
     },
     {
@@ -36,6 +36,11 @@ const router = createRouter({
       path: "/products/detail/:id",
       name: "product-detail",
       component: () => import("../components/product/DetailProduct.vue"),
+    },
+    {
+      path: "/lucky-spin",
+      name: "lucky-spin",
+      component: () => import("../views/LuckySpinView.vue"),
     },
     {
       path: "/admin",
@@ -86,8 +91,27 @@ const router = createRouter({
           name: "admin-chat",
           component: () => import("../admin/ChatAdminView.vue"),
         },
+        {
+          path: "orders",
+          name: "admin-orders",
+          component: () => import("../admin/OrderListView.vue"),
+        },
+        {
+          path: "rewards",
+          name: "admin-rewards",
+          component: () => import("../admin/RewardListView.vue"),
+        },
+        {
+          path: "rewards/new",
+          name: "admin-rewards-new",
+          component: () => import("../admin/RewardFormView.vue"),
+        },
+        {
+          path: "rewards/edit/:id",
+          name: "admin-rewards-edit",
+          component: () => import("../admin/RewardFormView.vue"),
+        },
       ],
-
     },
   ],
 });
