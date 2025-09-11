@@ -1,4 +1,4 @@
-import{G as C,a5 as v,a6 as S,a7 as E,a8 as B,a9 as y,aa as W,ab as H,ac as $,ad as V,ae as G,af as K,ag as g}from"./index-aK0Jjgsl.js";const Ke=async(e=null)=>{try{let t="/chat/history";return e&&(t+=`?userId=${e}`),await C("GET",t)}catch(t){throw t}};/**
+import{G as C,a5 as v,a6 as S,a7 as E,a8 as B,a9 as y,aa as W,ab as H,ac as $,ad as V,ae as G,af as K,ag as g}from"./index-ZpVQZX_T.js";const Ke=async(e=null)=>{try{let t="/chat/history";return e&&(t+=`?userId=${e}`),await C("GET",t)}catch(t){throw t}};/**
  * @license
  * Copyright 2019 Google LLC
  *

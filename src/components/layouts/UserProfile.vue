@@ -53,7 +53,6 @@ onMounted(async () => {
 <template>
     <div class="user-profile-page container">
         <LoadingSpinner v-if="isLoading" message="Đang tải dữ liệu..." />
-
         <div v-else class="profile-layout">
             <aside class="profile-sidebar">
                 <div class="profile-card user-info-card">
@@ -82,14 +81,13 @@ onMounted(async () => {
                                 <i class="fa-solid fa-truck"></i>
                                 <span>Freeship</span>
                             </div>
-                        </div>
+                        </div> <br>
+                        <RouterLink to="/lucky-spin" class="btn-primary">Vòng quay may mắn</RouterLink>
                     </div>
                 </div>
             </aside>
 
             <main class="loyalty-content">
-                <h2 class="page-title">Chương Trình Khách Hàng Thân Thiết</h2>
-
                 <div class="profile-card vip-card">
                     <div class="vip-card-header">
                         <div class="vip-level">
@@ -137,7 +135,7 @@ onMounted(async () => {
 
                 <div class="profile-card rules-accordion">
                     <button @click="isRulesVisible = !isRulesVisible" class="accordion-button">
-                        <h3 class="section-title">Thể lệ chương trình</h3>
+                        <h3 class="section-title">Thể lệ</h3>
                         <i class="fa-solid fa-chevron-down" :class="{ 'rotate-180': isRulesVisible }"></i>
                     </button>
                     <div v-if="isRulesVisible" class="rules-container">

@@ -101,7 +101,7 @@ onBeforeUnmount(() => {
         </div>
 
         <button class="action-icon mobile-search-trigger" @click="openSearch">
-          <i class="fa-brands fa-searchengin"></i>
+          <i class="fa-solid fa-magnifying-glass"></i>
         </button>
 
         <div class="user-menu-container">
@@ -331,7 +331,7 @@ onBeforeUnmount(() => {
   background-color: var(--primary-color);
 }
 
-.fa-user-secret,
+.fa-user,
 .fa-searchengin {
   font-size: clamp(1.1rem, 3vw, 1.5rem);
 }
