@@ -1,13 +1,18 @@
-import { createRouter, createWebHashHistory } from "vue-router";
+import { createRouter, createWebHistory } from "vue-router";
+import { updateMetaTag, updateCanonicalLink } from '@/utils/meta';
 import middleware from "./middleware";
 
 const router = createRouter({
-  history: createWebHashHistory(import.meta.env.BASE_URL),
+  history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: "/",
       name: "home",
       component: () => import("../views/HomeView.vue"),
+      meta: {
+        title: 'Tuni Toku - Cửa hàng mô hình, đồ chơi Tokusatsu chính hãng',
+        description: 'Chuyên cung cấp mô hình, DX Driver, Henshin Belt từ Kamen Rider, Super Sentai. Hàng chính hãng Bandai, giá tốt, uy tín.'
+      },
     },
     {
       path: "/register",
@@ -31,11 +36,19 @@ const router = createRouter({
       path: "/products",
       name: "product-list",
       component: () => import("../components/product/ListProduct.vue"),
+      meta: {
+        title: 'Tất cả sản phẩm | Mô hình Kamen Rider & Super Sentai | Tuni Toku',
+        description: 'Khám phá bộ sưu tập đồ chơi và mô hình Tokusatsu đa dạng tại Tuni Toku. Tìm kiếm DX Driver, Vistamp, Gaia Memory và nhiều hơn nữa.'
+      },
     },
     {
       path: "/products/detail/:id",
       name: "product-detail",
       component: () => import("../components/product/DetailProduct.vue"),
+      meta: {
+        title: 'Chi tiết sản phẩm',
+        description: 'Xem chi tiết thông tin, hình ảnh và giá của sản phẩm Tokusatsu tại Tuni Toku.'
+      }
     },
     {
       path: "/lucky-spin",
@@ -114,6 +127,26 @@ const router = createRouter({
       ],
     },
   ],
+});
+
+router.afterEach((to, from) => {
+  const siteName = 'Tuni Toku';
+  const defaultImageUrl = `${window.location.origin}/images/img2.jpg`;
+
+  document.title = to.meta.title || siteName;
+  updateMetaTag('description', to.meta.description, false);
+
+  updateMetaTag('og:title', document.title);
+  updateMetaTag('og:description', to.meta.description);
+  updateMetaTag('og:url', window.location.href);
+  updateMetaTag('og:image', to.meta.ogImage || defaultImageUrl);
+  updateMetaTag('og:site_name', siteName);
+
+  updateMetaTag('twitter:title', document.title, false);
+  updateMetaTag('twitter:description', to.meta.description, false);
+  updateMetaTag('twitter:image', to.meta.ogImage || defaultImageUrl, false);
+
+  updateCanonicalLink();
 });
 
 new middleware(router);

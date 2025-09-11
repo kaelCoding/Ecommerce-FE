@@ -4,7 +4,6 @@ import { get_auth_info, save_token_local } from "@/stores/auth";
 import { useRoute, useRouter } from "vue-router"
 import { auth_login_api } from "@/services/auth";
 import { useNotification } from "@/composables/useNotification";
-import { get_auth_user } from "@/stores/auth";
 
 const { showNotification } = useNotification();
 
@@ -22,13 +21,10 @@ const login = async () => {
     save_token_local(data.token)
     await get_auth_info()
 
-    console.log(get_auth_user.value)
-
     showNotification("Đăng nhập thành công.")
     const redirectPath = route.query.redirect || '/';
     router.push(redirectPath);
   } catch (err) {
-    console.log('on login error ', err)
     showNotification(err, "error")
   }
 }

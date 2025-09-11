@@ -28,6 +28,7 @@ const goToProductList = () => {
 <template>
   <div>
     <section class="hero-section">
+      <h1 class="hero-title" style="display: none;">Tuni Toku - Shop Mô Hình & Đồ Chơi Tokusatsu Chính Hãng</h1>
       <button @click="goToProductList" class="btn-primary">MUA NGAY !</button>
     </section>
 
@@ -38,14 +39,10 @@ const goToProductList = () => {
         </div>
         <div class="intro-text">
           <h2 class="section-title">
-            <span>Thế Giới Siêu Nhân</span>
-            <span>Nơi Đam Mê Hội Tụ !</span>
+            <span>Tuni Toku - Thiên Đường Đồ Chơi Tokusatsu</span>
           </h2>
           <p>
-            Chúng tôi chuyên cung cấp các mô hình siêu nhân chất lượng cao, từ các series huyền thoại đến những nhân vật
-            mới nhất. Mỗi sản phẩm đều được chọn lọc kỹ lưỡng, đảm bảo độ chi tiết và sự chân thực, mang đến trải nghiệm
-            sưu tầm tuyệt vời nhất cho những người hâm mộ. Khám phá ngay bộ sưu tập của chúng tôi và tìm thấy người hùng
-            của riêng bạn!
+            Tuni Toku chuyên cung cấp các mô hình và đồ chơi <strong>Tokusatsu chính hãng</strong> từ Bandai. Khám phá bộ sưu tập <strong>DX Driver, Henshin Belt, Gaia Memory, Vistamp</strong> và các vật phẩm sưu tầm độc đáo từ những series <strong>Kamen Rider, Super Sentai</strong> huyền thoại. Mỗi sản phẩm đều được chọn lọc kỹ lưỡng, đảm bảo mang đến trải nghiệm tuyệt vời nhất cho fan Tokusatsu tại Việt Nam.
           </p>
         </div>
       </div>

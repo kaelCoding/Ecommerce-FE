@@ -1,16 +1,16 @@
 <template>
     <footer class="main-footer">
         <div class="container footer-content">
-            <div id="about-us" class="footer-column about-us">
+            <div class="footer-column about-us">
                 <a href="https://www.facebook.com/W.A.T.St0re" target="_blank" class="social-links">
                     <h3>Tuni Toku</h3>
                 </a>
                 <p class="footer-text">
-                   TUNI TOKU là điểm đến của những người hâm mộ Tokusatsu. Chúng tôi chuyên cung cấp mô hình và đồ chơi chính hãng, chất lượng cao, an toàn và đa dạng. Cùng TUNI TOKU thỏa mãn đam mê sưu tầm và khám phá thế giới siêu anh hùng!
+                   Tuni Toku là điểm đến của những người hâm mộ Tokusatsu. Chúng tôi chuyên cung cấp mô hình và đồ chơi chính hãng, chất lượng cao, an toàn và đa dạng. Cùng Tuni Toku thỏa mãn đam mê sưu tầm và khám phá thế giới siêu anh hùng!
                 </p>
             </div>
 
-            <div id="contact" class="footer-column contact-info">
+            <div class="footer-column contact-info">
                 <h3 class="footer-heading">Hỗ trợ & Liên hệ</h3>
                 <a href="https://www.facebook.com/W.A.T.St0re" target="_blank">
                     <p class="footer-text">
@@ -18,7 +18,7 @@
                     </p>
                 </a>
                 <p class="footer-text">
-                    <i class="fas fa-phone"></i> +84 869553209
+                    <i class="fas fa-phone"></i> 0869553209
                 </p> 
                 <p class="footer-text">
                     <i class="fas fa-envelope"></i> hdtt1504@gmail.com
@@ -29,8 +29,6 @@
                 <h3 class="footer-heading">Liên kết nhanh</h3>
                 <router-link class="footer-text" to="/">Trang chủ</router-link>
                 <router-link class="footer-text" to="/products">Sản phẩm</router-link>
-                <router-link class="footer-text" to="/about">Về chúng tôi</router-link>
-                <router-link class="footer-text" to="/contact">Liên hệ</router-link>
             </div>
         </div>
         <div class="footer-bottom">

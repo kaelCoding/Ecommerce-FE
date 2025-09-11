@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, watch, computed } from 'vue';
+import { ref, onMounted, watch, computed, watchEffect } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { get_productID_api } from '@/services/product';
 import { submit_order_api } from '@/services/order';
@@ -7,6 +7,7 @@ import { formatPrice } from '@/composables/useUtils';
 import { useNotification } from '@/composables/useNotification';
 import { get_auth_user } from '@/stores/auth';
 import { useProductStore } from '@/stores/product';
+import { updateMetaTag, updateCanonicalLink } from '@/utils/meta';
 import ProductCard from '@/components/product/Card.vue';
 import LoadingSpinner from '../common/LoadingSpinner.vue';
 
@@ -31,7 +32,7 @@ const customerInfo = ref({
 });
 
 const discountPercentage = computed(() => {
-  return get_auth_user.value?.discountPercentage  || 0;
+  return get_auth_user.value?.discountPercentage || 0;
 });
 
 const discountedPrice = computed(() => {
@@ -102,8 +103,8 @@ const fetchProductData = async (productId) => {
     const categoryId = product.value.category_id;
     let related = productStore.getRelatedProducts(categoryId, product.value.ID, 6);
     if (related.length < 6) {
-        await productStore.ensureCategoryProducts(categoryId);
-        related = productStore.getRelatedProducts(categoryId, product.value.ID, 6);
+      await productStore.ensureCategoryProducts(categoryId);
+      related = productStore.getRelatedProducts(categoryId, product.value.ID, 6);
     }
     relatedProducts.value = related;
   } catch (err) {
@@ -149,9 +150,61 @@ const gotoChat = () => {
     });
   }
 }
+
+const jsonLdScriptContent = computed(() => {
+  if (!product.value) return null;
+
+  const schema = {
+    "@context": "https://schema.org/",
+    "@type": "Product",
+    "name": product.value.name,
+    "image": product.value.image_urls[0],
+    "description": product.value.description || `Mua ngay ${product.value.name} chính hãng tại Tuni Toku. Sản phẩm thuộc series ${product.value.category_name}. Cam kết chất lượng, giao hàng toàn quốc.`,
+    "brand": {
+      "@type": "Brand",
+      "name": "Bandai"
+    },
+    "sku": `TUNI-${product.value.ID}`,
+    "offers": {
+      "@type": "Offer",
+      "url": window.location.href,
+      "priceCurrency": "VND",
+      "price": discountedPrice.value,
+      "availability": "https://schema.org/InStock",
+      "itemCondition": "https://schema.org/NewCondition"
+    }
+  };
+
+  return JSON.stringify(schema);
+});
+
+watchEffect(() => {
+  if (product.value && product.value.name) {
+    const siteName = 'Tuni Toku';
+    const productName = product.value.name;
+    const categoryName = product.value.category_name;
+    const imageUrl = product.value.image_urls[0];
+    const newTitle = `${productName} | ${categoryName} | ${siteName}`;
+    const newDescription = `Mua ngay ${productName} chính hãng tại Tuni Toku. Sản phẩm thuộc series ${categoryName}. Cam kết chất lượng, giao hàng toàn quốc.`;
+    
+    document.title = newTitle;
+    updateMetaTag('description', newDescription, false);
+    updateMetaTag('og:title', newTitle);
+    updateMetaTag('og:description', newDescription);
+    updateMetaTag('og:url', window.location.href);
+    updateMetaTag('og:image', imageUrl);
+    updateMetaTag('twitter:title', newTitle, false);
+    updateMetaTag('twitter:description', newDescription, false);
+    updateMetaTag('twitter:image', imageUrl, false);
+    updateCanonicalLink();
+  }
+});
 </script>
 
 <template>
+  <component :is="'script'" type="application/ld+json" v-if="jsonLdScriptContent">
+    {{ jsonLdScriptContent }}
+  </component>
   <LoadingSpinner v-if="isLoading" message="Đang tải..." />
   <div v-else class="container">
     <main class="main-content-grid">
@@ -160,8 +213,8 @@ const gotoChat = () => {
           <img loading="lazy" :src="mainImage" :alt="product.name" class="img-main" />
         </div>
         <div class="thumbnail-list">
-          <img loading="lazy" v-for="image in product.image_urls" :key="image" :src="image" :class="{ active: mainImage === image }"
-            @click="mainImage = image" alt="Thumbnail" />
+          <img loading="lazy" v-for="image in product.image_urls" :key="image" :src="image"
+            :class="{ active: mainImage === image }" @click="mainImage = image" alt="Thumbnail" />
         </div>
       </div>
 
@@ -173,7 +226,7 @@ const gotoChat = () => {
           <p class="product-price">{{ formatPrice(discountedPrice) }}</p>
         </div>
         <p v-else class="product-price">{{ formatPrice(product.price) }}</p>
-        
+
         <div class="actions">
           <div class="quantity-selector">
             <button @click="decrementQuantity" aria-label="Giảm số lượng">-</button>
@@ -228,7 +281,8 @@ const gotoChat = () => {
                 <p>Sản phẩm: <strong>{{ product.name }}</strong></p>
                 <p>Số lượng: <strong>{{ quantity }}</strong></p>
                 <p>Tổng tiền: <strong>{{ formatPrice(product.price * quantity) }}</strong></p>
-                <p v-if="discountPercentage > 0">Thanh toán: <strong>{{ formatPrice(discountedPrice * quantity) }}</strong></p>
+                <p v-if="discountPercentage > 0">Thanh toán: <strong>{{ formatPrice(discountedPrice * quantity)
+                    }}</strong></p>
               </div>
 
               <form @submit.prevent="submitOrder">
@@ -501,6 +555,7 @@ const gotoChat = () => {
     grid-template-columns: 1fr;
   }
 }
+
 @media (max-width: 768px) {
   .product-grid .product-card {
     width: 150px;

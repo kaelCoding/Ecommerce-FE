@@ -20,7 +20,10 @@ onBeforeMount(async () => {
 <template>
   <div>
     <div class="container">
-      <h1 class="page-title">TẤT CẢ SẢN PHẨM</h1>
+      <div class="page-header">
+        <h1 class="page-title">Mô Hình - Đồ Chơi Tokusatsu</h1>
+        <p class="category-description">Tất cả sản phẩm Kamen Rider, Super Sentai và các dòng Tokusatsu khác.</p>
+      </div>
 
       <LoadingSpinner v-if="productStore.isLoading" message="Đang tải sản phẩm..." />
       <div v-else-if="!productStore.isLoading && productStore.listPageProducts.length === 0" class="no-products-state">
@@ -40,7 +43,22 @@ onBeforeMount(async () => {
 
 <style scoped>
 .container {
-  margin: 40px auto;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.page-header {
+  text-align: center;
+  margin-bottom: 60px;
+  padding-bottom: 30px;
+  border-bottom: 1px solid var(--light-gray-color);
+}
+
+.category-description {
+  font-size: clamp(1rem, 2.5vw, 1.1rem);
+  color: var(--text-color);
+  max-width: 600px;
+  margin: 0 auto;
 }
 
 .no-products-state {

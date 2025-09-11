@@ -7,7 +7,6 @@ const adminStore = useAdminStore();
 
 onBeforeMount(async () => {
   adminStore.fetchUsers;
-  console.log(adminStore.users)
 })
 </script>
 

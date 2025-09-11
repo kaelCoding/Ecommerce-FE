@@ -1,6 +1,5 @@
 <script setup>
 import { defineProps, computed } from 'vue';
-import { goToDetailProduct } from '@/composables/useUtils';
 import { formatPrice } from '@/composables/useUtils';
 import { get_auth_user } from '@/stores/auth';
 
@@ -21,24 +20,24 @@ const discountedPrice = computed(() => {
 </script>
 
 <template>
-  <div class="product-card" @click="goToDetailProduct(product.ID)">
-    <div class="card-image-wrapper">
-      <img :src="product.image_urls[0]" :alt="product.name" loading="lazy" class="product-image">
-      <div class="overlay">
-        <button class="btn-primary">Xem chi tiết</button>
-      </div>
-       <div v-if="discountPercentage > 0" class="discount-badge">
-        -{{ discountPercentage }}%
-      </div>
+  <RouterLink :to="'/products/detail/' + product.ID" class="product-card">
+  <div class="card-image-wrapper">
+    <img :src="product.image_urls[0]" :alt="product.name + ' - Đồ chơi Tokusatsu chính hãng'" loading="lazy" class="product-image">
+    <div class="overlay">
+      <span class="btn-primary">Xem chi tiết</span>
     </div>
-    <div class="card-content">
-      <h3 class="product-name">{{ product.name }}</h3>
-      <div class="price-container">
-        <p v-if="discountPercentage > 0" class="original-price">{{ formatPrice(product.price) }}</p>
-        <p class="product-price">{{ formatPrice(discountedPrice) }}</p>
-      </div>
+    <div v-if="discountPercentage > 0" class="discount-badge">
+      -{{ discountPercentage }}%
     </div>
   </div>
+  <div class="card-content">
+    <h3 class="product-name">{{ product.name }}</h3>
+    <div class="price-container">
+      <p v-if="discountPercentage > 0" class="original-price">{{ formatPrice(product.price) }}</p>
+      <p class="product-price">{{ formatPrice(discountedPrice) }}</p>
+    </div>
+  </div>
+</RouterLink>
 </template>
 
 <style scoped>
