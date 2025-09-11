@@ -3,6 +3,7 @@ import { onBeforeMount } from 'vue';
 import { useRouter } from 'vue-router';
 import { useNotification } from '@/composables/useNotification';
 import { useProductStore } from '@/stores/product';
+import Adsense from './Adsense.vue';
 import ProductCard from '@/components/product/Card.vue';
 import LoadingSpinner from '@/components/common/LoadingSpinner.vue';
 import UserFeedbackForm from '@/components/common/UserFeedbackForm.vue';
@@ -47,7 +48,7 @@ const goToProductList = () => {
         </div>
       </div>
     </section>
-
+    <Adsense/>
     <LoadingSpinner v-if="productStore.isLoading" message="Đang tải dữ liệu..." />
     <main v-else class="container">
       <div class="products-ctn">
