@@ -7,14 +7,16 @@ import fetchAllProductIds from './vite-scripts/fetch-product-ids.js';
 
 export default defineConfig(async () => {
   const productIds = await fetchAllProductIds();
-  const dynamicRoutes = productIds.map(id => `/products/detail/${id}`);
+  const dynamicRoutes = productIds
+    .filter(id => id != null)
+    .map(id => `/products/detail/${id}`);
 
   return {
     plugins: [
       vue(),
       vueDevTools(),
       sitemap({
-        hostname: '[https://tunitoku.store](https://tunitoku.store)',
+        hostname: 'https://tunitoku.store',
         dynamicRoutes: dynamicRoutes,
         exclude: ['/admin', '/profile', '/chat'],
       }),
