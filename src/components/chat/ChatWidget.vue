@@ -4,7 +4,7 @@ import { token, get_auth_user, get_auth_info } from '@/stores/auth';
 import { getChatHistory } from '@/services/chatService';
 import { getAdminInfo } from '@/services/userService';
 import { getWebSocketUrl } from '@/models/api';
-import { getMessaging, getToken, onMessage } from "firebase/messaging";
+import { getMessaging, getToken } from "firebase/messaging";
 import { updateFCMToken } from "@/services/fcmService";
 import { useI18n } from 'vue-i18n';
 import LoadingSpinner from '@/components/common/LoadingSpinner.vue';
@@ -33,7 +33,6 @@ const setupFCM = async () => {
         const currentToken = await getToken(messaging, {
             vapidKey: "BMJYrDhHREPAVJuzDYrBQb6APXLLy4KEGMMds0SMf-PtNIAS9-lnPOmoXlbVi00w2hhAjgO8CxW8BnmRDhHMx3w"
         });
-
         if (currentToken) {
             await updateFCMToken(currentToken);
         } else {
@@ -57,6 +56,12 @@ const connectWebSocket = () => {
 
     socket.value.onopen = () => {
         connectionError.value = false;
+    };
+
+    socket.value.onmessage = (event) => {
+        const message = JSON.parse(event.data);
+        messages.value.push(message);
+        scrollToBottom();
     };
 
     socket.value.onerror = (error) => {
