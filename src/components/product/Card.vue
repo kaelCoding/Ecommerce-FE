@@ -2,7 +2,9 @@
 import { defineProps, computed } from 'vue';
 import { formatPrice } from '@/composables/useUtils';
 import { get_auth_user } from '@/stores/auth';
+import { useI18n } from 'vue-i18n';
 
+const { t } = useI18n();
 const props = defineProps(["product"])
 
 const authUser = get_auth_user;
@@ -24,7 +26,7 @@ const discountedPrice = computed(() => {
   <div class="card-image-wrapper">
     <img :src="product.image_urls[0]" :alt="product.name + ' - Đồ chơi Tokusatsu chính hãng'" loading="lazy" class="product-image">
     <div class="overlay">
-      <span class="btn-primary">Xem chi tiết</span>
+      <span class="btn-primary">{{ t('productCard.viewDetails')}}</span>
     </div>
     <div v-if="discountPercentage > 0" class="discount-badge">
       -{{ discountPercentage }}%

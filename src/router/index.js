@@ -28,11 +28,6 @@ const router = createRouter({
       component: () => import("../components/layouts/UserProfile.vue"),
     },
     {
-      path: "/chat",
-      name: "chat",
-      component: () => import("../views/ChatView.vue"),
-    },
-    {
       path: "/products",
       name: "product-list",
       component: () => import("../components/product/ListProduct.vue"),

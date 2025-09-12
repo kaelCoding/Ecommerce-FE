@@ -3,11 +3,12 @@ import { onBeforeMount } from 'vue';
 import { useRouter } from 'vue-router';
 import { useNotification } from '@/composables/useNotification';
 import { useProductStore } from '@/stores/product';
-import Adsense from './Adsense.vue';
+import { useI18n } from 'vue-i18n';
 import ProductCard from '@/components/product/Card.vue';
 import LoadingSpinner from '@/components/common/LoadingSpinner.vue';
 import UserFeedbackForm from '@/components/common/UserFeedbackForm.vue';
 
+const { t } = useI18n();
 const { showNotification } = useNotification();
 const router = useRouter();
 
@@ -29,27 +30,24 @@ const goToProductList = () => {
 <template>
   <div>
     <section class="hero-section">
-      <h1 class="hero-title" style="display: none;">Tuni Toku - Shop Mô Hình & Đồ Chơi Tokusatsu Chính Hãng</h1>
-      <button @click="goToProductList" class="btn-primary">MUA NGAY !</button>
+      <h1 class="hero-title  visually-hidden">{{ t('home.introTitle') }}</h1>
+      <button @click="goToProductList" class="btn-primary">{{ t('home.heroButton') }} !</button>
     </section>
 
     <section class="intro-section">
       <div class="container intro-content">
         <div class="intro-image-wrapper">
-          <img src="/public/images/img2.jpg" loading="lazy" alt="kamenraider tokusatsu" class="intro-image" />
+          <img src="/public/images/img2.jpg" loading="lazy" alt="Mô hình Kamen Rider và Super Sentai chính hãng" để class="intro-image" />
         </div>
         <div class="intro-text">
           <h2 class="section-title">
-            <span>Tuni Toku - Thiên Đường Đồ Chơi Tokusatsu</span>
+            <span>{{ t('home.introTitle') }}</span>
           </h2>
-          <p>
-            Tuni Toku chuyên cung cấp các mô hình và đồ chơi <strong>Tokusatsu chính hãng</strong> từ Bandai. Khám phá bộ sưu tập <strong>DX Driver, Henshin Belt, Gaia Memory, Vistamp</strong> và các vật phẩm sưu tầm độc đáo từ những series <strong>Kamen Rider, Super Sentai</strong> huyền thoại. Mỗi sản phẩm đều được chọn lọc kỹ lưỡng, đảm bảo mang đến trải nghiệm tuyệt vời nhất cho fan Tokusatsu tại Việt Nam.
-          </p>
+          <p v-html="t('home.introText')"></p>
         </div>
       </div>
     </section>
-    <Adsense/>
-    <LoadingSpinner v-if="productStore.isLoading" message="Đang tải dữ liệu..." />
+    <LoadingSpinner v-if="productStore.isLoading" :message="t('home.loading')" />
     <main v-else class="container">
       <div class="products-ctn">
         <section v-for="categoryData in productStore.homePageProducts" :key="categoryData.ID" class="product-section">
@@ -60,10 +58,10 @@ const goToProductList = () => {
         </section>
 
         <div class="more-ctn">
-          <RouterLink class="btn-primary" to="/products">Xem nhiều hơn</RouterLink>
+          <RouterLink class="btn-primary" to="/products">{{ t('home.viewMore') }}</RouterLink>
         </div>
         <div v-if="!productStore.isLoading && productStore.homePageProducts.length === 0">
-          <p>Không có sản phẩm nào để hiển thị.</p>
+          <p>{{ t('home.noProducts') }}</p>
         </div>
       </div>
     </main>
@@ -84,8 +82,21 @@ const goToProductList = () => {
   align-items: center;
   justify-content: center;
   text-align: center;
+  flex-flow: column;
   color: var(--white-color);
   animation: fadeIn 1s ease-in-out;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 .intro-section {

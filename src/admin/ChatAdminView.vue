@@ -33,7 +33,7 @@ const selectUser = async (user) => {
 
     selectedUser.value = user;
     isChatVisible.value = true;
-    
+
     messages.value = [];
     isLoadingHistory.value = true;
     try {
@@ -209,15 +209,13 @@ onUnmounted(() => {
                     </div>
                 </div>
                 <div class="chat-input-area">
-                    <textarea 
-                        class="chat-input" 
-                        :placeholder="`Nhắn tin cho ${selectedUser.username}`"
+                    <textarea class="chat-input" :placeholder="`Nhắn tin cho ${selectedUser.username}`"
                         v-model="newMessage" @keydown.enter.prevent.exact="sendMessage" rows="1"
-                        @input="autoResizeTextarea"
-                        ref="chatInputEl"
-                        >
+                        @input="autoResizeTextarea" ref="chatInputEl">
                     </textarea>
-                    <button class="btn-primary" @click="sendMessage" :disabled="!newMessage.trim()">Gửi</button>
+                    <button class="send-btn" @click="sendMessage" :disabled="!newMessage.trim()">
+                        <i class="fa-solid fa-paper-plane"></i>
+                    </button>
                 </div>
             </template>
         </div>

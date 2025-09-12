@@ -30,11 +30,11 @@ const register = async () => {
 <template>
   <div>
     <div class="form-container">
-      <h1 class="form-title">Đăng ký</h1>
+      <h1 class="form-title">REGISTER</h1>
       <form @submit.prevent="register">
         <div class="form-group">
-          <label for="fullname">Họ và tên</label>
-          <input class="form-input" v-model="dataRegister.username" type="text" id="fullname" placeholder="Nguyễn Văn A"
+          <label for="fullname">Name</label>
+          <input class="form-input" v-model="dataRegister.username" type="text" id="fullname" placeholder="your name"
             required>
         </div>
         <div class="form-group">
@@ -43,15 +43,15 @@ const register = async () => {
             required>
         </div>
         <div class="form-group">
-          <label for="password">Mật khẩu</label>
+          <label for="password">Password</label>
           <input class="form-input" v-model="dataRegister.password" type="password" id="password" placeholder="••••••••"
             required>
         </div>
         <div class="form-actions">
-          <button type="submit" class="btn-primary">Tạo tài khoản</button>
+          <button type="submit" class="btn-primary">Register</button>
         </div>
         <p class="form-switch-text">
-          Đã có tài khoản? <router-link to="/login">Đăng nhập</router-link>
+          Have an account ? <router-link to="/login">Login</router-link>
         </p>
       </form>
     </div>

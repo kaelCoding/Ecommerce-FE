@@ -1,0 +1,85 @@
+{
+  "navbar": {
+    "home": "Trang chủ",
+    "products": "Sản phẩm",
+    "luckySpin": "Vòng quay may mắn",
+    "searchPlaceholder": "Tìm DX Driver, Henshin Belt...",
+    "profile": "Tài khoản",
+    "admin": "Quản trị",
+    "login": "Đăng nhập",
+    "logout": "Đăng xuất",
+    "search": "Nhập tên mô hình hoặc series bạn muốn tìm.",
+    "loading": "Đang tìm...",
+    "about": "Về Tuni Toku",
+    "contact": "Liên hệ"
+  },
+  "home": {
+    "pageTitle": "Tuni Toku - Shop Mô Hình Tokusatsu, Kamen Rider, Super Sentai Chính Hãng",
+    "introTitle": "Đánh Thức Đam Mê Tokusatsu",
+    "heroDescription": "Nơi fan Tokusatsu Việt Nam tìm thấy những món đồ chơi và mô hình Bandai chính hãng hiếm có nhất.",
+    "heroButton": "KHÁM PHÁ NGAY",
+    "introSectionTitle": "Tuni Toku - Thiên Đường Đồ Chơi Tokusatsu",
+    "introText": "Tại <strong>Tuni Toku</strong>, chúng tôi không chỉ bán đồ chơi, chúng tôi chia sẻ đam mê. Đây là nơi bạn có thể tìm thấy những chiếc <strong>DX Driver</strong> và <strong>Henshin Belt</strong> mà bạn hằng ao ước, khám phá bộ sưu tập <strong>Gaia Memory, Vistamp</strong> độc đáo, và sở hữu mô hình từ các series <strong>Kamen Rider, Super Sentai</strong> huyền thoại. Mỗi sản phẩm tại shop đều là <strong>hàng Bandai chính hãng</strong>, được lựa chọn cẩn thận để đảm bảo trải nghiệm sưu tầm tuyệt vời nhất.",
+    "loading": "Đang tải sản phẩm...",
+    "viewMore": "Xem Tất Cả Sản Phẩm",
+    "noProducts": "Hiện chưa có sản phẩm nào."
+  },
+  "footer": {
+    "aboutTitle": "Về Tuni Toku",
+    "aboutText": "Tuni Toku được sinh ra từ tình yêu mãnh liệt với thế giới Tokusatsu. Sứ mệnh của chúng tôi là trở thành shop mô hình uy tín hàng đầu, kết nối cộng đồng fan Kamen Rider và Super Sentai tại Việt Nam, và mang đến những sản phẩm Bandai chất lượng cao với giá cả hợp lý. Cùng Tuni Toku thỏa mãn đam mê sưu tầm của bạn!",
+    "supportTitle": "Hỗ trợ & Liên hệ",
+    "quickLinks": "Danh mục",
+    "allRightsReserved": "Bản quyền thuộc về Tuni Toku."
+  },
+  "productCard": {
+    "viewDetails": "Xem chi tiết"
+  },
+  "listProduct": {
+    "pageTitle": "Tất Cả Mô Hình - Đồ Chơi Tokusatsu",
+    "categoryDescription": "Khám phá và sở hữu ngay các mẫu DX Driver, Henshin Belt, và mô hình chính hãng từ series Kamen Rider, Super Sentai. Tuni Toku cam kết 100% hàng Bandai Nhật Bản, giao hàng toàn quốc."
+  },
+  "feedback": {
+    "formTitle": "Góp ý để Tuni Toku phục vụ tốt hơn!",
+    "formSubtitle": "Mọi đánh giá của bạn đều là nguồn động lực quý giá cho chúng tôi.",
+    "loading": "Đang gửi...",
+    "content": "Nội dung góp ý",
+    "placeholder": "Bạn cảm thấy hài lòng hay cần chúng tôi cải thiện điều gì? Hãy chia sẻ nhé...",
+    "submit": "Gửi Góp Ý"
+  },
+  "luckySpin": {
+    "spinTitle": "Vòng Quay May Mắn",
+    "spinSubtitle": "Nhập mã vận đơn của bạn để nhận lượt quay!",
+    "placeholder": "Nhập mã vận đơn...",
+    "loading": "Đang quay...",
+    "spin": "Quay ngay!",
+    "reward": "Chúc mừng! Phần thưởng của bạn là:",
+    "reward-value": "Giá trị:",
+    "btn": "Quay Lại"
+  },
+  "detailProduct": {
+    "loading": "Đang tải chi tiết sản phẩm...",
+    "payment": "THANH TOÁN",
+    "fa-shield-alt": "100% Chính Hãng Bandai",
+    "fa-truck-fast": "Giao Hàng Toàn Quốc",
+    "fa-box-open": "Hỗ Trợ Đổi Trả",
+    "description": "Mô Tả Sản Phẩm",
+    "relatedProduct": "Có Thể Bạn Cũng Thích",
+    "modalHeader": "Thông Tin Đặt Hàng",
+    "summaryProduct": "Sản phẩm:",
+    "summaryNumber": "Số lượng:",
+    "summaryPrice": "Tổng tiền:",
+    "phone": "Số điện thoại",
+    "phonePlace": "Số điện thoại để shop xác nhận đơn hàng",
+    "address": "Địa chỉ nhận hàng",
+    "addressPlace": "Ghi rõ số nhà, tên đường, phường/xã, quận/huyện, tỉnh/thành phố",
+    "paymentMethod": "Phương thức thanh toán",
+    "paymentOption1": "Thanh toán khi nhận hàng (COD)",
+    "paymentOption2": "Chuyển khoản ngân hàng",
+    "btnSubmit": "Xác Nhận Đặt Hàng",
+    "btnCancel": "Hủy"
+  },
+  "Chat": {
+    "placeholder": "Nhập tin nhắn...",
+    "err": "Không thể kết nối. Vui lòng thử lại sau."
+  }
+}

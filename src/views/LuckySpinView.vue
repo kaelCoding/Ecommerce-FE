@@ -2,7 +2,9 @@
 import { ref } from 'vue';
 import { useSpinStore } from '@/stores/spin';
 import { formatPrice } from '@/composables/useUtils';
+import { useI18n } from 'vue-i18n';
 
+const { t } = useI18n();
 const spinStore = useSpinStore();
 const shippingCode = ref('');
 const reward = ref(null);
@@ -25,8 +27,8 @@ const resetSpin = () => {
   <div class="lucky-spin-container">
     <div class="spin-card">
       <div class="spin-card-header">
-        <h2 class="spin-title">Vòng Quay May Mắn</h2>
-        <p class="spin-subtitle">Nhập mã vận đơn của bạn để quay!</p>
+        <h2 class="spin-title">{{ t('luckySpin.spinTitle') }}</h2>
+        <p class="spin-subtitle">{{ t('luckySpin.spinSubtitle') }}</p>
       </div>
       
       <div class="spin-card-body">
@@ -35,7 +37,7 @@ const resetSpin = () => {
             v-model="shippingCode" 
             type="text" 
             class="spin-input"
-            placeholder="Nhập mã vận đơn..."
+            :placeholder="t('luckySpin.placeholder')"
             :disabled="spinStore.isLoading.spin"
           />
           <button 
@@ -44,19 +46,19 @@ const resetSpin = () => {
             class="btn-primary"
           >
             <span v-if="spinStore.isLoading.spin">
-              <i class="fas fa-spinner fa-spin"></i> Đang quay...
+              <i class="fas fa-spinner fa-spin"></i> {{ t('luckySpin.loading') }}
             </span>
-            <span v-else>Quay ngay!</span>
+            <span v-else>{{ t('luckySpin.spin') }}</span>
           </button>
         </div>
 
         <div v-if="reward" class="result-section">
-          <h3>Chúc mừng! Bạn đã trúng:</h3>
+          <h3>{{ t('luckySpin.reward') }}</h3>
           <div class="reward-info">
             <p class="reward-name">{{ reward.name }}</p>
-            <p v-if="reward.value" class="reward-value">Giá trị: {{ formatPrice(reward.value) }}</p>
+            <p v-if="reward.value" class="reward-value"> {{ t('luckySpin.reward-value') }} {{ formatPrice(reward.value) }}</p>
           </div>
-          <button @click="resetSpin" class="btn-primary">Quay Lại</button>
+          <button @click="resetSpin" class="btn-primary">{{ t('luckySpin.btn') }}</button>
         </div>
       </div>
     </div>

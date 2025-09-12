@@ -5,6 +5,7 @@ import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import App from './App.vue'
 import router from './router'
+import i18n from './i18n'
 
 export const firebaseConfig = {
   apiKey: "AIzaSyCd6VV5jVJXQ_xZbse7yvL3czd91DglmOU",
@@ -25,6 +26,7 @@ const init_app = async () => {
     await init_store()
     vueApp.use(createPinia())
     vueApp.use(router)
+    vueApp.use(i18n);
     vueApp.mount('#app')
 }
 

@@ -10,7 +10,9 @@ import { useProductStore } from '@/stores/product';
 import { updateMetaTag, updateCanonicalLink } from '@/utils/meta';
 import ProductCard from '@/components/product/Card.vue';
 import LoadingSpinner from '../common/LoadingSpinner.vue';
+import { useI18n } from 'vue-i18n';
 
+const { t } = useI18n();
 const route = useRoute();
 const router = useRouter();
 const { showNotification } = useNotification();
@@ -139,18 +141,6 @@ const handleCheckout = () => {
   }
 };
 
-const gotoChat = () => {
-  if (get_auth_user.value) {
-    router.push("/chat")
-  } else {
-    showNotification('Bạn cần đăng nhập để nhắn tin.', 'error');
-    router.push({
-      path: '/login',
-      query: { redirect: route.fullPath }
-    });
-  }
-}
-
 const jsonLdScriptContent = computed(() => {
   if (!product.value) return null;
 
@@ -205,7 +195,7 @@ watchEffect(() => {
   <component :is="'script'" type="application/ld+json" v-if="jsonLdScriptContent">
     {{ jsonLdScriptContent }}
   </component>
-  <LoadingSpinner v-if="isLoading" message="Đang tải..." />
+  <LoadingSpinner v-if="isLoading" :message="t('detailProduct.loading')" />
   <div v-else class="container">
     <main class="main-content-grid">
       <div class="image-gallery">
@@ -234,30 +224,27 @@ watchEffect(() => {
             <button @click="incrementQuantity" aria-label="Tăng số lượng">+</button>
           </div>
           <button class="btn-primary" @click="handleCheckout">
-            <i class="fas fa-credit-card"></i> THANH TOÁN
-          </button>
-          <button class="btn-primary" @click="gotoChat">
-            <i class="fa-solid fa-comments"></i> NHẮN TIN TUNI
+            <i class="fas fa-credit-card"></i> {{ t('detailProduct.payment') }}
           </button>
         </div>
 
         <div class="trust-bar">
-          <div class="trust-item"><i class="fas fa-shield-alt"></i> <span>Hàng chính hãng 100%</span></div>
-          <div class="trust-item"><i class="fas fa-truck-fast"></i> <span>Giao hàng nhanh</span></div>
-          <div class="trust-item"><i class="fas fa-box-open"></i> <span>Đổi trả hàng 7 ngày</span></div>
+          <div class="trust-item"><i class="fas fa-shield-alt"></i> <span>{{ t('detailProduct.fa-shield-alt') }}</span></div>
+          <div class="trust-item"><i class="fas fa-truck-fast"></i> <span>{{ t('detailProduct.fa-truck-fast') }}</span></div>
+          <div class="trust-item"><i class="fas fa-box-open"></i> <span>{{ t('detailProduct.fa-box-open') }}</span></div>
         </div>
       </div>
     </main>
 
     <section class="extended-info-grid">
       <div class="description-section">
-        <h3>Mô tả chi tiết</h3>
+        <h3>{{ t('detailProduct.description') }}</h3>
         <p class="pre-line-text">{{ product.description || 'Chưa có mô tả chi tiết cho sản phẩm này.' }}</p>
       </div>
     </section>
 
     <section class="related-products-section">
-      <h2>Sản phẩm tương tự</h2> <br>
+      <h2>{{ t('detailProduct.relatedProduct') }}</h2> <br>
       <div class="product-grid">
         <ProductCard v-for="productitem in relatedProducts" :key="productitem.ID" :product="productitem" />
       </div>
@@ -269,7 +256,7 @@ watchEffect(() => {
       <div v-if="isCheckoutModalOpen" class="modal-backdrop" @click.self="closeCheckoutModal">
         <div class="checkout-modal">
           <div class="modal-header">
-            <h3>Thông tin đặt hàng</h3>
+            <h3>{{ t('detailProduct.modalHeader') }}</h3>
             <button class="close-btn" @click="closeCheckoutModal">
               <i class="fa-solid fa-xmark"></i>
             </button>
@@ -278,42 +265,42 @@ watchEffect(() => {
             <LoadingSpinner v-if="isSubmitting" message="Đang xử lý đơn hàng..." />
             <div v-else>
               <div class="summary">
-                <p>Sản phẩm: <strong>{{ product.name }}</strong></p>
-                <p>Số lượng: <strong>{{ quantity }}</strong></p>
-                <p>Tổng tiền: <strong>{{ formatPrice(product.price * quantity) }}</strong></p>
-                <p v-if="discountPercentage > 0">Thanh toán: <strong>{{ formatPrice(discountedPrice * quantity)
+                <p>{{ t('detailProduct.summaryProduct') }} <strong>{{ product.name }}</strong></p>
+                <p>{{ t('detailProduct.summaryNumber') }} <strong>{{ quantity }}</strong></p>
+                <p>{{ t('detailProduct.summaryPrice') }} <strong>{{ formatPrice(product.price * quantity) }}</strong></p>
+                <p v-if="discountPercentage > 0">{{ t('detailProduct.payment') }}: <strong>{{ formatPrice(discountedPrice * quantity)
                     }}</strong></p>
               </div>
 
               <form @submit.prevent="submitOrder">
                 <div class="form-group">
-                  <label for="phone">Số điện thoại</label>
+                  <label for="phone">{{ t('detailProduct.phone') }}</label>
                   <input id="phone" type="tel" class="form-input" v-model="customerInfo.phone"
-                    placeholder="Nhập số điện thoại của bạn" required>
+                    :placeholder="t('detailProduct.phonePlace')" required>
                 </div>
                 <div class="form-group">
-                  <label for="address">Địa chỉ</label>
+                  <label for="address">{{ t('detailProduct.address') }}</label>
                   <textarea id="address" class="form-input" v-model="customerInfo.address"
-                    placeholder="Nhập địa chỉ nhận hàng" required></textarea>
+                    :placeholder="t('detailProduct.addressPlace')" required></textarea>
                 </div>
 
                 <div class="form-group">
-                  <label>Phương thức thanh toán</label>
+                  <label>{{ t('detailProduct.paymentMethod') }}</label>
                   <div class="payment-options">
                     <div class="radio-label">
                       <input type="radio" v-model="customerInfo.paymentMethod" value="cod">
-                      <span>Thanh toán khi nhận hàng</span>
+                      <span>{{ t('detailProduct.paymentOption1') }}</span>
                     </div>
                     <div class="radio-label">
                       <input type="radio" v-model="customerInfo.paymentMethod" value="bank_transfer">
-                      <span>Chuyển khoản ngân hàng</span>
+                      <span>{{ t('detailProduct.paymentOption2') }}</span>
                     </div>
                   </div>
                 </div>
 
                 <div class="form-actions">
-                  <button type="button" class="btn" @click="closeCheckoutModal">Hủy</button>
-                  <button type="submit" class="btn-primary">Xác nhận đặt hàng</button>
+                  <button type="button" class="btn" @click="closeCheckoutModal">{{ t('detailProduct.btnCancel') }}</button>
+                  <button type="submit" class="btn-primary">{{ t('detailProduct.btnSubmit') }}</button>
                 </div>
               </form>
             </div>

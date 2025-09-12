@@ -5,7 +5,9 @@ import { useNotification } from '@/composables/useNotification';
 import { get_auth_user } from '@/stores/auth';
 import { useRouter } from 'vue-router';
 import LoadingSpinner from './LoadingSpinner.vue';
+import { useI18n } from 'vue-i18n';
 
+const { t } = useI18n();
 const { showNotification } = useNotification();
 const router = useRouter();
 
@@ -43,20 +45,20 @@ const submitFeedback = async () => {
 
 <template>
   <div class="form-container">
-    <h3 class="form-title">Hãy cho chúng tôi biết cảm nhận của bạn !</h3>
-    <p class="form-subtitle">Góp ý của bạn giúp chúng tôi cải thiện dịch vụ tốt hơn.</p>
+    <h3 class="form-title">{{ t('feedback.formTitle') }}</h3>
+    <p class="form-subtitle">{{ t('feedback.formSubtitle') }}</p>
 
-    <loading-spinner v-if="isLoading" message="Đang gửi..." />
+    <LoadingSpinner v-if="isLoading" :message="t('feedback.loading')" />
     <form @submit.prevent="submitFeedback" v-else>
       <div class="form-group">
-        <label for="feedback">Nội dung góp ý</label>
+        <label for="feedback">{{ t('feedback.content') }}</label>
         <textarea class="form-input" id="feedback" v-model="feedback" required rows="4"
-          placeholder="Chia sẻ suy nghĩ của bạn về sản phẩm/dịch vụ của chúng tôi..."></textarea>
+          :placeholder="t('feedback.placeholder')"></textarea>
       </div>
 
       <div class="form-actions">
         <button type="submit" class="btn-primary" :disabled="isLoading">
-          <span>Gửi góp ý</span>
+          <span>{{ t('feedback.submit') }}</span>
         </button>
       </div>
     </form>

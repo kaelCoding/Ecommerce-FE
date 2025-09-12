@@ -5,8 +5,10 @@ import { get_auth_user, logout_user } from '@/stores/auth';
 import { useRouter } from 'vue-router';
 import SearchOverlay from '../product/SearchOverlay.vue';
 import ThemeToggle from '../common/ThemeToggle.vue';
+import { useI18n } from 'vue-i18n';
 
 const router = useRouter();
+const { t, locale } = useI18n();
 
 const searchQuery = ref('');
 const searchResults = ref([]);
@@ -68,6 +70,11 @@ const handleLogout = () => {
   router.push('/login');
 };
 
+const changeLocale = (newLocale) => {
+  locale.value = newLocale;
+  localStorage.setItem('locale', newLocale);
+};
+
 onMounted(() => {
   window.addEventListener('scroll', handleScroll);
   window.addEventListener('keydown', handleKeydown);
@@ -85,17 +92,17 @@ onBeforeUnmount(() => {
   <header class="navbar" :class="{ 'scrolled': isScrolled, 'search-active': isSearchActive }">
     <div class="container">
       <RouterLink to="/" class="logo">
-        <!-- <img class="favicon-ctn" loading="lazy" src="/public/images/favicon.jpg" alt="tokusatsu"> -->
         <span>TUNI TOKU</span>
       </RouterLink>
       <nav class="nav-links">
-        <RouterLink to="/">Trang chủ</RouterLink>
-        <RouterLink to="/products">Sản phẩm</RouterLink>
-        <RouterLink to="/lucky-spin">Vòng quay may mắn</RouterLink>
+        <RouterLink to="/">{{ t('navbar.home') }}</RouterLink>
+        <RouterLink to="/products">{{ t('navbar.products') }}</RouterLink>
+        <a href="#about-us">{{ t('navbar.about') }}</a>
+        <a href="#contact">{{ t('navbar.contact') }}</a>
       </nav>
       <div class="nav-actions">
         <div class="search-container">
-          <input type="text" class="search-bar" placeholder="Tìm kiếm sản phẩm..." v-model="searchQuery"
+          <input type="text" class="search-bar" :placeholder="t('navbar.searchPlaceholder')" v-model="searchQuery"
             @focus="openSearch">
           <i class="fa-solid fa-magnifying-glass search-icon" @click="openSearch"></i>
         </div>
@@ -108,24 +115,25 @@ onBeforeUnmount(() => {
           <i class="fa-solid fa-user action-icon" @click.stop="isUserMenuOpen = !isUserMenuOpen"></i>
           <div v-if="isUserMenuOpen" class="user-dropdown">
             <ThemeToggle @click="isUserMenuOpen = false" />
+            <button v-if="locale === 'vi'" @click="changeLocale('en')" class="dropdown-item">
+              English
+            </button>
+            <button v-else-if="locale === 'en'" @click="changeLocale('vi')" class="dropdown-item">
+              Vietnamese
+            </button>
             <RouterLink to="/profile" v-if="get_auth_user && !get_auth_user.admin" class="dropdown-item"
-              @click="isUserMenuOpen = false" title="Hồ sơ cá nhân">
-              Hồ sơ
+              @click="isUserMenuOpen = false" :title="t('navbar.profile')">
+              {{ t('navbar.profile') }}
             </RouterLink>
             <RouterLink to="/admin" v-if="get_auth_user && get_auth_user.admin" class="dropdown-item"
-              @click="isUserMenuOpen = false">
-              Quản trị
+              @click="isUserMenuOpen = false" :title="t('navbar.admin')">
+              {{ t('navbar.admin') }}
             </RouterLink>
-            <router-link to="/chat" v-if="get_auth_user && !get_auth_user.admin" class="dropdown-item"
-              @click="isUserMenuOpen = false" title="Chat">
-              Nhắn tin
-            </router-link>
-
             <RouterLink v-if="!get_auth_user" to="/login" class="dropdown-item" @click="isUserMenuOpen = false">
-              Đăng nhập
+              {{ t('navbar.login') }}
             </RouterLink>
             <span v-else class="dropdown-item" @click="handleLogout">
-              Đăng xuất
+              {{ t('navbar.logout') }}
             </span>
           </div>
         </div>

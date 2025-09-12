@@ -1,0 +1,85 @@
+{
+  "navbar": {
+    "home": "Home",
+    "products": "Products",
+    "luckySpin": "Lucky Spin",
+    "searchPlaceholder": "Search DX Driver, Henshin Belt...",
+    "profile": "Account",
+    "admin": "Admin",
+    "login": "Login",
+    "logout": "Logout",
+    "search": "Enter the model name or series you're looking for.",
+    "loading": "Searching...",
+    "about": "About Tuni Toku",
+    "contact": "Contact"
+  },
+  "home": {
+    "pageTitle": "Tuni Toku - Authentic Tokusatsu, Kamen Rider, Super Sentai Model Shop",
+    "introTitle": "Awaken Your Inner Superhero",
+    "heroDescription": "The ultimate destination for Tokusatsu fans to find the rarest authentic Bandai toys and models.",
+    "heroButton": "SHOP NOW",
+    "introSectionTitle": "Tuni Toku - Your Tokusatsu Toy Paradise",
+    "introText": "At <strong>Tuni Toku</strong>, we don't just sell toys; we share a passion. This is where you can find the <strong>DX Drivers</strong> and <strong>Henshin Belts</strong> you've always dreamed of, discover a unique collection of <strong>Gaia Memories and Vistamps</strong>, and own figures from the legendary <strong>Kamen Rider and Super Sentai</strong> series. Every item in our shop is an <strong>authentic Bandai product</strong>, carefully selected to ensure the best collecting experience.",
+    "loading": "Loading products...",
+    "viewMore": "View All Products",
+    "noProducts": "There are no products to display yet."
+  },
+  "footer": {
+    "aboutTitle": "About Tuni Toku",
+    "aboutText": "Tuni Toku was born from a deep love for the world of Tokusatsu. Our mission is to be the leading reputable model shop, connecting the Kamen Rider and Super Sentai fan community in Vietnam, and providing high-quality Bandai products at reasonable prices. Join Tuni Toku to fulfill your collecting passion!",
+    "supportTitle": "Support & Contact",
+    "quickLinks": "Categories",
+    "allRightsReserved": "All Rights Reserved."
+  },
+  "productCard": {
+    "viewDetails": "View Details"
+  },
+  "listProduct": {
+    "pageTitle": "All Tokusatsu Models - Toys",
+    "categoryDescription": "Discover and own authentic DX Drivers, Henshin Belts, and models from the Kamen Rider and Super Sentai series. Tuni Toku guarantees 100% genuine Bandai Japan products with nationwide shipping."
+  },
+  "feedback": {
+    "formTitle": "Help Us Serve You Better!",
+    "formSubtitle": "Your feedback is invaluable to us.",
+    "loading": "Sending...",
+    "content": "Feedback",
+    "placeholder": "Are you satisfied, or is there anything we can improve? Please share your thoughts...",
+    "submit": "Submit Feedback"
+  },
+  "luckySpin": {
+    "spinTitle": "Lucky Spin",
+    "spinSubtitle": "Enter your shipping code to get a spin!",
+    "placeholder": "Enter shipping code...",
+    "loading": "Spinning...",
+    "spin": "Spin Now!",
+    "reward": "Congratulations! You've won:",
+    "reward-value": "Value:",
+    "btn": "Back"
+  },
+  "detailProduct": {
+    "loading": "Loading product details...",
+    "payment": "BUY NOW",
+    "fa-shield-alt": "100% Authentic Bandai",
+    "fa-truck-fast": "Nationwide Shipping",
+    "fa-box-open": "Return Support",
+    "description": "Product Description",
+    "relatedProduct": "You Might Also Like",
+    "modalHeader": "Order Information",
+    "summaryProduct": "Product:",
+    "summaryNumber": "Quantity:",
+    "summaryPrice": "Total:",
+    "phone": "Phone Number",
+    "phonePlace": "Your phone number for order confirmation",
+    "address": "Shipping Address",
+    "addressPlace": "Include house number, street, ward/commune, district, city/province",
+    "paymentMethod": "Payment Method",
+    "paymentOption1": "Cash on Delivery (COD)",
+    "paymentOption2": "Bank Transfer",
+    "btnSubmit": "Confirm Order",
+    "btnCancel": "Cancel"
+  },
+  "Chat": {
+    "placeholder": "Enter the message...",
+    "err": "Can't connect. Please try again later."
+  }
+}

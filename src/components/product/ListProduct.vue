@@ -4,7 +4,9 @@ import { useNotification } from '@/composables/useNotification';
 import { useProductStore } from '@/stores/product';
 import ProductCard from '@/components/product/Card.vue';
 import LoadingSpinner from '../common/LoadingSpinner.vue';
+import { useI18n } from 'vue-i18n';
 
+const { t } = useI18n();
 const showNotification = useNotification();
 const productStore = useProductStore();
 
@@ -21,8 +23,8 @@ onBeforeMount(async () => {
   <div>
     <div class="container">
       <div class="page-header">
-        <h1 class="page-title">Mô Hình - Đồ Chơi Tokusatsu</h1>
-        <p class="category-description">Tất cả sản phẩm Kamen Rider, Super Sentai và các dòng Tokusatsu khác.</p>
+        <h1 class="page-title">{{ t('listProduct.pageTitle') }}</h1>
+        <p class="category-description">{{ t('listProduct.categoryDescription') }}</p>
       </div>
 
       <LoadingSpinner v-if="productStore.isLoading" message="Đang tải sản phẩm..." />

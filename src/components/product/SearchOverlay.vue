@@ -2,6 +2,9 @@
 import { ref, watch, nextTick } from 'vue';
 import LoadingSpinner from '../common/LoadingSpinner.vue';
 import { formatPrice } from '@/composables/useUtils';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const props = defineProps({
   isActive: Boolean,
@@ -34,7 +37,7 @@ watch(() => props.isActive, (newVal) => {
               ref="searchInput"
               type="text" 
               class="search-input" 
-              placeholder="Tìm kiếm sản phẩm..."
+              :placeholder="t('navbar.searchPlaceholder')"
               :value="modelValue" 
               @input="emit('update:modelValue', $event.target.value)"
             />
@@ -44,7 +47,7 @@ watch(() => props.isActive, (newVal) => {
           </div>
           
           <div class="results-content">
-            <LoadingSpinner v-if="isLoading" message="Đang tìm kiếm..." />
+            <LoadingSpinner v-if="isLoading" :message="t('navbar.loading')" />
             <div v-else-if="results.length > 0" class="results-list">
               <RouterLink 
                 v-for="product in results" 
@@ -65,7 +68,7 @@ watch(() => props.isActive, (newVal) => {
             </div>
             <div v-else class="empty-state">
               <i class="fa-solid fa-keyboard empty-icon"></i>
-              <p>Nhập từ khoá để tìm sản phẩm.</p>
+              <p>{{ t('navbar.search') }}</p>
             </div>
           </div>
         </div>

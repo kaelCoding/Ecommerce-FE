@@ -116,6 +116,7 @@ html[data-theme="dark"] {
   box-shadow: 0 2px 5px var(--header-shadow);
   z-index: 10;
   flex-shrink: 0;
+  justify-content: space-between;
 }
 
 .back-button {
@@ -152,6 +153,7 @@ html[data-theme="dark"] {
   border-radius: 1.25rem;
   line-height: 1.5;
   word-break: break-word;
+  font-size: 0.95rem;
 }
 
 .message-timestamp {
@@ -182,9 +184,9 @@ html[data-theme="dark"] {
 }
 
 .chat-input-area {
-  padding: 1rem 1.25rem;
+  padding: 12px;
   border-top: 1px solid var(--border-color);
-  background-color: var(--panel-bg);
+  background-color: var(--body-color);
   display: flex;
   align-items: flex-end;
   gap: 0.75rem;
@@ -193,22 +195,35 @@ html[data-theme="dark"] {
 
 .chat-input {
   flex-grow: 1;
+  border: none;
   border-radius: var(--border-radius);
-  border: 1px solid var(--border-color);
-  background-color: var(--input-bg);
+  background-color: var(--light-gray-color);
   color: var(--chat-text);
-  font-size: 1rem;
+  font-size: 0.95rem;
   padding: 0.75rem 1rem;
   resize: none;
-  max-height: 120px;
+  max-height: 100px;
   overflow-y: auto;
-  line-height: 1.5;
+  line-height: 1.4;
   transition: border-color 0.2s ease;
 }
 
 .chat-input:focus {
   outline: none;
   border-color: var(--primary-color);
+}
+
+.send-btn {
+  background: none;
+  border: none;
+  color: var(--primary-color);
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 8px 12px;
+}
+.send-btn:disabled {
+  color: var(--text-color-light);
+  cursor: not-allowed;
 }
 
 .chat-input-area .btn-primary {
@@ -288,4 +303,37 @@ html[data-theme="dark"] {
 .client-chat-view .chat-panel {
   position: static;
   transform: none;
+}
+
+.typing-indicator {
+  background-color: var(--received-bubble-bg);
+  color: var(--chat-text);
+  padding: 0.75rem 1rem;
+  border-radius: 1.25rem;
+  border-bottom-left-radius: 0.5rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.typing-indicator span {
+  width: 8px;
+  height: 8px;
+  background-color: var(--timestamp-text);
+  border-radius: 50%;
+  animation: typing-blink 1.4s infinite both;
+}
+
+.typing-indicator span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.typing-indicator span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes typing-blink {
+  0% { opacity: 0.2; }
+  20% { opacity: 1; }
+  100% { opacity: 0.2; }
 }

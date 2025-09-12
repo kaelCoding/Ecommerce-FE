@@ -1,17 +1,21 @@
+<script setup>
+import { useI18n } from 'vue-i18n';
+const { t } = useI18n();
+</script>
 <template>
     <footer class="main-footer">
         <div class="container footer-content">
-            <div class="footer-column about-us">
+            <div id="about-us" class="footer-column about-us">
                 <a href="https://www.facebook.com/W.A.T.St0re" target="_blank" class="social-links">
-                    <h3>Tuni Toku</h3>
+                    <h3>{{ t('footer.aboutTitle') }}</h3>
                 </a>
                 <p class="footer-text">
-                   Tuni Toku là điểm đến của những người hâm mộ Tokusatsu. Chúng tôi chuyên cung cấp mô hình và đồ chơi chính hãng, chất lượng cao, an toàn và đa dạng. Cùng Tuni Toku thỏa mãn đam mê sưu tầm và khám phá thế giới siêu anh hùng!
+                   {{ t('footer.aboutText') }}
                 </p>
             </div>
 
-            <div class="footer-column contact-info">
-                <h3 class="footer-heading">Hỗ trợ & Liên hệ</h3>
+            <div id="contact" class="footer-column contact-info">
+                <h3 class="footer-heading">{{ t('footer.supportTitle') }}</h3>
                 <a href="https://www.facebook.com/W.A.T.St0re" target="_blank">
                     <p class="footer-text">
                         <i class="fa-brands fa-facebook-f"></i> Tuni Toku
@@ -26,15 +30,15 @@
             </div>
 
             <div class="footer-column quick-links">
-                <h3 class="footer-heading">Liên kết nhanh</h3>
-                <router-link class="footer-text" to="/">Trang chủ</router-link>
-                <router-link class="footer-text" to="/products">Sản phẩm</router-link>
+                <h3 class="footer-heading">{{ t('footer.quickLinks') }}</h3>
+                <router-link class="footer-text" to="/">{{ t('navbar.home') }}</router-link>
+                <router-link class="footer-text" to="/products">{{ t('navbar.products') }}</router-link>
             </div>
         </div>
         <div class="footer-bottom">
             <div class="container">
                 <p>&copy; 2025 KAEL.</p>
-                <p>All Rights Reserved.</p>
+                <p>{{ t('footer.allRightsReserved') }}</p>
             </div>
         </div>
     </footer>
