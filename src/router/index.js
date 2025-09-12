@@ -45,6 +45,24 @@ const router = createRouter({
         description: 'Xem chi tiết thông tin, hình ảnh và giá của sản phẩm Tokusatsu tại Tuni Toku.'
       }
     },
+    // {
+    //   path: "/products/category/:slug",
+    //   name: "category-products",
+    //   component: () => import("../views/CategoryView.vue"),
+    //   meta: {
+    //     title: 'Sản phẩm theo danh mục',
+    //     description: 'Khám phá các sản phẩm Tokusatsu theo từng danh mục tại Tuni Toku.'
+    //   }
+    // },
+    {
+      path: "/search",
+      name: "search-results",
+      component: () => import("../views/SearchView.vue"),
+      meta: {
+        title: 'Kết quả tìm kiếm',
+        description: 'Xem kết quả tìm kiếm sản phẩm tại Tuni Toku.'
+      }
+    },
     {
       path: "/lucky-spin",
       name: "lucky-spin",

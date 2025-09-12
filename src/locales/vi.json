@@ -4,6 +4,8 @@
     "products": "Sản phẩm",
     "luckySpin": "Vòng quay may mắn",
     "searchPlaceholder": "Tìm DX Driver, Henshin Belt...",
+    "viewallResult": "Xem tất cả kết quả cho",
+    "emptyState": "Không tìm thấy kết quả nào cho",
     "profile": "Tài khoản",
     "admin": "Quản trị",
     "login": "Đăng nhập",
@@ -81,5 +83,12 @@
   "Chat": {
     "placeholder": "Nhập tin nhắn...",
     "err": "Không thể kết nối. Vui lòng thử lại sau."
+  },
+  "search": {
+    "searchQuery": "Kết quả tìm kiếm cho",
+    "searchKey": "Vui lòng nhập từ khóa để tìm kiếm",
+    "searchFind": "Tìm thấy",
+    "searchProduct": "sản phẩm",
+    "searchEmpty": "Rất tiếc, không có sản phẩm nào phù hợp với từ khóa của bạn."
   }
 }

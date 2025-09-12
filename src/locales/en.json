@@ -4,6 +4,8 @@
     "products": "Products",
     "luckySpin": "Lucky Spin",
     "searchPlaceholder": "Search DX Driver, Henshin Belt...",
+    "viewallResult": "See all results for",
+    "emptyState": "No results found for",
     "profile": "Account",
     "admin": "Admin",
     "login": "Login",
@@ -81,5 +83,12 @@
   "Chat": {
     "placeholder": "Enter the message...",
     "err": "Can't connect. Please try again later."
+  },
+  "search": {
+    "searchQuery": "Search results for",
+    "searchKey": "Please enter the keyword to search",
+    "searchFind": "Find",
+    "searchProduct": "products",
+    "searchEmpty": "Sorry, there is no product that suits your keywords."
   }
 }

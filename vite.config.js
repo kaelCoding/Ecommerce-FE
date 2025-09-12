@@ -3,13 +3,17 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
 import sitemap from 'vite-plugin-sitemap'
-import fetchAllProductIds from './vite-scripts/fetch-product-ids.js';
+import fetchSitemapRoutes from './vite-scripts/fetch-sitemap-routes.js';
 
 export default defineConfig(async () => {
-  const productIds = await fetchAllProductIds();
-  const dynamicRoutes = productIds
-    .filter(id => id != null)
-    .map(id => `/products/detail/${id}`);
+  const dynamicRoutesFromApi = await fetchSitemapRoutes();
+
+  const staticRoutes = [
+    '/',
+    '/products',
+  ];
+
+  const allDynamicRoutes = [...staticRoutes, ...dynamicRoutesFromApi];
 
   return {
     plugins: [
@@ -17,8 +21,10 @@ export default defineConfig(async () => {
       vueDevTools(),
       sitemap({
         hostname: 'https://tunitoku.store',
-        dynamicRoutes: dynamicRoutes,
-        exclude: ['/admin', '/profile', '/chat'],
+        dynamicRoutes: allDynamicRoutes,
+        robots: [{ userAgent: '*', allow: '/' }],
+        exclude: ['/admin/**', '/profile', '/chat', '/register', '/login', '/search'],
+        readable: true,
       }),
     ],
     base: '/',
