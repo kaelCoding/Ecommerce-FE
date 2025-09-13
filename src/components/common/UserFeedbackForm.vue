@@ -4,8 +4,8 @@ import { send_feedback_api } from '@/services/order';
 import { useNotification } from '@/composables/useNotification';
 import { get_auth_user } from '@/stores/auth';
 import { useRouter } from 'vue-router';
-import LoadingSpinner from './LoadingSpinner.vue';
 import { useI18n } from 'vue-i18n';
+import LoadingSpinner from './LoadingSpinner.vue';
 
 const { t } = useI18n();
 const { showNotification } = useNotification();

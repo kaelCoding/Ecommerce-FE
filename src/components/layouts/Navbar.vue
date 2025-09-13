@@ -559,25 +559,5 @@ onBeforeUnmount(() => {
     display: block;
     z-index: 2;
   }
-
-  .container {
-    display: grid;
-    align-items: center;
-  }
-
-  .logo {
-    grid-column: 2 / 3;
-    justify-self: center;
-  }
-
-  .mobile-menu-toggle {
-    grid-column: 1 / 2;
-    justify-self: start;
-  }
-
-  .nav-actions {
-    grid-column: 3 / 4;
-    justify-self: end;
-  }
 }
 </style>
