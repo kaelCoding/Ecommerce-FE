@@ -1,0 +1,1 @@
+import{Q as t}from"./index-DFV4gWia.js";const o=async r=>{try{return await t("POST","/orders",r)}catch(a){throw a}},s=async r=>{try{return await t("POST","/feedback",r)}catch(a){throw a}};export{o as a,s};
