@@ -5,8 +5,6 @@ import { getChatHistory } from '@/services/chatService';
 import { get_users_api } from '@/services/auth';
 import { getWebSocketUrl } from '@/models/api';
 import LoadingSpinner from '@/components/common/LoadingSpinner.vue';
-import { getMessaging, getToken, onMessage } from "firebase/messaging";
-import { updateFCMToken } from "@/services/fcmService";
 
 const users = ref([]);
 const selectedUser = ref(null);
@@ -54,35 +52,6 @@ const selectUser = async (user) => {
 const goBackToList = () => {
     isChatVisible.value = false;
 };
-
-const setupFCM = async () => {
-    try {
-        const messaging = getMessaging();
-        const currentToken = await getToken(messaging, {
-            vapidKey: "BMJYrDhHREPAVJuzDYrBQb6APXLLy4KEGMMds0SMf-PtNIAS9-lnPOmoXlbVi00w2hhAjgO8CxW8BnmRDhHMx3w"
-        });
-        if (currentToken) {
-            await updateFCMToken(currentToken);
-        } else {
-            console.log('No registration token available. Request permission to generate one.');
-        }
-
-        onMessage(messaging, (payload) => {
-            console.log('Message received. ', payload);
-            const senderId = parseInt(payload.data.sender_id);
-            if (senderId && (!selectedUser.value || selectedUser.value.id !== senderId)) {
-                const user = users.value.find(u => u.id === senderId);
-                if (user) {
-                    user.hasNewMessage = true;
-                }
-            }
-        });
-
-    } catch (error) {
-        console.error('An error occurred while retrieving token. ', error);
-    }
-}
-
 
 const connectWebSocket = () => {
     if (!token.value) return;
@@ -162,7 +131,6 @@ onMounted(async () => {
         isLoading.value = false
 
         connectWebSocket();
-        setupFCM();
     } catch (error) {
         console.error('Failed to load users:', error);
     }

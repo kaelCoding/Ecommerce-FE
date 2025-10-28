@@ -1,7 +1,7 @@
 import fetch from 'node-fetch';
 
-// const API_BASE_URL = "http://localhost:8080";
-const API_BASE_URL = "https://ecommerce-be-production-856c.up.railway.app";
+const API_BASE_URL = "http://localhost:8080";
+// const API_BASE_URL = "https://ecommerce-be-production-856c.up.railway.app";
 const API_PREFIX = "/api/v1";
 
 async function fetchData(path) {

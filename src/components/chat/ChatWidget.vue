@@ -4,8 +4,6 @@ import { token, get_auth_user, get_auth_info } from '@/stores/auth';
 import { getChatHistory } from '@/services/chatService';
 import { getAdminInfo } from '@/services/userService';
 import { getWebSocketUrl } from '@/models/api';
-import { getMessaging, getToken } from "firebase/messaging";
-import { updateFCMToken } from "@/services/fcmService";
 import { useI18n } from 'vue-i18n';
 import LoadingSpinner from '@/components/common/LoadingSpinner.vue';
 
@@ -26,22 +24,6 @@ const scrollToBottom = () => {
         }
     });
 };
-
-const setupFCM = async () => {
-    try {
-        const messaging = getMessaging();
-        const currentToken = await getToken(messaging, {
-            vapidKey: "BMJYrDhHREPAVJuzDYrBQb6APXLLy4KEGMMds0SMf-PtNIAS9-lnPOmoXlbVi00w2hhAjgO8CxW8BnmRDhHMx3w"
-        });
-        if (currentToken) {
-            await updateFCMToken(currentToken);
-        } else {
-            console.log('No registration token available. Request permission to generate one.');
-        }
-    } catch (error) {
-        console.error('An error occurred while retrieving token. ', error);
-    }
-}
 
 const connectWebSocket = () => {
     if (!token.value) {
@@ -113,7 +95,6 @@ onMounted(async () => {
         isLoading.value = false;
         scrollToBottom();
         connectWebSocket();
-        setupFCM();
     } catch (error) {
         console.error('Failed to load chat data:', error);
     }

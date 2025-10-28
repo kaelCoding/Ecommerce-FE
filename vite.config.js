@@ -1,7 +1,7 @@
 import { fileURLToPath, URL } from 'node:url'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import vueDevTools from 'vite-plugin-vue-devtools'
+// import vueDevTools from 'vite-plugin-vue-devtools'
 import sitemap from 'vite-plugin-sitemap'
 import fetchSitemapRoutes from './vite-scripts/fetch-sitemap-routes.js';
 
@@ -18,7 +18,7 @@ export default defineConfig(async () => {
   return {
     plugins: [
       vue(),
-      vueDevTools(),
+      // vueDevTools(),
       sitemap({
         hostname: 'https://tunitoku.store',
         dynamicRoutes: allDynamicRoutes,
