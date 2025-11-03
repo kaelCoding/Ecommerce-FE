@@ -5,19 +5,27 @@ import { get_auth_user, logout_user } from '@/stores/auth';
 import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { formatPrice } from '@/composables/useUtils';
-import ThemeToggle from '../common/ThemeToggle.vue';
 import LoadingSpinner from '../common/LoadingSpinner.vue';
+import { useCartStore } from '@/stores/cart'; 
+import { storeToRefs } from 'pinia';
 
 const router = useRouter();
 const { t, locale } = useI18n();
+
+const cartStore = useCartStore();
+const { cartTotalItems } = storeToRefs(cartStore);
 
 const searchQuery = ref('');
 const searchResults = ref([]);
 const isLoading = ref(false);
 const isSearchActive = ref(false);
 const isUserMenuOpen = ref(false);
-let debounceTimer = null;
 const isMobileMenuOpen = ref(false);
+let debounceTimer = null;
+
+watch(isMobileMenuOpen, (newVal) => {
+  document.body.style.overflow = newVal ? 'hidden' : '';
+});
 
 const handleSearch = async (query) => {
   if (query.length > 1) {
@@ -46,12 +54,16 @@ watch(searchQuery, (newQuery) => {
 
 const isScrolled = ref(false);
 const handleScroll = () => {
-  isScrolled.value = window.scrollY > 10;
+  const banner = document.querySelector('.header-banner');
+  if (banner) {
+    isScrolled.value = window.scrollY > banner.offsetHeight;
+  } else {
+    isScrolled.value = window.scrollY > 10;
+  }
 };
 
 const openSearch = () => {
   isSearchActive.value = true;
-  isMobileMenuOpen.value = false;
 };
 
 const closeSearch = () => {
@@ -64,20 +76,15 @@ const toggleMobileMenu = () => {
   isMobileMenuOpen.value = !isMobileMenuOpen.value;
 };
 
-watch(isMobileMenuOpen, (isOpen) => {
-  if (isOpen) {
-    document.body.style.overflow = 'hidden';
-  } else {
-    document.body.style.overflow = '';
-  }
-});
-
 const closeAllDropdowns = (event) => {
   if (isUserMenuOpen.value && !event.target.closest('.user-menu-container')) {
     isUserMenuOpen.value = false;
   }
   if (isSearchActive.value && !event.target.closest('.search-active-container')) {
     closeSearch();
+  }
+  if (isMobileMenuOpen.value && !event.target.closest('.mobile-menu') && !event.target.closest('.mobile-menu-toggle')) {
+    isMobileMenuOpen.value = false;
   }
 };
 
@@ -91,6 +98,7 @@ const goToSearchPage = () => {
 const handleLogout = () => {
   logout_user();
   isUserMenuOpen.value = false;
+  isMobileMenuOpen.value = false;
   router.push('/login');
 };
 
@@ -102,6 +110,10 @@ const changeLocale = (newLocale) => {
 onMounted(() => {
   window.addEventListener('scroll', handleScroll);
   document.addEventListener('click', closeAllDropdowns);
+
+  if (get_auth_user.value) {
+    cartStore.fetchCart();
+  }
 });
 
 onBeforeUnmount(() => {
@@ -112,106 +124,157 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <header class="navbar"
-    :class="{ 'scrolled': isScrolled, 'search-active': isSearchActive, 'mobile-menu-active': isMobileMenuOpen }">
-    <div class="container">
-      <template v-if="!isSearchActive">
-        <div class="mobile-menu-toggle">
-          <i v-if="!isMobileMenuOpen" class="fa-solid fa-bars action-icon"  @click="toggleMobileMenu"></i>
-          <button v-else class="close-mobile-menu" @click="toggleMobileMenu">
-            <i class="fa-solid fa-xmark"></i>
+  <header class="navbar">
+    <div class="header-banner">
+      <RouterLink to="/">
+        <img src="/public/images/tuni4.png" alt="Tuni Toku Banner" />
+      </RouterLink>
+    </div>
+
+    <div class="nav-bar-wrapper" :class="{ 'scrolled': isScrolled, 'search-active': isSearchActive }">
+      <div class="container">
+        <template v-if="!isSearchActive">
+          <button class="mobile-menu-toggle" @click.stop="toggleMobileMenu">
+            <i class="fa-solid fa-bars"></i>
           </button>
-        </div>
 
-        <RouterLink to="/" class="logo">
-          <span>TUNI TOKU</span>
-        </RouterLink>
+          <nav class="nav-links hide-on-mobile">
+            <RouterLink to="/">{{ t('navbar.home') }}</RouterLink>
+            <RouterLink to="/products">{{ t('navbar.products') }}</RouterLink>
+            <RouterLink to="/proxy-order">MERCARI</RouterLink>
+            <a href="#contact" class="hide-on-small">LIÊN HỆ</a>
+            <a href="#about-us" class="hide-on-small">VỀ CHÚNG TÔI</a>
+          </nav>
 
-        <nav class="nav-links desktop-only">
-          <RouterLink to="/">{{ t('navbar.home') }}</RouterLink>
-          <RouterLink to="/products">{{ t('navbar.products') }}</RouterLink>
-          <a href="#about-us">{{ t('navbar.about') }}</a>
-          <a href="#contact">{{ t('navbar.contact') }}</a>
-        </nav>
-
-        <div class="nav-actions">
-          <div class="search-icon-wrapper">
-            <i class="fa-solid fa-magnifying-glass action-icon" @click.stop="openSearch"></i>
-          </div>
-          <div class="user-menu-container">
-            <i class="fa-solid fa-user action-icon" @click.stop="isUserMenuOpen = !isUserMenuOpen"></i>
-            <div v-if="isUserMenuOpen" class="user-dropdown">
-              <ThemeToggle @click="isUserMenuOpen = false" />
-              <button v-if="locale === 'vi'" @click="changeLocale('en')" class="dropdown-item">
-                English
-              </button>
-              <button v-else-if="locale === 'en'" @click="changeLocale('vi')" class="dropdown-item">
-                Vietnamese
-              </button>
-
-              <RouterLink to="/profile" v-if="get_auth_user && !get_auth_user.admin" class="dropdown-item"
-                @click="isUserMenuOpen = false" :title="t('navbar.profile')">
-                {{ t('navbar.profile') }}
-              </RouterLink>
-              <RouterLink to="/admin" v-if="get_auth_user && get_auth_user.admin" class="dropdown-item"
-                @click="isUserMenuOpen = false" :title="t('navbar.admin')">
-                {{ t('navbar.admin') }}
-              </RouterLink>
-              <RouterLink v-if="!get_auth_user" to="/login" class="dropdown-item" @click="isUserMenuOpen = false">
-                {{ t('navbar.login') }}
-              </RouterLink>
-              <span v-else class="dropdown-item" @click="handleLogout">
-                {{ t('navbar.logout') }}
-              </span>
+          <div class="nav-actions hide-on-mobile">
+            <div class="search-icon-wrapper">
+              <i class="fa-solid fa-magnifying-glass action-icon" @click.stop="openSearch"></i>
             </div>
+            <div class="user-menu-container">
+              <i class="fa-solid fa-user action-icon" @click.stop="isUserMenuOpen = !isUserMenuOpen"></i>
+              <div v-if="isUserMenuOpen" class="user-dropdown">
+                <RouterLink to="/profile" v-if="get_auth_user && !get_auth_user.admin" class="dropdown-item"
+                  @click="isUserMenuOpen = false" :title="t('navbar.profile')">
+                  {{ t('navbar.profile') }}
+                </RouterLink>
+                <RouterLink to="/admin" v-if="get_auth_user && get_auth_user.admin" class="dropdown-item"
+                  @click="isUserMenuOpen = false" :title="t('navbar.admin')">
+                  {{ t('navbar.admin') }}
+                </RouterLink>
+                <RouterLink v-if="!get_auth_user" to="/login" class="dropdown-item" @click="isUserMenuOpen = false">
+                  {{ t('navbar.login') }}
+                </RouterLink>
+                <span v-else class="dropdown-item" @click="handleLogout">
+                  {{ t('navbar.logout') }}
+                </span>
+              </div>
+            </div>
+            <RouterLink to="/cart" class="cart-icon-wrapper">
+              <i class="fas fa-shopping-cart action-icon"></i>
+              <span v-if="cartTotalItems > 0" class="cart-item-count">{{ cartTotalItems }}</span>
+            </RouterLink>
           </div>
-        </div>
-      </template>
 
-      <div v-if="isSearchActive" class="search-active-container" @click.stop>
-        <div class="search-input-wrapper">
-          <i class="fa-solid fa-magnifying-glass search-icon"></i>
-          <input type="text" class="search-bar expanded" :placeholder="t('navbar.searchPlaceholder')"
-            v-model="searchQuery" @keydown.enter="goToSearchPage" autofocus>
-          <button class="close-btn" @click="closeSearch">
-            <i class="fa-solid fa-xmark"></i>
-          </button>
-        </div>
-        <div v-if="searchQuery.length > 1" class="search-results-expanded">
-          <LoadingSpinner v-if="isLoading" :message="t('navbar.loading')" />
-          <div v-else-if="searchResults.length > 0">
-            <div class="results-list">
-              <RouterLink v-for="product in searchResults" :key="product.ID" :to="`/products/detail/${product.ID}`"
-                class="result-item" @click="closeSearch">
-                <img :src="product.image_urls[0]" :alt="product.name" class="result-item-image" />
-                <div class="result-item-info">
-                  <h4 class="result-item-name">{{ product.name }}</h4>
-                  <p class="result-item-price">{{ formatPrice(product.price) }}</p>
-                </div>
-              </RouterLink>
+          <div class="nav-actions-mobile">
+            <div class="search-icon-wrapper">
+              <i class="fa-solid fa-magnifying-glass action-icon" @click.stop="openSearch"></i>
             </div>
-            <div class="view-all-results" @click="goToSearchPage">
-              {{ t('navbar.viewallResult') }} "{{ searchQuery }}"
-            </div>
+            <RouterLink to="/cart" class="cart-icon-wrapper">
+              <i class="fas fa-shopping-cart action-icon"></i>
+              <span v-if="cartTotalItems > 0" class="cart-item-count">{{ cartTotalItems }}</span>
+            </RouterLink>
           </div>
-          <div v-else class="empty-state">
-            <p>{{ t('navbar.emptyState') }} "<strong>{{ searchQuery }}</strong>".</p>
+        </template>
+        
+        <div v-if="isSearchActive" class="search-active-container" @click.stop>
+          <div class="search-input-wrapper">
+            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+            <input type="text" class="search-bar expanded" :placeholder="t('navbar.searchPlaceholder')"
+              v-model="searchQuery" @keydown.enter="goToSearchPage" autofocus>
+            <button class="close-btn" @click="closeSearch">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+          <div v-if="searchQuery.length > 1" class="search-results-expanded">
+            <LoadingSpinner v-if="isLoading" :message="t('navbar.loading')" />
+            <div v-else-if="searchResults.length > 0">
+              <div class="results-list">
+                <RouterLink v-for="product in searchResults" :key="product.ID" :to="`/products/detail/${product.ID}`"
+                  class="result-item" @click="closeSearch">
+                  <img :src="product.image_urls[0]" :alt="product.name" class="result-item-image" />
+                  <div class="result-item-info">
+                    <h4 class="result-item-name">{{ product.name }}</h4>
+                    <p class="result-item-price">{{ formatPrice(product.price) }}</p>
+                  </div>
+                </RouterLink>
+              </div>
+              <div class="view-all-results" @click="goToSearchPage">
+                {{ t('navbar.viewallResult') }} "{{ searchQuery }}"
+              </div>
+            </div>
+            <div v-else class="empty-state">
+              <p>{{ t('navbar.emptyState') }} "<strong>{{ searchQuery }}</strong>".</p>
+            </div>
           </div>
         </div>
       </div>
     </div>
 
-    <transition name="slide-fade">
-      <div v-if="isMobileMenuOpen" class="mobile-menu-panel">
-        <nav class="mobile-nav-links">
-          <RouterLink to="/" @click="toggleMobileMenu">{{ t('navbar.home') }}</RouterLink>
-          <RouterLink to="/products" @click="toggleMobileMenu">{{ t('navbar.products') }}</RouterLink>
-          <a href="#about-us" @click="toggleMobileMenu">{{ t('navbar.about') }}</a>
-          <a href="#contact" @click="toggleMobileMenu">{{ t('navbar.contact') }}</a>
+    <teleport to="body">
+      <transition name="slide-fade">
+        <div v-if="isMobileMenuOpen" class="mobile-menu-overlay" @click="toggleMobileMenu"></div>
+      </transition>
+      <transition name="slide-left">
+        <nav v-if="isMobileMenuOpen" class="mobile-menu">
+          <div class="mobile-menu-header">
+            <h3>Menu</h3>
+            <button class="close-btn" @click="toggleMobileMenu">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+          <div class="mobile-menu-links">
+            <div v-if="get_auth_user">
+              <RouterLink to="/profile" v-if="!get_auth_user.admin" class="mobile-link" @click="toggleMobileMenu">
+                <i class="fa-solid fa-user"></i> {{ t('navbar.profile') }}
+              </RouterLink>
+              <RouterLink to="/admin" v-if="get_auth_user.admin" class="mobile-link" @click="toggleMobileMenu">
+                <i class="fa-solid fa-user-shield"></i> {{ t('navbar.admin') }}
+              </RouterLink>
+            </div>
+            <div v-else>
+              <RouterLink to="/login" class="mobile-link" @click="toggleMobileMenu">
+                <i class="fa-solid fa-right-to-bracket"></i> {{ t('navbar.login') }}
+              </RouterLink>
+            </div>
+
+            <hr class="mobile-divider" />
+
+            <RouterLink to="/" class="mobile-link" @click="toggleMobileMenu">
+              <i class="fa-solid fa-house"></i> {{ t('navbar.home') }}
+            </RouterLink>
+            <RouterLink to="/products" class="mobile-link" @click="toggleMobileMenu">
+              <i class="fa-solid fa-boxes-stacked"></i> {{ t('navbar.products') }}
+            </RouterLink>
+            <RouterLink to="/proxy-order" class="mobile-link" @click="toggleMobileMenu">
+              <i class="fa-solid fa-boxes-packing"></i> MERCARI
+            </RouterLink>
+            <a href="#contact" class="mobile-link" @click="toggleMobileMenu">
+              <i class="fa-solid fa-phone"></i> LIÊN HỆ
+            </a>
+            <a href="#about-us" class="mobile-link" @click="toggleMobileMenu">
+              <i class="fa-solid fa-circle-info"></i> VỀ CHÚNG TÔI
+            </a>
+            
+            <hr class="mobile-divider" />
+
+            <span v-if="get_auth_user" class="mobile-link logout" @click="handleLogout">
+              <i class="fa-solid fa-right-from-bracket"></i> {{ t('navbar.logout') }}
+            </span>
+          </div>
         </nav>
-      </div>
-    </transition>
-  </header>
+      </transition>
+    </teleport>
+    </header>
 </template>
 
 <style scoped>
@@ -235,55 +298,63 @@ onBeforeUnmount(() => {
   background-color: var(--white-color);
 }
 
-.navbar {
-  position: fixed;
-  top: 0;
-  left: 0;
+.header-banner {
   width: 100%;
-  padding: clamp(10px, 2vh, 15px) 0;
-  background-color: var(--body-color);
-  z-index: 100;
-  transition: all var(--transition-speed) ease;
-  height: 72px;
-  border-color: #374151;
+  padding: 0; 
+  margin: 0; 
+  background-color: var(--white-color);
 }
 
-.navbar.scrolled {
-  box-shadow: var(--box-shadow);
-  border-bottom: 1px solid var(--light-gray-color);
+.header-banner > a {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.header-banner img {
+  width: 100%;
+  height: 100%; 
+  object-fit: cover;
+  object-position: top; 
+}
+
+.nav-bar-wrapper {
+  width: 100%;
+  background-color: var(--white-color);
+  height: 72px;
+  transition: all var(--transition-speed) ease;
+}
+
+.navbar {
+  width: 100%;
+  z-index: 100;
+  transition: all var(--transition-speed) ease;
 }
 
 .container {
   display: flex;
   justify-content: space-between;
-  align-items: center;
   padding: 0 20px;
+  align-items: center;
   height: 100%;
-  position: relative;
 }
 
-.logo {
-  display: flex;
-  align-items: center;
-  gap: clamp(6px, 2vw, 12px);
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--secondary-color);
-  text-decoration: none;
-}
 
 .nav-links {
   display: flex;
-  gap: 2rem;
+  gap: clamp(0.8rem, 1.5vw, 1.5rem);
+  height: 100%;
+  align-items: center;
 }
 
 .nav-links a {
-  font-weight: 500;
+  font-weight: 600;
   position: relative;
   transition: color var(--transition-speed) ease;
   color: var(--secondary-color);
   text-decoration: none;
-  font-size: 1rem;
+  font-size: clamp(0.9rem, 1.2vw, 1rem);
+  white-space: nowrap;
 }
 
 .nav-links a:hover {
@@ -310,7 +381,32 @@ onBeforeUnmount(() => {
 .nav-actions {
   display: flex;
   align-items: center;
-  gap: clamp(10px, 3vw, 15px);
+  gap: clamp(15px, 3vw, 20px);
+  justify-content: flex-end;
+  height: 100%;
+}
+
+.cart-icon-wrapper {
+  position: relative;
+  text-decoration: none;
+  line-height: 1;
+}
+
+.cart-item-count {
+  position: absolute;
+  top: -10px;
+  right: -12px;
+  background-color: var(--primary-color);
+  color: var(--white-color);
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border: 2px solid var(--white-color);
 }
 
 .action-icon {
@@ -320,7 +416,7 @@ onBeforeUnmount(() => {
   border: none;
   cursor: pointer;
   background: none;
-  font-size: 1.25rem;
+  font-size: clamp(1.1rem, 2vw, 1.25rem);
 }
 
 .action-icon:hover {
@@ -367,19 +463,19 @@ onBeforeUnmount(() => {
   background-color: var(--primary-color);
 }
 
-.navbar:not(.search-active) .search-container {
+.nav-bar-wrapper:not(.search-active) .search-container {
   position: relative;
 }
 
-.navbar .logo,
-.navbar .nav-links,
-.navbar .nav-actions {
+.nav-bar-wrapper .nav-links,
+.nav-bar-wrapper .nav-actions,
+.nav-bar-wrapper .mobile-menu-toggle {
   transition: opacity var(--transition-speed) ease;
 }
 
-.navbar.search-active .logo,
-.navbar.search-active .nav-links,
-.navbar.search-active .nav-actions {
+.nav-bar-wrapper.search-active .nav-links,
+.nav-bar-wrapper.search-active .nav-actions,
+.nav-bar-wrapper.search-active .mobile-menu-toggle {
   display: none;
 }
 
@@ -388,6 +484,7 @@ onBeforeUnmount(() => {
   position: relative;
   display: flex;
   flex-direction: column;
+  grid-column: 1 / 4; 
 }
 
 .search-input-wrapper {
@@ -409,7 +506,7 @@ onBeforeUnmount(() => {
 .search-bar.expanded:focus {
   outline: none;
   border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+  box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.3);
 }
 
 .search-icon {
@@ -425,8 +522,6 @@ onBeforeUnmount(() => {
 .close-btn {
   position: absolute;
   right: 15px;
-  top: 50%;
-  transform: translateY(-50%);
   background: none;
   border: none;
   font-size: 1.25rem;
@@ -496,68 +591,168 @@ onBeforeUnmount(() => {
   color: var(--primary-color);
 }
 
-.mobile-menu-toggle {
-  display: none;
+
+.mobile-menu-toggle { display: none; }
+.nav-actions-mobile { display: none; }
+
+@media (max-width: 900px) {
+  .nav-links a.hide-on-small {
+    display: none;
+  }
+  .hide-on-mobile {
+    display: none !important;
+  }
+  .mobile-menu-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    margin-left: -10px;
+  }
+  .mobile-menu-toggle .fa-solid {
+    font-size: 1.5rem;
+    color: var(--secondary-color);
+  }
+  .nav-actions-mobile {
+    display: flex;
+    align-items: center;
+    gap: clamp(15px, 3vw, 20px);
+  }
 }
 
-.mobile-menu-panel {
-  position: fixed;
-  top: 72;
+.nav-bar-wrapper.scrolled {
+  position: fixed; 
+  top: 0;
   left: 0;
   width: 100%;
-  height: 100%;
-  background-color: var(--body-color);
-  z-index: 20;
-  padding: 20px;
+  box-shadow: var(--box-shadow); 
+  animation: slideDown 0.3s ease-out;
+  z-index: 2;
 }
 
-.close-mobile-menu {
-  background: none;
-  border: none;
-  color: var(--secondary-color);
-  font-size: clamp(1.1rem, 3vw, 1.5rem);
-  cursor: pointer;
+@keyframes slideDown {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(0);
+  }
 }
 
-.mobile-nav-links {
+.mobile-menu-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1001;
+}
+
+.mobile-menu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 300px;
+  max-width: 80vw;
+  height: 100vh;
+  background-color: var(--white-color);
+  z-index: 1002;
+  box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1); 
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
 }
 
-.mobile-nav-links a {
-  font-size: 1.2rem;
+.mobile-menu-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--light-gray-color);
+}
+.mobile-menu-header h3 {
+  font-size: 1.25rem;
   font-weight: 600;
   color: var(--secondary-color);
-  text-decoration: none;
-  border-bottom: 1px solid var(--light-gray-color);
-  transition: color var(--transition-speed) ease;
 }
 
-.mobile-nav-links a:hover {
-  color: var(--primary-color);
+
+.mobile-menu-links {
+  padding: 1rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.mobile-link {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--secondary-color);
+  text-decoration: none;
+  border-radius: var(--border-radius);
+  transition: background-color var(--transition-speed) ease;
+}
+.mobile-link .fa-solid {
+  width: 20px;
+  text-align: center;
+  color: var(--text-color);
+  opacity: 0.8;
+}
+.mobile-link:hover {
+  background-color: var(--light-gray-color);
+}
+
+.mobile-cart-count {
+  background-color: var(--primary-color);
+  color: var(--white-color);
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  font-size: 0.75rem;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 700;
+  margin-left: auto;
+}
+
+.mobile-divider {
+  border: none;
+  border-top: 1px solid var(--light-gray-color);
+  margin: 0.5rem 0;
+}
+
+.mobile-link.logout {
+  color: #dc2626;
+  cursor: pointer;
+}
+.mobile-link.logout .fa-solid {
+  color: #dc2626;
+}
+
+.slide-left-enter-active,
+.slide-left-leave-active {
+  transition: transform 0.3s ease;
+}
+.slide-left-enter-from,
+.slide-left-leave-to {
+  transform: translateX(-100%);
 }
 
 .slide-fade-enter-active,
 .slide-fade-leave-active {
-  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transition: opacity 0.3s ease;
 }
-
 .slide-fade-enter-from,
 .slide-fade-leave-to {
-  transform: translateX(100%);
   opacity: 0;
-}
-
-
-@media (max-width: 960px) {
-  .nav-links.desktop-only {
-    display: none;
-  }
-
-  .mobile-menu-toggle {
-    display: block;
-    z-index: 2;
-  }
 }
 </style>

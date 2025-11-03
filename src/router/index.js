@@ -69,6 +69,21 @@ const router = createRouter({
       component: () => import("../views/LuckySpinView.vue"),
     },
     {
+      path: "/proxy-order",
+      name: "proxy-order",
+      component: () => import("../views/ProxyOrder.vue"),
+    },
+    {
+      path: '/cart',
+      name: 'cart',
+      component: () => import("../views/CartView.vue"),
+    },
+    {
+      path: '/checkout',
+      name: 'checkout',
+      component: () => import("../views/CheckoutView.vue"),
+    },
+    {
       path: "/admin",
       component: () => import("../components/layouts/AdminLayout.vue"),
       children: [

@@ -16,128 +16,103 @@ const productStore = useProductStore();
 
 onBeforeMount(async () => {
   try {
-    await productStore.fetchProductsForHome();
+    if (productStore.homePageProducts.length === 0) {
+      await productStore.fetchProductsForHome();
+    }
   } catch (err) {
     showNotification(err, "error");
   }
 });
-
-const goToProductList = () => {
-  router.push({ name: 'product-list' });
-};
 </script>
 
 <template>
-  <div>
+  <div class="container">
     <section class="hero-section">
-      <h1 class="hero-title  visually-hidden">{{ t('home.introTitle') }}</h1>
-      <button @click="goToProductList" class="btn-primary">{{ t('home.heroButton') }} !</button>
-    </section>
-
-    <section class="intro-section">
-      <div class="container intro-content">
-        <div class="intro-image-wrapper">
-          <img src="/public/images/img2.jpg" loading="lazy" alt="Mô hình Kamen Rider và Super Sentai chính hãng" để class="intro-image" />
-        </div>
-        <div class="intro-text">
-          <h2 class="section-title">
-            <span>{{ t('home.introTitle') }}</span>
-          </h2>
-          <p v-html="t('home.introText')"></p>
-        </div>
+      <div class="hero-image">
+        <img src="/public/images/bg2.png" alt="Tuni Toku Hero Banner" />
+      </div>
+      <div class="hero-content">
+        <h2 class="section-title">
+          <span>{{ t('home.introTitle') }}</span>
+        </h2>
+         <p>Tại <strong>Tuni Toku</strong>, chúng tôi không chỉ bán đồ chơi, chúng tôi chia sẻ đam mê. Đây là nơi bạn có thể tìm thấy những chiếc <strong>DX Driver</strong> và <strong>Henshin Belt</strong> mà bạn hằng ao ước, khám phá bộ sưu tập <strong>Gaia Memory, Vistamp</strong> độc đáo, và sở hữu mô hình từ các series <strong>Kamen Rider, Super Sentai</strong> huyền thoại. Mỗi sản phẩm tại shop đều là <strong>hàng Bandai chính hãng</strong>, được lựa chọn cẩn thận để đảm bảo trải nghiệm sưu tầm tuyệt vời nhất.</p>
       </div>
     </section>
-    <LoadingSpinner v-if="productStore.isLoading" :message="t('home.loading')" />
-    <main v-else class="container">
-      <div class="products-ctn">
-        <section v-for="categoryData in productStore.homePageProducts" :key="categoryData.ID" class="product-section">
-          <h2 class="page-title">{{ categoryData.name }}</h2>
-          <div class="product-grid">
-            <ProductCard v-for="product in categoryData.products" :key="product.ID" :product="product" />
-          </div>
-        </section>
 
-        <div class="more-ctn">
-          <RouterLink class="btn-primary" to="/products">{{ t('home.viewMore') }}</RouterLink>
+    <LoadingSpinner v-if="productStore.isLoading" :message="t('home.loading')" />
+    
+    <main v-else class="products-ctn">
+      <section 
+        v-for="categoryData in productStore.homePageProducts" 
+        :key="categoryData.ID" 
+        class="product-section"
+      >
+        <h2 class="section-title-center">{{ categoryData.name }}</h2>
+        
+        <div class="product-grid">
+          <ProductCard 
+            v-for="product in categoryData.products" 
+            :key="product.ID" 
+            :product="product" 
+          />
         </div>
-        <div v-if="!productStore.isLoading && productStore.homePageProducts.length === 0">
-          <p>{{ t('home.noProducts') }}</p>
+
+        <div class="view-all-button-container">
+          <RouterLink 
+            :to="{ path: '/products', query: { category: categoryData.ID } }" 
+            class="btn-secondary"
+          >
+            Xem tất cả <i class="fas fa-arrow-right"></i>
+          </RouterLink>
         </div>
+      </section>
+
+      <div v-if="!productStore.isLoading && productStore.homePageProducts.length === 0">
+        <p>Không có sản phẩm nào để hiển thị.</p>
       </div>
     </main>
 
-    <br><br>
-    <section class="container">
-      <UserFeedbackForm/>
+    <section>
+      <UserFeedbackForm />
     </section>
-    <br><br>
   </div>
 </template>
 
 <style scoped>
 .hero-section {
-  background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('/public/images/SUPER.jpg') no-repeat center center/cover;
-  height: 60vh;
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
   align-items: center;
-  justify-content: center;
-  text-align: center;
-  flex-flow: column;
-  color: var(--white-color);
-  animation: fadeIn 1s ease-in-out;
-}
-
-.visually-hidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
-}
-
-.intro-section {
-  padding: 80px 0;
+  margin-bottom: 2rem;
   background-color: var(--white-color);
-  text-align: center;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  padding: 2rem;
 }
-
-.intro-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 40px;
+@media (min-width: 992px) {
+  .hero-section {
+    grid-template-columns: 1fr 1fr;
+  }
 }
-
-.intro-image-wrapper {
-  width: 100%;
-  max-width: 600px;
+.hero-image {
   border-radius: var(--border-radius);
   overflow: hidden;
-  box-shadow: var(--box-shadow);
-  animation: fadeInUp 1s ease-in-out;
-  max-height: 320px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
-
-.intro-image {
+.hero-image img {
   width: 100%;
   height: auto;
   display: block;
-  transition: transform var(--transition-speed);
+  object-fit: cover;
 }
-
-.intro-image:hover {
-  transform: scale(1.05);
+.hero-content {
+  flex-flow: column;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
-
-.intro-text {
-  max-width: 600px;
-}
-
-.intro-text .section-title {
+.hero-content .section-title {
   display: flex;
   flex-direction: column;
   text-align: center;
@@ -145,52 +120,118 @@ const goToProductList = () => {
   color: var(--secondary-color);
   font-size: clamp(1.8rem, 4vw, 2.5rem);
 }
-
-.intro-text p {
+.hero-content p {
   font-size: clamp(1rem, 2.5vw, 1.1rem);
   line-height: 1.6;
   color: var(--text-color);
 }
 
+.section-title-center {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--secondary-color);
+  margin-bottom: 2rem;
+}
+
+.featured-categories {
+  margin-bottom: 4rem;
+}
+
+.category-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 15px;
+}
+
+.category-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #f3f4f6; /* Màu xám nhạt (giống ảnh mẫu) */
+  border-radius: var(--border-radius);
+  padding: 20px 10px;
+  text-decoration: none;
+  color: var(--secondary-color);
+  font-weight: 600;
+  text-align: center;
+  transition: all var(--transition-speed) ease;
+  border: 1px solid var(--light-gray-color);
+}
+.category-card:hover {
+  background-color: #e5e7eb;
+  transform: translateY(-3px);
+  box-shadow: var(--box-shadow);
+}
+.category-icon-placeholder {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--primary-color);
+  margin-bottom: 10px;
+}
+.category-name {
+  font-size: 0.95rem;
+}
+
 .products-ctn {
-  border-bottom: 1px solid var(--light-gray-color);
-  border-top: 1px solid var(--light-gray-color);
-  padding-top: 32px;
+  padding-top: 0;
 }
 
 .product-section {
   margin-bottom: 4rem;
 }
 
-.more-ctn {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding-bottom: 24px;
+.product-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* 2 cột trên mobile */
+  gap: 15px;
 }
+
+.view-all-button-container {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.btn-secondary {
+  background-color: var(--white-color);
+  color: var(--secondary-color);
+  border: 2px solid var(--light-gray-color);
+  font-weight: 600;
+  padding: 10px 20px;
+  text-decoration: none;
+  border-radius: var(--border-radius);
+  transition: all var(--transition-speed) ease;
+}
+.btn-secondary:hover {
+  background-color: var(--light-gray-color);
+  border-color: var(--light-gray-color);
+  transform: translateY(-2px);
+  box-shadow: var(--box-shadow);
+}
+.btn-secondary i {
+  margin-left: 5px;
+}
+
 
 @media (min-width: 768px) {
-  .intro-content {
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .intro-text {
-    text-align: left;
+  .product-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
   }
 }
 
-@media (max-width: 768px) {
-  .intro-section {
-    padding: 40px 0;
+@media (min-width: 992px) {
+  .product-grid {
+    grid-template-columns: repeat(4, 1fr);
   }
-  .intro-content {
-    gap: 20px;
-  }
-  .hero-section {
-    height: 40vh;
-  }
+}
+
+.feedback-section {
+  padding: 2rem;
+  background-color: var(--white-color);
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  margin-bottom: 40px;
 }
 </style>

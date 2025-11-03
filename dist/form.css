@@ -170,30 +170,3 @@ select.form-input {
   background-color: var(--primary-color);
   border-color: var(--primary-color);
 }
-
-/* =========================================================
-   DARK MODE
-   ========================================================= */
-html[data-theme="dark"] .form-container {
-  background-color: var(--light-gray-color);
-  box-shadow: var(--box-shadow);
-}
-
-html[data-theme="dark"] .form-title,
-html[data-theme="dark"] .form-subtitle,
-html[data-theme="dark"] label {
-  color: var(--secondary-color);
-}
-
-html[data-theme="dark"] input,
-html[data-theme="dark"] textarea {
-  background-color: #4b5563;
-  border-color: #6b7280;
-  color: var(--secondary-color);
-}
-
-html[data-theme="dark"] .success-message {
-  background-color: #1f2d22;
-  color: #bbf7d0;
-  border-color: #2e4c36;
-}

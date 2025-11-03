@@ -33,6 +33,7 @@ const { t } = useI18n();
                 <h3 class="footer-heading">{{ t('footer.quickLinks') }}</h3>
                 <router-link class="footer-text" to="/">{{ t('navbar.home') }}</router-link>
                 <router-link class="footer-text" to="/products">{{ t('navbar.products') }}</router-link>
+                <router-link class="footer-text" to="/proxy-order">Mercari</router-link>
             </div>
         </div>
         <div class="footer-bottom">
@@ -46,10 +47,9 @@ const { t } = useI18n();
 
 <style scoped>
 .main-footer {
-    background-color: var(--secondary-color);
-    color: #ccc;
+    background-color: var(--white-color);
+    color: var(--text-color); 
     padding: 60px 60px 20px 60px;
-    border-top: 5px solid var(--secondary-color);
 }
 
 h3, a {
@@ -72,7 +72,7 @@ h3, a {
 .footer-heading {
     font-size: 1.2rem;
     font-weight: 600;
-    color: #ffffff;
+    color: var(--secondary-color); 
     margin-bottom: 20px;
 }
 
@@ -93,7 +93,7 @@ a:hover {
 
 .social-links {
     display: flex;
-    color: #ffffff;
+    color: var(--secondary-color); 
     margin-bottom: 20px;
     font-size: 1.2rem;
     font-weight: 600;
@@ -101,11 +101,12 @@ a:hover {
 }
 
 .footer-bottom {
-    border-top: 1px solid #444;
+    border-top: 1px solid var(--light-gray-color); 
     padding-top: 20px;
     text-align: center;
     font-size: 0.9rem;
-    color: #888;
+    color: var(--text-color);
+    opacity: 0.8; 
 }
 
 @media (max-width: 768px) {

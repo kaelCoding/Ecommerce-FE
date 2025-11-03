@@ -20,6 +20,14 @@ const isEditing = computed(() => !!route.params.id);
 const pageTitle = computed(() => isEditing.value ? 'Sửa Sản Phẩm' : 'Thêm Sản Phẩm Mới');
 const submitButtonText = computed(() => isEditing.value ? 'Cập Nhật' : 'Thêm Sản Phẩm');
 
+const product = reactive({
+    id: null,
+    name: "",
+    description: "",
+    price: "",
+    categoryIds: [], 
+});
+
 onMounted(async () => {
     await adminStore.fetchCategories();
 
@@ -33,7 +41,7 @@ onMounted(async () => {
             product.name = fetchedProduct.name;
             product.description = fetchedProduct.description;
             product.price = fetchedProduct.price;
-            product.categoryId = fetchedProduct.category_id;
+            product.categoryIds = fetchedProduct.categories.map(cat => cat.ID);
             existingImageUrls.value = fetchedProduct.image_urls || [];
         } catch (err) {
             console.error("Failed to fetch product data:", err);
@@ -42,14 +50,6 @@ onMounted(async () => {
             isLoading.value = false;
         }
     }
-});
-
-const product = reactive({
-    id: null,
-    name: "",
-    description: "",
-    price: "",
-    categoryId: "",
 });
 
 const handleFileChange = (event) => {
@@ -61,15 +61,22 @@ const handleSubmit = async () => {
         showNotification("Vui lòng chọn ít nhất một ảnh.", "error");
         return;
     }
+    
+    if (product.categoryIds.length === 0) {
+        showNotification("Vui lòng chọn ít nhất một danh mục.", "error");
+        return;
+    }
 
     isLoading.value = true;
-
     const formData = new FormData();
 
     formData.append('name', product.name);
     formData.append('description', product.description);
     formData.append('price', product.price);
-    formData.append('category_id', product.categoryId);
+    
+    for (const id of product.categoryIds) {
+        formData.append('category_ids', id);
+    }
 
     if (selectedFiles.value.length > 0) {
         for (const file of selectedFiles.value) {
@@ -111,14 +118,19 @@ const handleSubmit = async () => {
                     <input type="text" id="name" class="form-input" v-model="product.name"
                         placeholder="Nhập tên sản phẩm" required>
                 </div>
+                
                 <div class="form-group">
                     <label for="category">Danh mục</label>
-                    <select id="category" class="form-input" v-model="product.categoryId" required>
-                        <option value="" disabled>Chọn danh mục</option>
-                        <option v-for="cat in adminStore.categories" :key="cat.ID" :value="cat.ID">{{ cat.name }}</option>
-                    </select>
+                    <div class="category-checkbox-group">
+                        <label v-for="cat in adminStore.categories" :key="cat.ID" class="checkbox-label">
+                            <input type="checkbox" :value="cat.ID" v-model="product.categoryIds" />
+                            {{ cat.name }}
+                        </label>
+                    </div>
+                    <div v-if="adminStore.categories.length === 0">
+                        <small>Không tìm thấy danh mục nào. Vui lòng <RouterLink to="/admin/categories/new">tạo danh mục</RouterLink> trước.</small>
+                    </div>
                 </div>
-
                 <div class="form-group">
                     <label for="price">Giá</label>
                     <input type="text" id="price" class="form-input" v-model="product.price" placeholder="Nhập giá"
@@ -160,5 +172,28 @@ const handleSubmit = async () => {
     display: flex;
     gap: 10px;
     flex-wrap: wrap;
+}
+
+.category-checkbox-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid var(--light-gray-color);
+    padding: 15px;
+    border-radius: var(--border-radius);
+    background-color: var(--white-color);
+}
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+}
+.checkbox-label input[type="checkbox"] {
+    width: 1.2em;
+    height: 1.2em;
+    accent-color: var(--primary-color);
 }
 </style>

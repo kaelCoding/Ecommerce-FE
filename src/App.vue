@@ -4,7 +4,6 @@ import Footer from './components/layouts/Footer.vue';
 import NotificationPopup from './components/common/NotificationPopup.vue';
 import ChatBubble from './components/chat/ChatBubble.vue';
 import ChatWidget from './components/chat/ChatWidget.vue';
-import { useTheme } from './composables/useTheme';
 import { useRoute } from 'vue-router';
 import { computed, onMounted, ref, watch } from 'vue';
 import { get_auth_user } from './stores/auth';
@@ -25,12 +24,17 @@ watch(isChatOpen, (isOpen) => {
   }
 });
 
+const shouldShowNavbar = computed(() => {
+  return route.path !== '/login' && route.path !== '/register';
+});
+
 const shouldShowFooter = computed(() =>
   !route.path.startsWith('/admin') &&
   !route.path.startsWith('/chat') &&
   !route.path.startsWith('/profile') &&
   !route.path.startsWith('/lucky-spin') &&
   !route.path.startsWith('/products/detail') &&
+  !route.path.startsWith('/proxy-order') &&
   route.path !== '/login' &&
   route.path !== '/register'
 );
@@ -43,16 +47,16 @@ const shouldShowChat = computed(() => {
 const toggleChat = () => {
   isChatOpen.value = !isChatOpen.value;
 };
-
-useTheme();
 </script>
 
 <template>
   <div id="app">
-    <Navbar />
-    <main class="page-wrapper">
+    <Navbar v-if="shouldShowNavbar"/>
+    
+    <main :class="{ 'page-wrapper': shouldShowNavbar }">
       <router-view />
     </main>
+
     <Footer v-if="shouldShowFooter" />
     <NotificationPopup />
 
@@ -64,3 +68,13 @@ useTheme();
     </div>
   </div>
 </template>
+
+<style>
+.container {
+  width: 100%;
+  max-width: 1280px; 
+  margin: 0 auto;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+</style>

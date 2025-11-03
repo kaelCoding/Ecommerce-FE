@@ -12,20 +12,6 @@
   --header-shadow: rgba(0, 0, 0, 0.05);
 }
 
-html[data-theme="dark"] {
-  --chat-bg: #111827;
-  --chat-text: var(--text-color);
-  --border-color: #374151;
-  --panel-bg: #111827;
-  --hover-bg: #1f2937;
-  --input-bg: #1f2937;
-  --received-bubble-bg: #374151;
-  --sent-bubble-bg: var(--primary-color);
-  --sent-bubble-text: #ffffff;
-  --timestamp-text: #6b7280;
-  --header-shadow: rgba(0, 0, 0, 0.2);
-}
-
 .chat-container {
   display: grid;
   grid-template-columns: 320px 1fr;

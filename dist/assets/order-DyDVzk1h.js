@@ -1,0 +1,1 @@
+import{T as a}from"./index-B0cCL04z.js";const o=async r=>{try{return await a("POST","/cart/checkout",r)}catch(t){throw t}},e=async r=>{try{return await a("POST","/feedback",r)}catch(t){throw t}},s=async r=>{try{return await a("POST","/proxy/order",r)}catch(t){throw t}};export{s as a,o as c,e as s};

@@ -2,7 +2,6 @@
 import { ref, onMounted, watch, computed, watchEffect } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { get_productID_api } from '@/services/product';
-import { submit_order_api } from '@/services/order';
 import { formatPrice } from '@/composables/useUtils';
 import { useNotification } from '@/composables/useNotification';
 import { get_auth_user } from '@/stores/auth';
@@ -11,27 +10,72 @@ import { updateMetaTag, updateCanonicalLink } from '@/utils/meta';
 import ProductCard from '@/components/product/Card.vue';
 import LoadingSpinner from '../common/LoadingSpinner.vue';
 import { useI18n } from 'vue-i18n';
+import { useCartStore } from '@/stores/cart';
 
 const { t } = useI18n();
 const route = useRoute();
 const router = useRouter();
 const { showNotification } = useNotification();
+const cartStore = useCartStore();
 
 const productStore = useProductStore();
 const product = ref(null);
 const relatedProducts = ref([])
 
 const isLoading = ref(true);
-const isSubmitting = ref(false)
+
+const jsonLdScriptContent = computed(() => {
+  if (!product.value) {
+    return null;
+  }
+  const data = {
+    "@context": "https://schema.org/",
+    "@type": "Product",
+    "name": product.value.name,
+    "image": product.value.image_urls?.[0] || '',
+    "description": product.value.description || `Mua ngay ${product.value.name} tại TuniToku Store.`,
+    "brand": {
+      "@type": "Brand",
+      // ===== SỬA ĐỔI TẠI ĐÂY =====
+      // Đọc tên từ mảng categories thay vì category_name
+      "name": product.value.categories?.[0]?.name || "TuniToku Store"
+    },
+    "offers": {
+      "@type": "Offer",
+      "url": window.location.href, 
+      "priceCurrency": "VND",
+      "price": discountedPrice.value || product.value.price,
+      "itemCondition": "https://schema.org/NewCondition",
+      "availability": "https://schema.org/InStock" 
+    }
+  };
+  return JSON.stringify(data, null, 2);
+});
+
+watchEffect(() => {
+  if (product.value) {
+    const title = `${product.value.name} - TuniToku Store`;
+    const description = product.value.description?.substring(0, 160) || `Mua ngay ${product.value.name} chính hãng giá tốt.`;
+    const imageUrl = product.value.image_urls?.[0] || '';
+    const currentUrl = window.location.href;
+
+    updateMetaTag('title', title);
+    updateMetaTag('description', description);
+    updateMetaTag('og:title', title, 'property');
+    updateMetaTag('og:description', description, 'property');
+    updateMetaTag('og:image', imageUrl, 'property');
+    updateMetaTag('og:url', currentUrl, 'property');
+    updateMetaTag('twitter:card', 'summary_large_image');
+    updateMetaTag('twitter:title', title);
+    updateMetaTag('twitter:description', description);
+    updateMetaTag('twitter:image', imageUrl);
+
+    updateCanonicalLink(currentUrl);
+  }
+});
 
 const quantity = ref(1);
 const mainImage = ref('');
-const isCheckoutModalOpen = ref(false);
-const customerInfo = ref({
-  phone: '',
-  address: '',
-  paymentMethod: 'cod',
-});
 
 const discountPercentage = computed(() => {
   return get_auth_user.value?.discountPercentage || 0;
@@ -49,45 +93,6 @@ const decrementQuantity = () => {
   if (quantity.value > 1) quantity.value--;
 };
 
-const openCheckoutModal = () => { isCheckoutModalOpen.value = true; };
-const closeCheckoutModal = () => {
-  isCheckoutModalOpen.value = false;
-  resetForm();
-};
-
-const resetForm = () => {
-  customerInfo.value = {
-    phone: '',
-    address: '',
-    paymentMethod: 'cod',
-  };
-  quantity.value = 1;
-};
-
-const submitOrder = async () => {
-  isSubmitting.value = true
-  const orderPayload = {
-    productID: product.value.ID,
-    quantity: quantity.value,
-    customerName: get_auth_user.value.username,
-    customerPhone: customerInfo.value.phone,
-    customerAddress: customerInfo.value.address,
-    customerEmail: get_auth_user.value.email,
-    paymentMethod: customerInfo.value.paymentMethod,
-  };
-
-  try {
-    await submit_order_api(orderPayload);
-    showNotification('Đặt hàng thành công! Chúng tôi sẽ sớm liên hệ với bạn để xác nhận.')
-    closeCheckoutModal();
-  } catch (err) {
-    console.error("Failed to submit order:", err);
-    showNotification(err, 'error');
-  } finally {
-    isSubmitting.value = false;
-  }
-};
-
 const fetchProductData = async (productId) => {
   if (!productId) {
     isLoading.value = false;
@@ -102,13 +107,26 @@ const fetchProductData = async (productId) => {
       mainImage.value = product.value.image_urls[0];
     }
 
-    const categoryId = product.value.category_id;
-    let related = productStore.getRelatedProducts(categoryId, product.value.ID, 6);
-    if (related.length < 6) {
-      await productStore.ensureCategoryProducts(categoryId);
-      related = productStore.getRelatedProducts(categoryId, product.value.ID, 6);
+    // ===== SỬA ĐỔI TẠI ĐÂY =====
+    // Lấy ID của danh mục ĐẦU TIÊN từ mảng categories
+    const firstCategory = product.value.categories?.[0];
+
+    if (firstCategory) {
+      const categoryId = firstCategory.ID; // Lấy ID
+      
+      // Tiếp tục logic tìm sản phẩm liên quan
+      let related = productStore.getRelatedProducts(categoryId, product.value.ID, 6);
+      if (related.length < 6) {
+        await productStore.ensureCategoryProducts(categoryId); // Truyền ID hợp lệ
+        related = productStore.getRelatedProducts(categoryId, product.value.ID, 6);
+      }
+      relatedProducts.value = related;
+    } else {
+      // Nếu sản phẩm không có danh mục nào
+      relatedProducts.value = [];
     }
-    relatedProducts.value = related;
+    // ===== KẾT THÚC SỬA ĐỔI =====
+
   } catch (err) {
     console.error("Failed to fetch product data:", err);
     product.value = null;
@@ -129,66 +147,19 @@ watch(() => route.params.id, (newId) => {
   }
 });
 
-const handleCheckout = () => {
-  if (get_auth_user.value) {
-    openCheckoutModal();
-  } else {
-    showNotification('Bạn cần đăng nhập để tiến hành thanh toán.', 'error');
-    router.push({
-      path: '/login',
-      query: { redirect: route.fullPath }
-    });
+const handleAddToCart = async () => {
+  if (!get_auth_user.value) {
+    showNotification('Bạn cần đăng nhập để thêm vào giỏ hàng.', 'error');
+    router.push({ path: '/login', query: { redirect: route.fullPath } });
+    return;
+  }
+  try {
+    await cartStore.addItem(product.value.ID, quantity.value);
+    showNotification('Đã thêm sản phẩm vào giỏ hàng!', 'success');
+  } catch (err) {
+    showNotification(err, 'error');
   }
 };
-
-const jsonLdScriptContent = computed(() => {
-  if (!product.value) return null;
-
-  const schema = {
-    "@context": "https://schema.org/",
-    "@type": "Product",
-    "name": product.value.name,
-    "image": product.value.image_urls[0],
-    "description": product.value.description || `Mua ngay ${product.value.name} chính hãng tại Tuni Toku. Sản phẩm thuộc series ${product.value.category_name}. Cam kết chất lượng, giao hàng toàn quốc.`,
-    "brand": {
-      "@type": "Brand",
-      "name": "Bandai"
-    },
-    "sku": `TUNI-${product.value.ID}`,
-    "offers": {
-      "@type": "Offer",
-      "url": window.location.href,
-      "priceCurrency": "VND",
-      "price": discountedPrice.value,
-      "availability": "https://schema.org/InStock",
-      "itemCondition": "https://schema.org/NewCondition"
-    }
-  };
-
-  return JSON.stringify(schema);
-});
-
-watchEffect(() => {
-  if (product.value && product.value.name) {
-    const siteName = 'Tuni Toku';
-    const productName = product.value.name;
-    const categoryName = product.value.category_name;
-    const imageUrl = product.value.image_urls[0];
-    const newTitle = `${productName} | ${categoryName} | ${siteName}`;
-    const newDescription = `Mua ngay ${productName} chính hãng tại Tuni Toku. Sản phẩm thuộc series ${categoryName}. Cam kết chất lượng, giao hàng toàn quốc.`;
-    
-    document.title = newTitle;
-    updateMetaTag('description', newDescription, false);
-    updateMetaTag('og:title', newTitle);
-    updateMetaTag('og:description', newDescription);
-    updateMetaTag('og:url', window.location.href);
-    updateMetaTag('og:image', imageUrl);
-    updateMetaTag('twitter:title', newTitle, false);
-    updateMetaTag('twitter:description', newDescription, false);
-    updateMetaTag('twitter:image', imageUrl, false);
-    updateCanonicalLink();
-  }
-});
 </script>
 
 <template>
@@ -196,9 +167,11 @@ watchEffect(() => {
     {{ jsonLdScriptContent }}
   </component>
   <LoadingSpinner v-if="isLoading" :message="t('detailProduct.loading')" />
+  
   <div v-else class="container">
+
     <main class="main-content-grid">
-      <div class="image-gallery">
+      <div class="image-gallery card-white">
         <div class="main-image-wrapper">
           <img loading="lazy" :src="mainImage" :alt="product.name" class="img-main" />
         </div>
@@ -208,8 +181,7 @@ watchEffect(() => {
         </div>
       </div>
 
-      <div class="info-panel">
-        <p class="product-brand">{{ product.category_name }}</p>
+      <div class="info-panel card-white">
         <h1 class="product-title">{{ product.name }}</h1>
         <div v-if="discountPercentage > 0" class="price-info">
           <p class="original-price">{{ formatPrice(product.price) }}</p>
@@ -223,8 +195,9 @@ watchEffect(() => {
             <input type="text" :value="quantity" readonly aria-label="Số lượng hiện tại" />
             <button @click="incrementQuantity" aria-label="Tăng số lượng">+</button>
           </div>
-          <button class="btn-primary" @click="handleCheckout">
-            <i class="fas fa-credit-card"></i> {{ t('detailProduct.payment') }}
+
+          <button class="btn-primary" @click="handleAddToCart" :disabled="cartStore.isLoading">
+            <i class="fas fa-cart-plus"></i> Thêm vào giỏ
           </button>
         </div>
 
@@ -236,79 +209,20 @@ watchEffect(() => {
       </div>
     </main>
 
-    <section class="extended-info-grid">
-      <div class="description-section">
-        <h3>{{ t('detailProduct.description') }}</h3>
+    <div class="description-card card-white">
+      <section class="description-section">
+        <h3>THÔNG TIN SẢN PHẨM</h3>
         <p class="pre-line-text">{{ product.description || 'Chưa có mô tả chi tiết cho sản phẩm này.' }}</p>
-      </div>
-    </section>
-
+      </section>
+    </div>
+    
     <section class="related-products-section">
-      <h2>{{ t('detailProduct.relatedProduct') }}</h2> <br>
+      <h2>SẢN PHẨM LIÊN QUAN</h2>
       <div class="product-grid">
         <ProductCard v-for="productitem in relatedProducts" :key="productitem.ID" :product="productitem" />
       </div>
     </section>
   </div>
-
-  <teleport to="body">
-    <transition name="modal-fade">
-      <div v-if="isCheckoutModalOpen" class="modal-backdrop" @click.self="closeCheckoutModal">
-        <div class="checkout-modal">
-          <div class="modal-header">
-            <h3>{{ t('detailProduct.modalHeader') }}</h3>
-            <button class="close-btn" @click="closeCheckoutModal">
-              <i class="fa-solid fa-xmark"></i>
-            </button>
-          </div>
-          <div class="modal-body">
-            <LoadingSpinner v-if="isSubmitting" message="Đang xử lý đơn hàng..." />
-            <div v-else>
-              <div class="summary">
-                <p>{{ t('detailProduct.summaryProduct') }} <strong>{{ product.name }}</strong></p>
-                <p>{{ t('detailProduct.summaryNumber') }} <strong>{{ quantity }}</strong></p>
-                <p>{{ t('detailProduct.summaryPrice') }} <strong>{{ formatPrice(product.price * quantity) }}</strong></p>
-                <p v-if="discountPercentage > 0">{{ t('detailProduct.payment') }}: <strong>{{ formatPrice(discountedPrice * quantity)
-                    }}</strong></p>
-              </div>
-
-              <form @submit.prevent="submitOrder">
-                <div class="form-group">
-                  <label for="phone">{{ t('detailProduct.phone') }}</label>
-                  <input id="phone" type="tel" class="form-input" v-model="customerInfo.phone"
-                    :placeholder="t('detailProduct.phonePlace')" required>
-                </div>
-                <div class="form-group">
-                  <label for="address">{{ t('detailProduct.address') }}</label>
-                  <textarea id="address" class="form-input" v-model="customerInfo.address"
-                    :placeholder="t('detailProduct.addressPlace')" required></textarea>
-                </div>
-
-                <div class="form-group">
-                  <label>{{ t('detailProduct.paymentMethod') }}</label>
-                  <div class="payment-options">
-                    <div class="radio-label">
-                      <input type="radio" v-model="customerInfo.paymentMethod" value="cod">
-                      <span>{{ t('detailProduct.paymentOption1') }}</span>
-                    </div>
-                    <div class="radio-label">
-                      <input type="radio" v-model="customerInfo.paymentMethod" value="bank_transfer">
-                      <span>{{ t('detailProduct.paymentOption2') }}</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="form-actions">
-                  <button type="button" class="btn" @click="closeCheckoutModal">{{ t('detailProduct.btnCancel') }}</button>
-                  <button type="submit" class="btn-primary">{{ t('detailProduct.btnSubmit') }}</button>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
-      </div>
-    </transition>
-  </teleport>
 </template>
 
 <style scoped>
@@ -316,10 +230,18 @@ watchEffect(() => {
   margin: 40px auto;
 }
 
+.card-white {
+  background-color: var(--white-color);
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  padding: clamp(20px, 4vw, 40px);
+  overflow: hidden;
+}
+
 .main-content-grid {
   display: grid;
-  grid-template-columns: 7fr 3fr;
-  gap: 60px;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
 }
 
 .image-gallery {
@@ -357,7 +279,7 @@ watchEffect(() => {
   width: 100%;
   aspect-ratio: 1/1;
   border-radius: 8px;
-  border: 2px solid var(--border-color);
+  border: 2px solid var(--light-gray-color); 
   cursor: pointer;
   object-fit: cover;
   transition: all 0.2s ease;
@@ -369,19 +291,25 @@ watchEffect(() => {
   opacity: 1;
 }
 
+.info-panel {
+  display: flex;
+  flex-direction: column;
+}
+
 .product-brand {
   font-size: clamp(0.8rem, 2vw, 0.9rem);
   font-weight: 500;
-  color: var(--text-light);
+  color: var(--text-color);
+  opacity: 0.7;
   text-transform: uppercase;
   letter-spacing: 1px;
   margin-bottom: 8px;
 }
 
 .product-title {
-  font-size: clamp(2rem, 5vw, 2.8rem);
+  font-size: clamp(1.5rem, 4vw, 2.2rem);
   font-weight: 700;
-  color: var(--text-dark);
+  color: var(--secondary-color);
   line-height: 1.2;
 }
 
@@ -390,33 +318,26 @@ watchEffect(() => {
   align-items: center;
   gap: 15px;
   margin: 24px 0;
+  flex-wrap: wrap;
 }
 
 .original-price {
-  font-size: clamp(1.4rem, 4vw, 2rem);
+  font-size: clamp(1.2rem, 4vw, 1.5rem);
   color: #999;
   text-decoration: line-through;
 }
 
 .product-price {
-  font-size: clamp(2rem, 5vw, 2.5rem);
+  font-size: clamp(1.8rem, 5vw, 2.2rem);
   font-weight: 700;
   color: var(--primary-color);
   margin: 0;
 }
 
-.discount-badge {
-  background-color: var(--primary-color);
-  color: #fff;
-  font-weight: 600;
-  padding: 4px 8px;
-  border-radius: var(--border-radius);
-  font-size: 0.9rem;
-}
-
+/* THAY ĐỔI: Layout .actions chỉ còn 2 cột */
 .actions {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: auto 1fr; /* Cột 1 cho số lượng, Cột 2 cho nút */
   gap: 16px;
   margin-bottom: 32px;
   align-items: center;
@@ -437,6 +358,8 @@ watchEffect(() => {
   background-color: var(--white-color);
   color: var(--text-color);
   border: none;
+  border-top: 1px solid var(--light-gray-color);
+  border-bottom: 1px solid var(--light-gray-color);
   font-size: clamp(0.9rem, 2vw, 1.1rem);
   font-weight: 600;
 }
@@ -456,17 +379,28 @@ watchEffect(() => {
   background-color: #d1d5db;
 }
 
+/* THAY ĐỔI: Nút "Thêm vào giỏ" là nút chính */
 .btn-primary {
-  flex-grow: 1;
+  width: 100%;
   gap: 10px;
   height: clamp(40px, 5vh, 48px);
   font-size: clamp(0.9rem, 2vw, 1rem);
 }
 
+.btn-primary:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* ĐÃ XOÁ: .btn-secondary (vì .btn-primary đã thay thế) */
+
 .trust-bar {
   display: flex;
   flex-direction: column;
-  gap: 30px;
+  gap: 20px; 
+  margin-top: auto; 
+  padding-top: 20px; 
+  border-top: 1px solid var(--light-gray-color);
 }
 
 .trust-item {
@@ -477,19 +411,14 @@ watchEffect(() => {
   font-size: clamp(0.9rem, 2vw, 1rem);
 }
 
-.extended-info-grid {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 60px;
-  padding-top: 32px;
-  margin-top: 60px;
-  border-top: 1px solid var(--light-gray-color);
+.description-card {
+  margin-top: 40px;
 }
 
 .description-section h3,
 .related-products-section h2 {
   font-size: clamp(1.5rem, 4vw, 2rem);
-  color: var(--text-color);
+  color: var(--secondary-color);
   margin-bottom: 16px;
 }
 
@@ -500,9 +429,11 @@ watchEffect(() => {
 }
 
 .related-products-section {
-  padding-top: 32px;
-  margin-top: 60px;
-  border-top: 1px solid var(--light-gray-color);
+  background-color: var(--white-color);
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  padding: clamp(20px, 4vw, 40px);
+  margin-top: 40px; 
 }
 
 .product-grid {
@@ -537,9 +468,8 @@ watchEffect(() => {
     grid-template-columns: 1fr;
     gap: 40px;
   }
-
-  .extended-info-grid {
-    grid-template-columns: 1fr;
+  .trust-bar {
+    margin-top: 32px;
   }
 }
 
@@ -547,6 +477,34 @@ watchEffect(() => {
   .product-grid .product-card {
     width: 150px;
     flex-shrink: 0;
+  }
+
+  .card-white,
+  .related-products-section {
+    padding: 20px;
+  }
+  
+  /* THAY ĐỔI: Sửa layout .actions trên mobile */
+  .actions {
+    display: flex;
+    flex-direction: column; /* Xếp chồng lên nhau */
+    gap: 16px;
+  }
+  .quantity-selector {
+    height: 48px;
+    width: 100%; /* Chiếm 100% */
+  }
+  .quantity-selector input {
+     height: 100%;
+     width: 100%; /* Input chiếm 100% */
+     flex-grow: 1;
+  }
+  .quantity-selector button {
+    width: 50px; /* Nút 2 bên cố định */
+    height: 100%;
+  }
+  .btn-primary {
+    width: 100%;
   }
 }
 </style>

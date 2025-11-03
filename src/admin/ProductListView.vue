@@ -54,7 +54,7 @@ const goToEditProduct = (productId) => {
             <tr>
               <th>Ảnh</th>
               <th class="name-ctn">Tên</th>
-              <th>Giá</th>
+              <th>Danh Mục</th>
               <th>Hành động</th>
             </tr>
           </thead>
@@ -65,8 +65,19 @@ const goToEditProduct = (productId) => {
                 <img v-if="product.image_urls && product.image_urls.length > 0" :src="product.image_urls[0]"
                   :alt="product.name" class="table-img">
               </td>
-              <td class="name-ctn">{{ product.name }}</td>
-              <td>{{ formatPrice(product.price) }}</td>
+              <td class="name-ctn">
+                {{ product.name }}
+                <div class="price-mobile">{{ formatPrice(product.price) }}</div>
+              </td>
+              
+              <td>
+                <div class="category-tags">
+                  <span v-for="cat in product.categories" :key="cat.ID" class="category-tag">
+                    {{ cat.name }}
+                  </span>
+                </div>
+              </td>
+
               <td>
                 <div class="table-actions center">
                   <button class="btn-primary" @click="goToEditProduct(product.ID)">
@@ -96,6 +107,28 @@ const goToEditProduct = (productId) => {
   white-space: nowrap;
 }
 
+.price-mobile {
+    display: none;
+    font-weight: 600;
+    color: var(--primary-color);
+    font-size: 0.9rem;
+    margin-top: 5px;
+}
+.category-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+.category-tag {
+    background-color: var(--light-gray-color);
+    color: var(--secondary-color);
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
 @media (max-width: 767px) {
   .admin-table thead th:nth-child(3) {
     display: none;
@@ -103,6 +136,15 @@ const goToEditProduct = (productId) => {
   
   .admin-table tbody td:nth-child(3) {
     display: none;
+  }
+
+  .price-mobile {
+    display: block;
+  }
+
+  .name-ctn {
+    max-width: 50vw;
+    white-space: normal;
   }
 }
 </style>

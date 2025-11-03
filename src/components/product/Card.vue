@@ -22,7 +22,7 @@ const discountedPrice = computed(() => {
 </script>
 
 <template>
-  <RouterLink :to="'/products/detail/' + product.ID" class="product-card">
+<RouterLink :to="'/products/detail/' + product.ID" class="product-card">
   <div class="card-image-wrapper">
     <img :src="product.image_urls[0]" :alt="product.name + ' - Đồ chơi Tokusatsu chính hãng'" loading="lazy" class="product-image">
     <div class="overlay">
@@ -34,8 +34,7 @@ const discountedPrice = computed(() => {
   </div>
   <div class="card-content">
     <h3 class="product-name">{{ product.name }}</h3>
-    <div class="price-container">
-      <p v-if="discountPercentage > 0" class="original-price">{{ formatPrice(product.price) }}</p>
+    <div class="price-container"> <p v-if="discountPercentage > 0" class="original-price">{{ formatPrice(product.price) }}</p>
       <p class="product-price">{{ formatPrice(discountedPrice) }}</p>
     </div>
   </div>
@@ -58,7 +57,7 @@ const discountedPrice = computed(() => {
 }
 
 .product-card {
-  background-color: var(--body-color);
+  background-color: var(--white-color);
   border-radius: var(--border-radius);
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(0,0,0,0.05);
@@ -116,7 +115,7 @@ const discountedPrice = computed(() => {
   white-space: nowrap;
 }
 
-.price-info {
+.price-container {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -130,12 +129,6 @@ const discountedPrice = computed(() => {
   text-decoration: line-through;
 }
 
-.discounted-price {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: var(--primary-color);
-}
-
 .product-price {
   font-size: 1.1rem;
   font-weight: 700;
@@ -147,11 +140,6 @@ const discountedPrice = computed(() => {
 @media (max-width: 768px) {
   .product-name {
     font-size: 0.95rem; 
-  }
-
-  .product-category {
-    font-size: 0.8rem; 
-    margin-bottom: 5px;
   }
 
   .product-price {
